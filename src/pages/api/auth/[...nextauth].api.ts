@@ -23,7 +23,7 @@ export function buildNextAuthOption(
           return {
             id: profile.sub,
             name: profile.name,
-            username: '',
+            username: "",
             email: profile.email,
             avatar_url: profile.picture,
           };
@@ -39,6 +39,12 @@ export function buildNextAuthOption(
           return "/register/connect-calendar/?error=permissions";
         }
         return true;
+      },
+      async session({ session, user }) {
+        return {
+          ...session,
+          user,
+        };
       },
     },
   };
