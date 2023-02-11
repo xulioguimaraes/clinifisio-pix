@@ -1,3 +1,4 @@
+import { api } from "@/lib/axios";
 import { buildNextAuthOption } from "@/pages/api/auth/[...nextauth].api";
 import { FormAnnotation } from "@/pages/home/components/ClaimUsernameForm/styles";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,6 +14,7 @@ import {
 import { GetServerSideProps } from "next";
 import { getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { ArrowRight } from "phosphor-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -34,8 +36,13 @@ export default function UpdateProfile() {
     resolver: zodResolver(updateProfileSchema),
   });
   const session = useSession();
-
-  const handleUpdateProfile = async (data: UpdateProfileData) => {};
+  const router = useRouter();
+  const handleUpdateProfile = async (data: UpdateProfileData) => {
+    await api.put("/users/profile", {
+      bio: data.bio,
+    });
+    await router.push(`/schedule/${session.data?.user.username}`);
+  };
   return (
     <Container>
       <Header>
@@ -45,7 +52,7 @@ export default function UpdateProfile() {
           pode editar essas informações depois.
         </Text>
 
-        <MultiStep size={4} currentStep={1} />
+        <MultiStep size={4} currentStep={4} />
       </Header>
       <ProfileBox as="form" onSubmit={handleSubmit(handleUpdateProfile)}>
         <label>
@@ -59,7 +66,9 @@ export default function UpdateProfile() {
           <Text size={"sm"}>Sobre você</Text>
           <TextArea {...register("bio")} />
           <FormAnnotation>
-            Fale um pouco sobre você. Isto será exibido em sua pagina pessoal.
+            <Text size={"sm"}>
+              Fale um pouco sobre você. Isto será exibido em sua pagina pessoal.
+            </Text>
           </FormAnnotation>
         </label>
         <Button type="submit" disabled={isSubmitting}>
