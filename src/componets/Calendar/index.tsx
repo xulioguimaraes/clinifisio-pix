@@ -43,7 +43,7 @@ export const Calendar = () => {
             <td></td>
             <td></td>
             <td>
-              <Calendarday>1</Calendarday>
+              <Calendarday disabled>1</Calendarday>
             </td>
             <td>
               <Calendarday>2</Calendarday>

@@ -1,7 +1,7 @@
 interface GetWeekDaysParams {
   short?: boolean;
 }
-export const getWeekDays = ({ short = false }: GetWeekDaysParams) => {
+export const getWeekDays = ({ short = false }: GetWeekDaysParams = {}) => {
   const formatter = new Intl.DateTimeFormat("pt-BR", {
     weekday: "long",
   });
@@ -9,7 +9,7 @@ export const getWeekDays = ({ short = false }: GetWeekDaysParams) => {
     .map((day) => formatter.format(new Date(Date.UTC(2021, 5, day))))
     .map((weekday) => {
       if (short) {
-       return weekday.substring(0, 3).toUpperCase();
+        return weekday.substring(0, 3).toUpperCase();
       }
       return weekday.substring(0, 1).toUpperCase().concat(weekday.substring(1));
     });
