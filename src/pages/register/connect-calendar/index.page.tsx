@@ -17,7 +17,7 @@ export default function ConnectCalendar() {
     await signIn("google");
   };
   const handleNavigateToNextStep = async () => {
-    await router.push("/register/time-intervas");
+    await router.push("/register/time-intervals");
   };
 
   return (
