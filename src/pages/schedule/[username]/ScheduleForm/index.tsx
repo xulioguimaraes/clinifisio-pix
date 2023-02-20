@@ -9,7 +9,12 @@ export const ScheduleForm = () => {
     setSelectedDateTime(null);
   };
   if (selectedDateTime) {
-    return <ConfrimStep schedulingDate={selectedDateTime} onCancelConfitmation={handleClearSelectedDateTime} />;
+    return (
+      <ConfrimStep
+        schedulingDate={selectedDateTime}
+        onCancelConfitmation={handleClearSelectedDateTime}
+      />
+    );
   }
   return <CalendarStep onSelectDateTime={setSelectedDateTime} />;
 };
