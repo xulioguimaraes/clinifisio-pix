@@ -67,15 +67,21 @@ export default async function handler(
     },
   });
 
-  const availableTimes = possibleTimes.filter((time) => {
-    const isTimeBlocked = blockedTimes.some(
-      (blockedTime) => blockedTime.date.getHours() === time
-    );
+  // const availableTimes = possibleTimes.filter((time) => {
+  //   const isTimeBlocked = blockedTimes.some(
+  //     (blockedTime) => blockedTime.date.getHours() === time
+  //   );
 
-    const isTimeInPast = referenceDate.set("hour", time).isBefore(new Date());
+  //   const isTimeInPast = referenceDate.set("hour", time).isBefore(new Date());
 
-    return !isTimeBlocked && !isTimeInPast;
-  });
+  //   return !isTimeBlocked && !isTimeInPast;
+  // });
+
+  const availableTimes  = blockedTimes.map((schedules) => {
+    return schedules.date
+  })
+
+  
 
   return res.json({ possibleTimes, availableTimes });
 }
