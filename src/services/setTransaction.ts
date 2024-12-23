@@ -11,7 +11,7 @@ export default async (objSend: IValuesTransactionModal) => {
     .then((item) => item.data)
     .catch(() => false);
   if (response) {
-    arrayTransaction = [...arrayTransaction, response[0]];
+    arrayTransaction = [...arrayTransaction!, response[0]];
     arrayTransaction = arrayTransaction.sort((a, b) => {
       if (a.id > b.id) {
         return -1;
