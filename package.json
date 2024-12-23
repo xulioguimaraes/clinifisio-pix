@@ -9,10 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@hookform/resolvers": "^2.9.10",
     "@ignite-ui/react": "^2.2.4",
+    "@mui/icons-material": "^6.2.1",
+    "@mui/material": "^6.2.1",
     "@next/font": "13.1.6",
     "@prisma/client": "^4.9.0",
+    "@supabase/supabase-js": "^2.47.8",
     "@tanstack/react-query": "^4.24.6",
     "@types/node": "18.11.18",
     "@types/react": "18.0.27",
@@ -30,12 +35,16 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.43.0",
+    "react-modal": "^3.16.3",
+    "react-query": "^3.39.3",
+    "sass": "^1.83.0",
     "typescript": "4.9.4",
     "zod": "^3.20.2"
   },
   "devDependencies": {
     "@rocketseat/eslint-config": "^1.2.0",
     "@types/cookie": "^0.5.1",
+    "@types/react-modal": "^3.16.3",
     "prisma": "^4.10.1"
   }
 }

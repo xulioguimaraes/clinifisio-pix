@@ -1,4 +1,4 @@
-import { Calendar } from "@/componets/Calendar";
+import { Calendar } from "@/components/Calendar";
 import { api } from "@/lib/axios";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";

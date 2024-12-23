@@ -1,0 +1,104 @@
+.container {
+  h2 {
+    color: var(--text-title);
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  input, textarea {
+    width: 100%;
+    padding: 0 1.5rem;
+    height: 4rem;
+    border-radius: 0.25rem;
+
+    border: 1px solid #d7d7d7;
+    background: #f6f6f6;
+
+    font-weight: 400;
+    font-size: 1rem;
+
+    &::placeholder {
+      color: var(--text-body);
+    }
+    & + input {
+      margin-top: 1rem;
+    }
+  }
+  textarea{
+    height: 6rem;
+    padding-top: 0.6rem;
+  }
+  button[type="submit"] {
+    width: 100%;
+    padding: 0 1.5rem;
+    height: 4rem;
+    background: var(--green);
+    color: var(--shape);
+    border-radius: 0.25rem;
+    border: 0;
+    font-size: 1rem;
+    margin-top: 1.5rem;
+    font-weight: 600;
+  }
+}
+.modalOverlay {
+  background: rgba($color: #000000, $alpha: 0.6);
+  position: fixed;
+  inset: 0;
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @media (max-width: 576px) {
+    align-items: flex-end;
+  }
+}
+.modalContent {
+  width: 100%;
+  max-width: 576px;
+  background: var(--background);
+  padding: 3rem;
+  position: relative;
+  border-radius: 0.25rem;
+  @media (max-width: 576px) {
+    border-radius: 1rem 1rem 0px 0px;
+    padding: 1.5rem;
+  }
+}
+.modalClose {
+  position: absolute;
+  right: 1.5rem;
+  top: 1.5rem;
+  border: 0;
+  background: transparent;
+}
+.typeTransaction {
+  margin: 1rem 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  >button {
+    height: 4rem;
+    border: 1px solid #d7d7d7;
+    border-radius: 0.25rem;
+    background: #f6f6f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img {
+      width: 20px;
+      height: 20px;
+    }
+    span {
+      display: inline-block;
+      margin-left: 1rem;
+      font-size: 1rem;
+      color: var(--text-title);
+    }
+    &.deposit{
+        background: #33cc9530;
+    }
+    &.withraw{
+        background:#e52e4d30;
+    }
+  }
+}

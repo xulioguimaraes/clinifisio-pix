@@ -1,48 +1,46 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider     = "mysql"
+  provider     = "postgresql"
   url          = env("DATABASE_URL")
+  directUrl    = env("DIRECT_URL")
   relationMode = "prisma"
 }
 
 model User {
-  id         String   @id @default(uuid())
-  username   String   @unique
-  name       String
-  bio        String?  @db.Text
-  email      String?  @unique
-  create_at  DateTime @default(now())
-  avatar_url String?
-
+  id            String             @id @default(uuid())
+  username      String             @unique
+  name          String
+  bio           String?
+  email         String?            @unique
+  created_at    DateTime           @default(now()) @map("create_at")
+  avatar_url    String?
   accounts      Account[]
   sessions      Session[]
   timeIntervals UserTimeInterval[]
-  Scheduling    Scheduling[]
+  schedulings   Scheduling[]
+  transactions  Transation[]
 
   @@map("users")
 }
 
 model Account {
-  id                  String  @id @default(cuid())
+  id                  String       @id @default(cuid())
   user_id             String
   type                String
   provider            String
   provider_account_id String
-  refresh_token       String? @db.Text
-  access_token        String? @db.Text
+  refresh_token       String?
+  access_token        String?
   expires_at          Int?
   token_type          String?
   scope               String?
-  id_token            String? @db.Text
+  id_token            String?
   session_state       String?
-
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user                User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  Transation          Transation[]
 
   @@unique([provider, provider_account_id])
   @@index([user_id])
@@ -65,9 +63,8 @@ model UserTimeInterval {
   week_day              Int
   time_start_in_minutes Int
   time_end_in_minutes   Int
-
-  user    User   @relation(fields: [user_id], references: [id])
-  user_id String
+  user_id               String
+  user                  User   @relation(fields: [user_id], references: [id])
 
   @@index([user_id])
   @@map("users_time_intervals")
@@ -80,10 +77,24 @@ model Scheduling {
   email        String
   observations String?
   created_at   DateTime @default(now())
-
-  user    User   @relation(fields: [user_id], references: [id])
-  user_id String
+  user_id      String
+  user         User     @relation(fields: [user_id], references: [id])
 
   @@index([user_id])
   @@map("schedulings")
+}
+
+model Transation {
+  id          Int      @id @default(autoincrement())
+  title       String
+  price       Int
+  description String?
+  type        Boolean
+  createdAt   DateTime @default(now()) @map("created_at")
+  accountId   String?  @map("accountId")
+  userId      String?  @map("userId")
+  User        User?    @relation(fields: [userId], references: [id])
+  Account     Account? @relation(fields: [accountId], references: [id])
+
+  @@map("transation")
 }

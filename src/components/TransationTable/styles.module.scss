@@ -1,0 +1,18 @@
+.container {
+  margin-top: 3rem;
+  section {
+    display: none;
+  }
+  @media (max-width: 600px) {
+    section {
+      display: block;
+    
+    }
+  }
+  @media (max-width: 600px) {
+    table {
+      display: none;
+    }
+  }
+  
+}

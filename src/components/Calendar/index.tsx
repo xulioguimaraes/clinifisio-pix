@@ -44,6 +44,7 @@ export const Calendar = ({ onDateSelected, selectedDate }: CalendarProps) => {
 
   const year = currentDate.get("year");
   const month = currentDate.get("month");
+  console.log({ year, month: String(month + 1).padStart(2, "0") });
   const { data: blockedDates } = useQuery<BlockedDates>(
     ["blocked-dates", year, month],
     async () => {
@@ -60,6 +61,8 @@ export const Calendar = ({ onDateSelected, selectedDate }: CalendarProps) => {
   const currentMonth = currentDate.format("MMMM");
   const currentYear = currentDate.format("YYYY");
   const calendarWeeks = useMemo(() => {
+    console.log(currentDate.daysInMonth());
+    console.log({ blockedDates });
     if (!blockedDates) {
       return [];
     }
@@ -91,8 +94,8 @@ export const Calendar = ({ onDateSelected, selectedDate }: CalendarProps) => {
         date,
         disabled:
           date.endOf("day").isBefore(new Date()) ||
-          blockedDates.blockedWeekDays.includes(date.get("day")) || 
-          blockedDates.blockedDates.includes(date.get("date"))
+          blockedDates.blockedWeekDays.includes(date.get("day")) ||
+          blockedDates.blockedDates.includes(date.get("date")),
       })),
       ...nextMonthFillArray.map((date) => ({ date, disabled: true })),
     ];
@@ -124,6 +127,7 @@ export const Calendar = ({ onDateSelected, selectedDate }: CalendarProps) => {
 
     setCurrentDate(nextMonthDate);
   };
+  console.log({ calendarWeeks });
 
   return (
     <CalendarContainer>
