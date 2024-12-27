@@ -37,12 +37,11 @@ export default function Painel() {
   };
   return (
     <>
-      <Header onOpenNewTransactionModal={handleOpenNewTransactionModal} />
       <NewTrasactionModal
         isOpen={isNewTrasactionModalOpen}
         onRequestClose={handleCloseNewTransactionModal}
       />
-      <Dashboard />
+      <Dashboard onOpenNewTransactionModal={handleOpenNewTransactionModal} />
     </>
   );
 }

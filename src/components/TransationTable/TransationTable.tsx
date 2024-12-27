@@ -7,7 +7,11 @@ import { Table } from "../Table/Table";
 import { TransactionModal } from "../TransactionModal/TransactionModal";
 import styles from "./styles.module.scss";
 
-export const TransationTable = () => {
+export const TransationTable = ({
+  onOpenNewTransactionModal,
+}: {
+  onOpenNewTransactionModal: () => void;
+}) => {
   const [onTransactionModal, setOnTransactionModal] = useState(false);
   const [transaction, setTransaction] = useState<ITransaction>(
     {} as ITransaction
@@ -25,7 +29,10 @@ export const TransationTable = () => {
   return (
     <>
       <div className={styles.container}>
-        <Table handleTransaction={handleTransaction} />
+        <Table
+          handleTransaction={handleTransaction}
+          onOpenNewTransactionModal={onOpenNewTransactionModal}
+        />
         <CardMobile handleTransaction={handleTransaction} />
       </div>
       <TransactionModal
