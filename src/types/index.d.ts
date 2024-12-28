@@ -17,3 +17,11 @@ export interface IValuesTransactionModal {
   description: string;
   type: boolean;
 }
+
+interface IServices {
+  userId: string;
+  name: string;
+  description: any;
+  price: number;
+  porcentagem: any;
+}

@@ -5,43 +5,49 @@ import {
   Paper,
   TextField,
 } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import styles from "@/styles/global.module.scss";
+import { useEffect, useState } from "react";
+import { DataGrid } from "@mui/x-data-grid";
 import { Add, Search } from "@mui/icons-material";
-import { useDataTableContext } from "@/hooks/useDataTable";
-import { TransactionModal } from "../TransactionModal/TransactionModal";
-import { useState } from "react";
-import styles from "./styles.module.scss";
 import { columns } from "./columns";
-import { ITransaction } from "@/types";
+import { IServices } from "@/types";
+import { services } from "@/services/services";
 
-export const Table = () => {
-  const {
-    lisTransation,
-    onOpenNewTransactionModal,
-    isLoading,
-    params,
-    total,
-    setParams,
-  } = useDataTableContext();
-  const [onTransactionModal, setOnTransactionModal] = useState(false);
+export const TableServices = () => {
+  const [onModal, setOnModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [total, setTotal] = useState(0);
+  const [params, setParams] = useState({ per_page: 10, page: 1, search: "" });
+
+  const [listServices, setListServices] = useState<IServices[]>([]);
   const [openSearchTerm, setOpenSearchTerm] = useState(false);
-  const [transaction, setTransaction] = useState<ITransaction>(
-    {} as ITransaction
-  );
+  const [service, setService] = useState<IServices>({} as IServices);
   const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(
     null
   ); // Armazena o timeout do debounce
+
+  const getData = async () => {
+    setIsLoading(true);
+    const response = await services.getListServices(params);
+    setIsLoading(false);
+
+    if (response.status === 200) {
+      setTotal(response.data.total);
+      setListServices(response.data.data);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, [params]);
   const [searchTerm, setSearchTerm] = useState(""); // Armazena o termo de pesquisa
 
-  const handleTransaction = (item: ITransaction) => {
-    if (item.description === "" && item.price === 0 && item.title === "") {
-      return;
-    }
-    setOnTransactionModal(true);
-    setTransaction(item);
+  const handleServices = (item: IServices) => {
+    setOnModal(true);
+    setService(item);
   };
   const onCloseModal = () => {
-    setOnTransactionModal(false);
+    setOnModal(false);
   };
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -69,12 +75,12 @@ export const Table = () => {
           Pesquisar
         </Button>
         <Button
-          onClick={onOpenNewTransactionModal}
+          onClick={onCloseModal}
           color="success"
           startIcon={<Add />}
           variant="contained"
         >
-          Nova Transação
+          Novo Serviço
         </Button>
       </div>
       <Collapse in={openSearchTerm}>
@@ -106,12 +112,12 @@ export const Table = () => {
           <></>
         )}
         <DataGrid
-          rows={lisTransation}
+          rows={listServices}
           columns={columns}
           disableAutosize
           disableColumnSelector
           onRowClick={({ row }) => {
-            handleTransaction(row);
+            handleServices(row);
           }}
           paginationMode="server"
           density="compact"
@@ -136,12 +142,6 @@ export const Table = () => {
           sx={{ border: 0 }}
         />
       </Paper>
-
-      <TransactionModal
-        isOpen={onTransactionModal}
-        setModal={onCloseModal}
-        transaction={transaction}
-      />
     </>
   );
 };

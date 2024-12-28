@@ -1,5 +1,5 @@
-import { ITransaction } from "@/interface/interfaces";
 import { transaction } from "@/services/transaction";
+import { ITransaction } from "@/types";
 import {
   createContext,
   Dispatch,

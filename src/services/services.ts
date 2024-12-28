@@ -1,4 +1,4 @@
-import { IValuesTransactionModal } from "@/types";
+import { IServices } from "@/types";
 import { api } from "./api";
 interface IParams {
   per_page: number;
@@ -6,20 +6,20 @@ interface IParams {
   search: string;
 }
 
-export const transaction = {
-  getListTransaction: async (params: IParams) => {
+export const services = {
+  getListServices: async (params: IParams) => {
     return await api
-      .get("/transction/listtrasaction", { params })
+      .get("/transction/list-services", { params })
       .then((item) => {
         return item;
       });
   },
-  createTransaction: async (data: IValuesTransactionModal) => {
+  createServices: async (data: IServices) => {
     return await api
-      .post("/transction/newtransaction", data)
+      .post("/transction/create-service", data)
       .then((item) => item);
   },
-  deleteTransaction: async (id: string) => {
+  deleteServices: async (id: string) => {
     return await api
       .delete(`/transction/deletetransaction/${id}`)
       .then((item) => {

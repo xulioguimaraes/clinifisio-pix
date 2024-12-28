@@ -1,5 +1,4 @@
 import React, { FormEvent, useEffect, useState } from "react";
-import { ITransaction } from "../../interface/interfaces";
 
 import styles from "./styles.module.scss";
 import { Modal } from "../Modal/Modal";
@@ -14,6 +13,7 @@ import {
 import { transaction as transactionservice } from "@/services/transaction";
 import { useDataTableContext } from "@/hooks/useDataTable";
 import { useToastContext } from "@/hooks/useToast";
+import { ITransaction } from "@/types";
 
 interface ITransactionModal {
   isOpen: boolean;

@@ -1,4 +1,4 @@
-import { ITable, ITransaction } from "../../interface/interfaces";
+import { ITable, ITransaction } from "@/types";
 import { queryClient } from "../../services/queryClient";
 import styles from "./styles.module.scss";
 export const CardMobile = ({ handleTransaction }: ITable) => {

@@ -1,5 +1,4 @@
 import { FormEvent, useState } from "react";
-import { IValuesTransactionModal } from "../../interface/interfaces";
 import styles from "./styles.module.scss";
 import { transaction } from "@/services/transaction";
 
@@ -7,6 +6,7 @@ import { Box, Button, CircularProgress, TextField } from "@mui/material";
 import { useDataTableContext } from "@/hooks/useDataTable";
 import { Modal } from "../Modal/Modal";
 import { useToastContext } from "@/hooks/useToast";
+import { IValuesTransactionModal } from "@/types";
 interface Props {
   isOpen: boolean;
   onRequestClose: () => void;
