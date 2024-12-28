@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { transaction as transactionservice } from "@/services/transaction";
 import { useDataTableContext } from "@/hooks/useDataTable";
+import { useToastContext } from "@/hooks/useToast";
 
 interface ITransactionModal {
   isOpen: boolean;
@@ -40,6 +41,7 @@ export const TransactionModal = ({
   const [error, setError] = useState(false);
   const [open, setOpen] = useState(false);
   const { params, setParams } = useDataTableContext();
+  const toast = useToastContext();
   const handleClick = () => {
     setOpen(true);
   };
@@ -72,7 +74,7 @@ export const TransactionModal = ({
 
       const copyParams = { ...params };
       setParams(copyParams);
-      handleClick();
+      toast.success("Transação excluida com sucesso");
       onRequestClose();
     } catch (error: any) {
       //falta implementar um hook para o toast para se usar em todos os lugares do projeto
@@ -171,21 +173,6 @@ export const TransactionModal = ({
           </div>
         </form>
       </Modal>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        open={open}
-        autoHideDuration={6000}
-        onClose={handleClose}
-      >
-        <Alert
-          onClose={handleClose}
-          severity="success"
-          variant="filled"
-          sx={{ width: "100%" }}
-        >
-          Transação excluida com sucesso
-        </Alert>
-      </Snackbar>
     </>
   );
 };

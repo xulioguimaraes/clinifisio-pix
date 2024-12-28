@@ -14,6 +14,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { Header } from "@/components/Header/Header";
 import { useRouter } from "next/router";
+import { ToastProvider } from "@/hooks/useToast";
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
@@ -40,17 +41,19 @@ export default function App({
         <QueryClientProvider client={queryClient}>
           <SessionProvider session={session}>
             <AuthProvider>
-              <CssBaseline />
-              <DefaultSeo
-                openGraph={{
-                  type: "website",
-                  locale: "pt_BR",
-                  url: "https://www.urldaaplicação.ie/",
-                  siteName: "CALL",
-                }}
-              />
-              {!routerNoShowMenu.includes(router.pathname) && <Header />}
-              <Component {...pageProps} />
+              <ToastProvider>
+                <CssBaseline />
+                <DefaultSeo
+                  openGraph={{
+                    type: "website",
+                    locale: "pt_BR",
+                    url: "https://www.urldaaplicação.ie/",
+                    siteName: "CALL",
+                  }}
+                />
+                {!routerNoShowMenu.includes(router.pathname) && <Header />}
+                <Component {...pageProps} />
+              </ToastProvider>
             </AuthProvider>
           </SessionProvider>
         </QueryClientProvider>

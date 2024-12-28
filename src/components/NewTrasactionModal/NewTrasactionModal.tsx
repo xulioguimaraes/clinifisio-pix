@@ -1,21 +1,12 @@
 import { FormEvent, useState } from "react";
-import ReactModal from "react-modal";
 import { IValuesTransactionModal } from "../../interface/interfaces";
-import { Spinner } from "../Spinner/Spinner";
 import styles from "./styles.module.scss";
 import { transaction } from "@/services/transaction";
 
-import {
-  Alert,
-  Box,
-  Button,
-  CircularProgress,
-  Snackbar,
-  SnackbarCloseReason,
-  TextField,
-} from "@mui/material";
+import { Box, Button, CircularProgress, TextField } from "@mui/material";
 import { useDataTableContext } from "@/hooks/useDataTable";
 import { Modal } from "../Modal/Modal";
+import { useToastContext } from "@/hooks/useToast";
 interface Props {
   isOpen: boolean;
   onRequestClose: () => void;
@@ -41,22 +32,10 @@ export const NewTrasactionModal = () => {
   const [error, setError] = useState(false);
   const [valueIsEmpty, setValueIsEmpty] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [open, setOpen] = useState(false);
+
+  const toast = useToastContext();
   const [isLoading, setIsLoading] = useState(false);
-  const handleClick = () => {
-    setOpen(true);
-  };
 
-  const handleClose = (
-    event?: React.SyntheticEvent | Event,
-    reason?: SnackbarCloseReason
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
   const handleCreateNewTransaction = async (e: FormEvent) => {
     e.preventDefault();
     if (values.title === "" || values.price === "") {
@@ -80,7 +59,7 @@ export const NewTrasactionModal = () => {
       setParams(copyParams);
       setValues(initialValues);
       closeSpinner();
-      handleClick();
+      toast.success("Transação cadastrada com sucesso");
       return onRequestClose();
     }
     return setError(true);
@@ -188,22 +167,6 @@ export const NewTrasactionModal = () => {
           </Button>
         </Box>
       </Modal>
-
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        open={open}
-        autoHideDuration={6000}
-        onClose={handleClose}
-      >
-        <Alert
-          onClose={handleClose}
-          severity="success"
-          variant="filled"
-          sx={{ width: "100%" }}
-        >
-          Transação cadastrada com sucesso
-        </Alert>
-      </Snackbar>
     </>
   );
 };
