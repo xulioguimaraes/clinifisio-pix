@@ -40,8 +40,14 @@ const columns: GridColDef[] = [
   },
 ];
 export const Table = () => {
-  const { lisTransation, onOpenNewTransactionModal, isLoading } =
-    useDataTableContext();
+  const {
+    lisTransation,
+    onOpenNewTransactionModal,
+    isLoading,
+    params,
+    total,
+    setParams,
+  } = useDataTableContext();
   const [onTransactionModal, setOnTransactionModal] = useState(false);
   const [transaction, setTransaction] = useState<ITransaction>(
     {} as ITransaction
@@ -68,7 +74,13 @@ export const Table = () => {
           Nova Transação
         </Button>
       </div>
-      <Paper sx={{ height: 400, width: "100%", position: "relative" }}>
+      <Paper
+        sx={{
+          height: 450,
+          width: "100%",
+          position: "relative",
+        }}
+      >
         {isLoading ? (
           <>
             <div className={styles.desfocado}></div>
@@ -87,10 +99,26 @@ export const Table = () => {
           onRowClick={({ row }) => {
             handleTransaction(row);
           }}
+          paginationMode="server"
           density="compact"
           disableColumnResize
-          initialState={{ pagination: { paginationModel } }}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                page: params.page -1,
+                pageSize: params.per_page,
+              },
+            },
+          }}
+          rowCount={total}
           pageSizeOptions={[10, 20, 30, 50, 100]}
+          onPaginationModelChange={(row) => {
+            setParams((old) => ({
+              ...old,
+              per_page: row.pageSize,
+              page: row.page + 1,
+            }));
+          }}
           sx={{ border: 0 }}
         />
       </Paper>

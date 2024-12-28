@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { supabase } from "../../services/supabase";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { buildNextAuthOption } from "./auth/[...nextauth].api";
@@ -18,16 +17,36 @@ export default async function get(
   }
   if (request.method === "GET") {
     try {
+      const { page = 1, per_page = 10 } = request.query;
+
+      const pageInt = parseInt(page as string, 10);
+      const limitInt = parseInt(per_page as string, 10);
+
+      const skip = (pageInt - 1) * limitInt;
+
       const transactions = await prisma.transation.findMany({
         orderBy: {
-          createdAt: "desc", // Certifique-se de ter uma coluna `created_at` no banco de dados
+          createdAt: "desc", // Ordena pela data de criação
         },
+        where: {
+          userId: session.user.id, // Filtro por ID do usuário
+        },
+        skip: skip, // Pula os registros anteriores para a página
+        take: limitInt, // Limita o número de resultados por página
+      });
+
+      const totalTransactions = await prisma.transation.count({
         where: {
           userId: session.user.id,
         },
       });
 
-      return response.status(200).json(transactions);
+      return response.status(200).json({
+        data: transactions,
+        total_pages: Math.ceil(totalTransactions / limitInt), // Total de páginas
+        current_page: pageInt, // Página atual
+        total: totalTransactions, // Total de itens
+      });
     } catch (error) {
       console.error("Error fetching transactions:", error);
       return response

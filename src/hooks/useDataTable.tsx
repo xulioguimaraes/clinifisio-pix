@@ -8,14 +8,19 @@ import {
   useEffect,
   useState,
 } from "react";
+interface IParams {
+  per_page: number;
+  page: number;
+}
 interface DataTableContextType {
   lisTransation: ITransaction[];
-  setParams: Dispatch<SetStateAction<{}>>;
-  params: {};
+  setParams: Dispatch<SetStateAction<IParams>>;
+  params: IParams;
   onOpenNewTransactionModal: () => void;
   onCloseNewTransactionModal: () => void;
   isNewTrasactionModalOpen: boolean;
   isLoading: boolean;
+  total: number;
 }
 
 const DataTableContext = createContext<DataTableContextType>(
@@ -31,16 +36,18 @@ export const DataTableProvider = ({
 }) => {
   const [lisTransation, setListTransation] = useState<ITransaction[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [params, setParams] = useState({});
+  const [params, setParams] = useState({ per_page: 10, page: 1 });
+  const [total, setTotal] = useState(0);
   const [isNewTrasactionModalOpen, setIsNewTrasactionModalOpen] =
     useState(false);
   const getData = async () => {
     setIsLoading(true);
-    const response = await transaction.getListTransaction();
+    const response = await transaction.getListTransaction(params);
     setIsLoading(false);
 
     if (response.status === 200) {
-      setListTransation(response.data);
+      setTotal(response.data.total);
+      setListTransation(response.data.data);
     }
   };
   const handleOpenNewTransactionModal = () => {
@@ -62,6 +69,7 @@ export const DataTableProvider = ({
         onCloseNewTransactionModal: handleCloseNewTransactionModal,
         isNewTrasactionModalOpen,
         isLoading,
+        total,
       }}
     >
       {children}
