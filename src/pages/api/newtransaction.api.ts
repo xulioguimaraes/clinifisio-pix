@@ -1,20 +1,25 @@
 import { prisma } from "@/lib/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getServerSession } from "next-auth";
+import { buildNextAuthOption } from "./auth/[...nextauth].api";
 
 export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
+  const session = await getServerSession(
+    request,
+    response,
+    buildNextAuthOption(request, response)
+  );
+  if (!session) {
+    return response.status(401).json({ error: "Unauthorized" });
+  }
   if (request.method === "POST") {
     try {
-      const { userId, accountId, title, price, description, type } =
-        request.body;
-      console.log(!userId || !title || price == null || type == null);
-      console.log(userId);
-      console.log(title);
-      console.log(price);
-      console.log(type);
-      if (!userId || !title || price == null || type == null) {
+      const { title, price, description, type } = request.body;
+
+      if (!title || price == null || type == null) {
         return response.status(400).json({
           error: "Missing required fields: userId, title, price, or type.",
         });
@@ -23,7 +28,7 @@ export default async function handler(
       // Criando uma nova transação
       const transaction = await prisma.transation.create({
         data: {
-          userId: userId, // Associando a um usuário
+          userId: session.user.id, // Associando a um usuário
           title: String(title),
           price: Number(price),
           description: description ? String(description) : null,

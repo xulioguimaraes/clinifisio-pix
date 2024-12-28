@@ -1,16 +1,14 @@
 import { Summary } from "../Summary/Summary";
-import { TransationTable } from "../TransationTable/TransationTable";
+import { Table } from "../Table/Table";
 import styles from "./styles.module.scss";
 
-export const Dashboard = ({
-  onOpenNewTransactionModal,
-}: {
-  onOpenNewTransactionModal: () => void;
-}) => {
+export const Dashboard = () => {
   return (
     <main className={styles.container}>
       <Summary />
-      <TransationTable onOpenNewTransactionModal={onOpenNewTransactionModal} />
+      <div className={styles.container}>
+        <Table />
+      </div>
     </main>
   );
 };

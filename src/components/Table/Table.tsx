@@ -1,8 +1,10 @@
 import { ITable, ITransaction } from "../../interface/interfaces";
-import { queryClient } from "../../services/queryClient";
 import { Button, Paper } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Add } from "@mui/icons-material";
+import { useDataTableContext } from "@/hooks/useDataTable";
+import { TransactionModal } from "../TransactionModal/TransactionModal";
+import { useState } from "react";
 
 const paginationModel = { page: 0, pageSize: 5 };
 const columns: GridColDef[] = [
@@ -37,12 +39,22 @@ const columns: GridColDef[] = [
     flex: 1,
   },
 ];
-export const Table = ({
-  handleTransaction,
-  onOpenNewTransactionModal,
-}: ITable) => {
-  const transaction = queryClient.getQueryData<ITransaction[]>("list");
-
+export const Table = () => {
+  const { lisTransation, onOpenNewTransactionModal } = useDataTableContext();
+  const [onTransactionModal, setOnTransactionModal] = useState(false);
+  const [transaction, setTransaction] = useState<ITransaction>(
+    {} as ITransaction
+  );
+  const handleTransaction = (item: ITransaction) => {
+    if (item.description === "" && item.price === 0 && item.title === "") {
+      return;
+    }
+    setOnTransactionModal(true);
+    setTransaction(item);
+  };
+  const onCloseModal = () => {
+    setOnTransactionModal(false);
+  };
   return (
     <>
       <div className="flex justify-end mb-4">
@@ -57,7 +69,7 @@ export const Table = ({
       </div>
       <Paper sx={{ height: 400, width: "100%" }}>
         <DataGrid
-          rows={transaction}
+          rows={lisTransation}
           columns={columns}
           disableAutosize
           disableColumnSelector
@@ -71,6 +83,12 @@ export const Table = ({
           sx={{ border: 0 }}
         />
       </Paper>
+
+      <TransactionModal
+        isOpen={onTransactionModal}
+        setModal={onCloseModal}
+        transaction={transaction}
+      />
     </>
   );
 };

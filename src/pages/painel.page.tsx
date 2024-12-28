@@ -2,17 +2,15 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 import authLogin from "../services/auth/authLogin";
-import getTransaction from "../services/getTransaction";
 import { supabase } from "../services/supabase";
 import { Header } from "@/components/Header/Header";
 import { NewTrasactionModal } from "@/components/NewTrasactionModal/NewTrasactionModal";
 import { Dashboard } from "@/components/Dashboard/Dashboard";
+import { DataTableProvider } from "@/hooks/useDataTable";
 
 export default function Painel() {
   const router = useRouter();
-  const [isNewTrasactionModalOpen, setIsNewTrasactionModalOpen] =
-    useState(false);
-  getTransaction();
+
   const handleLogin = async () => {
     const {
       data: { session },
@@ -29,19 +27,10 @@ export default function Painel() {
     handleLogin();
   }, []);
 
-  const handleOpenNewTransactionModal = () => {
-    setIsNewTrasactionModalOpen(true);
-  };
-  const handleCloseNewTransactionModal = () => {
-    setIsNewTrasactionModalOpen(false);
-  };
   return (
-    <>
-      <NewTrasactionModal
-        isOpen={isNewTrasactionModalOpen}
-        onRequestClose={handleCloseNewTransactionModal}
-      />
-      <Dashboard onOpenNewTransactionModal={handleOpenNewTransactionModal} />
-    </>
+    <DataTableProvider>
+      <NewTrasactionModal />
+      <Dashboard />
+    </DataTableProvider>
   );
 }

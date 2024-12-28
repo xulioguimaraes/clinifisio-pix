@@ -13,7 +13,7 @@ export const CardMobile = ({ handleTransaction }: ITable) => {
       {transaction?.map((item) => {
         return (
           <div key={item.id} onClick={() => handleTransaction(item)}>
-            <h3>{item.title}</h3>
+            <h3>{item?.title}</h3>
             <h1 className={item.type ? styles.deposit : styles.withraw}>
               {item.type ? "" : `- `}
               {new Intl.NumberFormat("pt-BR", {

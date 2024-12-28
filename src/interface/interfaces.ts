@@ -8,7 +8,7 @@ export interface ITransaction {
 }
 export interface ITable {
   handleTransaction: (e: ITransaction) => void;
-  onOpenNewTransactionModal: () => void;
+  onOpenNewTransactionModal?: () => void;
 }
 export interface IValuesTransactionModal {
   id?: Number;

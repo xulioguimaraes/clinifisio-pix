@@ -8,6 +8,7 @@ export function buildNextAuthOption(
 ): NextAuthOptions {
   return {
     adapter: PrismaAdapter(req, res),
+    secret: process.env.NEXT_AUTH_SECRET,
     // Configure one or more authentication providers
     providers: [
       GoogleProvider({
@@ -48,6 +49,12 @@ export function buildNextAuthOption(
           ...session,
           user,
         };
+      },
+      async jwt({ token, user }) {
+        if (user) {
+          token.id = user.id;
+        }
+        return token;
       },
     },
   };

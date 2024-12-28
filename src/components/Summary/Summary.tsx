@@ -1,15 +1,14 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import { ITransaction } from "../../interface/interfaces";
 import getDateTransaction from "../../services/getDateTransaction";
-import { queryClient } from "../../services/queryClient";
 import styles from "./styles.module.scss";
+import { useDataTableContext } from "@/hooks/useDataTable";
 interface IGetDateTransaction {
   dateTypeFalse: { created_at: string };
   dateTypeTrue: { created_at: string };
 }
 export const Summary = () => {
-  const prev = queryClient.getQueryData<ITransaction[]>("list");
+  const { lisTransation } = useDataTableContext();
   const [entrada, setEntrada] = useState("R$ 0");
   const [saida, setSaida] = useState("R$ 0");
   const [total, setTotal] = useState(0);
@@ -19,10 +18,10 @@ export const Summary = () => {
   });
 
   useEffect(() => {
-    if (prev?.length > 0) {
+    if (lisTransation?.length > 0) {
       let inValue = 0,
         outValue = 0;
-      prev.forEach((item) => {
+      lisTransation.forEach((item) => {
         if (item.type) {
           return (inValue = inValue + item.price);
         }
@@ -41,17 +40,17 @@ export const Summary = () => {
       setSaida(out);
       setTotal((inValue - outValue) / 100);
     }
-  }, [prev]);
+  }, [lisTransation]);
   useEffect(() => {
-    if (prev?.length === 0) {
+    if (lisTransation?.length === 0) {
       setEntrada("R$ 0");
       setSaida("R$ 0");
       setTotal(0);
     }
-  }, [prev]);
+  }, [lisTransation]);
   useEffect(() => {
     getDateTrans();
-  }, [prev]);
+  }, [lisTransation]);
   const getDateTrans = async () => {
     const { dateTypeFalse, dateTypeTrue } =
       (await getDateTransaction()) as IGetDateTransaction;

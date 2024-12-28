@@ -1,11 +1,21 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { supabase } from "../../services/supabase";
 import { prisma } from "@/lib/prisma";
+import { getServerSession } from "next-auth";
+import { buildNextAuthOption } from "./auth/[...nextauth].api";
 
 export default async function get(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
+  const session = await getServerSession(
+    request,
+    response,
+    buildNextAuthOption(request, response)
+  );
+  if (!session) {
+    return response.status(401).json({ error: "Unauthorized" });
+  }
   if (request.method === "GET") {
     try {
       const transactions = await prisma.transation.findMany({
@@ -13,7 +23,7 @@ export default async function get(
           createdAt: "desc", // Certifique-se de ter uma coluna `created_at` no banco de dados
         },
         where: {
-          userId: "52b14745-c4bb-4cc9-b520-5f4f449e0705",
+          userId: session.user.id,
         },
       });
 
