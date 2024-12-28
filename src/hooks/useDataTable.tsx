@@ -15,6 +15,7 @@ interface DataTableContextType {
   onOpenNewTransactionModal: () => void;
   onCloseNewTransactionModal: () => void;
   isNewTrasactionModalOpen: boolean;
+  isLoading: boolean;
 }
 
 const DataTableContext = createContext<DataTableContextType>(
@@ -29,11 +30,15 @@ export const DataTableProvider = ({
   children: React.ReactNode;
 }) => {
   const [lisTransation, setListTransation] = useState<ITransaction[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [params, setParams] = useState({});
   const [isNewTrasactionModalOpen, setIsNewTrasactionModalOpen] =
     useState(false);
   const getData = async () => {
+    setIsLoading(true);
     const response = await transaction.getListTransaction();
+    setIsLoading(false);
+
     if (response.status === 200) {
       setListTransation(response.data);
     }
@@ -56,6 +61,7 @@ export const DataTableProvider = ({
         onOpenNewTransactionModal: handleOpenNewTransactionModal,
         onCloseNewTransactionModal: handleCloseNewTransactionModal,
         isNewTrasactionModalOpen,
+        isLoading,
       }}
     >
       {children}

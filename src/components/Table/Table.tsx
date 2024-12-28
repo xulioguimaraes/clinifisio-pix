@@ -1,12 +1,12 @@
 import { ITable, ITransaction } from "../../interface/interfaces";
-import { Button, Paper } from "@mui/material";
+import { Box, Button, CircularProgress, Paper } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Add } from "@mui/icons-material";
 import { useDataTableContext } from "@/hooks/useDataTable";
 import { TransactionModal } from "../TransactionModal/TransactionModal";
 import { useState } from "react";
-
-const paginationModel = { page: 0, pageSize: 5 };
+import styles from "./styles.module.scss";
+const paginationModel = { page: 0, pageSize: 10 };
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", flex: 0.5 },
   { field: "title", headerName: "Titulo", flex: 1 },
@@ -40,7 +40,8 @@ const columns: GridColDef[] = [
   },
 ];
 export const Table = () => {
-  const { lisTransation, onOpenNewTransactionModal } = useDataTableContext();
+  const { lisTransation, onOpenNewTransactionModal, isLoading } =
+    useDataTableContext();
   const [onTransactionModal, setOnTransactionModal] = useState(false);
   const [transaction, setTransaction] = useState<ITransaction>(
     {} as ITransaction
@@ -67,7 +68,17 @@ export const Table = () => {
           Nova Transação
         </Button>
       </div>
-      <Paper sx={{ height: 400, width: "100%" }}>
+      <Paper sx={{ height: 400, width: "100%", position: "relative" }}>
+        {isLoading ? (
+          <>
+            <div className={styles.desfocado}></div>
+            <div className="absolute z-20 inset-0 flex items-center justify-center">
+              <CircularProgress />
+            </div>
+          </>
+        ) : (
+          <></>
+        )}
         <DataGrid
           rows={lisTransation}
           columns={columns}
@@ -79,7 +90,7 @@ export const Table = () => {
           density="compact"
           disableColumnResize
           initialState={{ pagination: { paginationModel } }}
-          pageSizeOptions={[5, 10]}
+          pageSizeOptions={[10, 20, 30, 50, 100]}
           sx={{ border: 0 }}
         />
       </Paper>

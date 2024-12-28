@@ -10,4 +10,9 @@ export const transaction = {
   createTransaction: async (data: IValuesTransactionModal) => {
     return await api.post("/newtransaction", data).then((item) => item);
   },
+  deleteTransaction: async (id: string) => {
+    return await api.delete(`/deletetransaction/${id}`).then((item) => {
+      return item;
+    });
+  },
 };
