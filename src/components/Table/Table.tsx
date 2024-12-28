@@ -1,19 +1,25 @@
-import { ITable, ITransaction } from "../../interface/interfaces";
-import { Box, Button, CircularProgress, Paper } from "@mui/material";
+import { ITransaction } from "../../interface/interfaces";
+import {
+  Button,
+  CircularProgress,
+  Collapse,
+  Paper,
+  TextField,
+} from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { Add } from "@mui/icons-material";
+import { Add, Search } from "@mui/icons-material";
 import { useDataTableContext } from "@/hooks/useDataTable";
 import { TransactionModal } from "../TransactionModal/TransactionModal";
 import { useState } from "react";
 import styles from "./styles.module.scss";
-const paginationModel = { page: 0, pageSize: 10 };
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", flex: 0.5 },
   { field: "title", headerName: "Titulo", flex: 1 },
   {
     field: "price",
     headerName: "Valor",
-    flex: 1,
+    flex: 0.5,
+    type: "number",
     renderCell: ({ row }) => {
       return (
         <>
@@ -35,8 +41,8 @@ const columns: GridColDef[] = [
   {
     field: "description",
     headerName: "Descrição",
-    type: "number",
-    flex: 1,
+
+    flex: 2,
   },
 ];
 export const Table = () => {
@@ -49,9 +55,15 @@ export const Table = () => {
     setParams,
   } = useDataTableContext();
   const [onTransactionModal, setOnTransactionModal] = useState(false);
+  const [openSearchTerm, setOpenSearchTerm] = useState(false);
   const [transaction, setTransaction] = useState<ITransaction>(
     {} as ITransaction
   );
+  const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(
+    null
+  ); // Armazena o timeout do debounce
+  const [searchTerm, setSearchTerm] = useState(""); // Armazena o termo de pesquisa
+
   const handleTransaction = (item: ITransaction) => {
     if (item.description === "" && item.price === 0 && item.title === "") {
       return;
@@ -62,9 +74,31 @@ export const Table = () => {
   const onCloseModal = () => {
     setOnTransactionModal(false);
   };
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setSearchTerm(value);
+
+    if (debounceTimeout) {
+      clearTimeout(debounceTimeout);
+    }
+
+    const timeout = setTimeout(() => {
+      setParams((old) => ({ ...old, search: value, per_page: 10, page: 1 }));
+    }, 1000); // 500ms de delay
+
+    setDebounceTimeout(timeout);
+  };
   return (
     <>
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-end mb-4 gap-2">
+        <Button
+          onClick={() => setOpenSearchTerm(!openSearchTerm)}
+          color="primary"
+          startIcon={<Search />}
+          variant="contained"
+        >
+          Pesquisar
+        </Button>
         <Button
           onClick={onOpenNewTransactionModal}
           color="success"
@@ -74,6 +108,17 @@ export const Table = () => {
           Nova Transação
         </Button>
       </div>
+      <Collapse in={openSearchTerm}>
+        <TextField
+          fullWidth
+          focused
+          className="mb-4"
+          placeholder="Digite o que deseja pesquisar"
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
+      </Collapse>
+
       <Paper
         sx={{
           height: 450,
@@ -105,7 +150,7 @@ export const Table = () => {
           initialState={{
             pagination: {
               paginationModel: {
-                page: params.page -1,
+                page: params.page - 1,
                 pageSize: params.per_page,
               },
             },

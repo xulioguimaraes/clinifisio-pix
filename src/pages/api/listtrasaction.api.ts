@@ -17,20 +17,28 @@ export default async function get(
   }
   if (request.method === "GET") {
     try {
-      const { page = 1, per_page = 10 } = request.query;
+      const { page = 1, per_page = 10, search = "" } = request.query;
 
       const pageInt = parseInt(page as string, 10);
       const limitInt = parseInt(per_page as string, 10);
 
       const skip = (pageInt - 1) * limitInt;
+      const whereClause: any = {
+        userId: session.user.id, // Filtro por ID do usuário
+      };
+
+      if (search) {
+        whereClause.OR = [
+          { description: { contains: search, mode: "insensitive" } }, // Exemplo de pesquisa por descrição
+          { title: { contains: search, mode: "insensitive" } }, // Exemplo de pesquisa por título
+        ];
+      }
 
       const transactions = await prisma.transation.findMany({
         orderBy: {
           createdAt: "desc", // Ordena pela data de criação
         },
-        where: {
-          userId: session.user.id, // Filtro por ID do usuário
-        },
+        where: whereClause,
         skip: skip, // Pula os registros anteriores para a página
         take: limitInt, // Limita o número de resultados por página
       });

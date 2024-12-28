@@ -11,6 +11,7 @@ import {
 interface IParams {
   per_page: number;
   page: number;
+  search: string;
 }
 interface DataTableContextType {
   lisTransation: ITransaction[];
@@ -36,7 +37,7 @@ export const DataTableProvider = ({
 }) => {
   const [lisTransation, setListTransation] = useState<ITransaction[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [params, setParams] = useState({ per_page: 10, page: 1 });
+  const [params, setParams] = useState({ per_page: 10, page: 1, search: "" });
   const [total, setTotal] = useState(0);
   const [isNewTrasactionModalOpen, setIsNewTrasactionModalOpen] =
     useState(false);

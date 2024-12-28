@@ -4,8 +4,8 @@ import getDateTransaction from "../../services/getDateTransaction";
 import styles from "./styles.module.scss";
 import { useDataTableContext } from "@/hooks/useDataTable";
 interface IGetDateTransaction {
-  dateTypeFalse: { created_at: string };
-  dateTypeTrue: { created_at: string };
+  dateTypeFalse: { createdAt: string };
+  dateTypeTrue: { createdAt: string };
 }
 export const Summary = () => {
   const { lisTransation } = useDataTableContext();
@@ -55,11 +55,11 @@ export const Summary = () => {
     const { dateTypeFalse, dateTypeTrue } =
       (await getDateTransaction()) as IGetDateTransaction;
     setdateTransaction({
-      entry: new Date(dateTypeTrue?.created_at).toLocaleDateString("pt-BR", {
+      entry: new Date(dateTypeTrue?.createdAt).toLocaleDateString("pt-BR", {
         day: "2-digit",
         month: "long",
       }),
-      withdrawal: new Date(dateTypeFalse?.created_at).toLocaleDateString(
+      withdrawal: new Date(dateTypeFalse?.createdAt).toLocaleDateString(
         "pt-BR",
         {
           day: "2-digit",

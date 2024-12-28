@@ -3,6 +3,7 @@ import { api } from "./api";
 interface IParams {
   per_page: number;
   page: number;
+  search: string;
 }
 
 export const transaction = {
