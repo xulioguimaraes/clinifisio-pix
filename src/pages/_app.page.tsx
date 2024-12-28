@@ -51,8 +51,10 @@ export default function App({
                     siteName: "CALL",
                   }}
                 />
-                {!routerNoShowMenu.includes(router.pathname) && <Header />}
-                <Component {...pageProps} />
+                <div className="max-w-screen-lg mx-auto my-0">
+                  {!routerNoShowMenu.includes(router.pathname) && <Header />}
+                  <Component {...pageProps} />
+                </div>
               </ToastProvider>
             </AuthProvider>
           </SessionProvider>

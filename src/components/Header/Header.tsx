@@ -1,21 +1,8 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
-import styles from "./styles.module.scss";
+import { Button, Divider, Drawer } from "@mui/material";
 
 import { IoMdMenu } from "react-icons/io";
 import { useState } from "react";
-import { Mail } from "@mui/icons-material";
 import { MenuHeader } from "./components/MenuHeader";
-
 
 export const Header = () => {
   const handleLogOut = async () => {};
@@ -23,16 +10,27 @@ export const Header = () => {
 
   return (
     <>
-      <header className={styles.containerHeader}>
-        <div className={styles.content}>
-          <div>
-            <Button onClick={() => setOpen(true)} color="info">
-              <IoMdMenu />
+      <header>
+        <div>
+          <div className="flex px-8 pt-8 pb-48 items-center justify-between">
+            <Button
+              size="large"
+              variant="outlined"
+              onClick={() => setOpen(true)}
+              color="info"
+            >
+              <IoMdMenu size={24} />
             </Button>
-            <button type="button" onClick={handleLogOut} className={styles.out}>
+            <Button
+              size="large"
+              variant="outlined"
+              color="error"
+              onClick={handleLogOut}
+            >
               Sair
-            </button>
+            </Button>
           </div>
+          <Divider />
         </div>
         <Drawer open={open} onClose={() => setOpen(false)}>
           <MenuHeader />
