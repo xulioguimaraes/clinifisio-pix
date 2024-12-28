@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth";
-import { buildNextAuthOption } from "../auth/[...nextauth].api";
+import { buildNextAuthOption } from "@/pages/api/auth/[...nextauth].api";
 
 const prisma = new PrismaClient();
 

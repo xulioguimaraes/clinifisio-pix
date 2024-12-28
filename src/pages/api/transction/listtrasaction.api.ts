@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
-import { buildNextAuthOption } from "./auth/[...nextauth].api";
+import { buildNextAuthOption } from "@/pages/api/auth/[...nextauth].api";
 
 export default async function get(
   request: NextApiRequest,

@@ -22,6 +22,7 @@ model User {
   timeIntervals UserTimeInterval[]
   schedulings   Scheduling[]
   transactions  Transation[]
+  services      Service[]
 
   @@map("users")
 }
@@ -97,4 +98,20 @@ model Transation {
   Account     Account? @relation(fields: [accountId], references: [id])
 
   @@map("transation")
+}
+
+model Service {
+  id          String  @id @default(uuid())
+  userId      String
+  name        String
+  description String?
+  price       Decimal @default(0.0)
+  porcentagem Decimal @default(0.0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("services")
 }
