@@ -90,7 +90,7 @@ export const Table = () => {
   };
   return (
     <>
-      <div className="flex justify-end mb-4 mt-8 gap-2">
+      <div className="flex justify-end my-4 gap-2">
         <Button
           onClick={() => setOpenSearchTerm(!openSearchTerm)}
           color="primary"

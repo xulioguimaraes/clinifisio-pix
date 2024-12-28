@@ -11,8 +11,8 @@ export const Header = () => {
   return (
     <>
       <header>
-        <div>
-          <div className="flex px-8 pt-8 pb-48 items-center justify-between">
+        <div className="mb-4">
+          <div className="flex px-8 pt-8 pb-4 items-center justify-between">
             <Button
               size="large"
               variant="outlined"

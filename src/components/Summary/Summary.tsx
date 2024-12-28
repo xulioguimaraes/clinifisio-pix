@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import getDateTransaction from "../../services/getDateTransaction";
 import styles from "./styles.module.scss";
 import { useDataTableContext } from "@/hooks/useDataTable";
+import { Divider } from "@mui/material";
 interface IGetDateTransaction {
   dateTypeFalse: { createdAt: string };
   dateTypeTrue: { createdAt: string };
@@ -74,53 +75,58 @@ export const Summary = () => {
       <Head>
         <title>Painel | Clinifisio</title>
       </Head>
-      <div className={styles.container}>
-        <div>
-          <header>
-            <p>Entradas</p>
-            <img src="/images/income.svg" alt="Entradas" />
-          </header>
-          <strong className={styles.deposit}>{entrada}</strong>
-          {dateTransaction.entry === "Invalid Date" ? (
-            ""
-          ) : (
-            <>
-              <label>Ultima entrada dia {dateTransaction.entry}</label>
-            </>
-          )}
+      <div>
+        <div className={styles.container}>
+          <div>
+            <header>
+              <p>Entradas</p>
+              <img src="/images/income.svg" alt="Entradas" />
+            </header>
+            <strong className={styles.deposit}>{entrada}</strong>
+            {dateTransaction.entry === "Invalid Date" ? (
+              ""
+            ) : (
+              <>
+                <label>Ultima entrada dia {dateTransaction.entry}</label>
+              </>
+            )}
+          </div>
+          <div>
+            <header>
+              <p>Saidas</p>
+              <img src="/images/outcome.svg" alt="Saidas" />
+            </header>
+            <strong className={styles.withraw}>{saida}</strong>
+            {dateTransaction.withdrawal === "Invalid Date" ? (
+              ""
+            ) : (
+              <>
+                <label>Ultima saida dia {dateTransaction.withdrawal}</label>
+              </>
+            )}
+          </div>
+          <div
+            className={styles.total}
+            style={
+              total < 0
+                ? { background: "var(--red)", color: "var(--shape)" }
+                : {}
+            }
+          >
+            <header>
+              <p>Total</p>
+              <img src="/images/total.svg" alt="Total" />
+            </header>
+            <strong>
+              {new Intl.NumberFormat("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              }).format(total)}
+            </strong>
+            {/* <label>01 à 15 de abril</label> */}
+          </div>
         </div>
-        <div>
-          <header>
-            <p>Saidas</p>
-            <img src="/images/outcome.svg" alt="Saidas" />
-          </header>
-          <strong className={styles.withraw}>{saida}</strong>
-          {dateTransaction.withdrawal === "Invalid Date" ? (
-            ""
-          ) : (
-            <>
-              <label>Ultima saida dia {dateTransaction.withdrawal}</label>
-            </>
-          )}
-        </div>
-        <div
-          className={styles.total}
-          style={
-            total < 0 ? { background: "var(--red)", color: "var(--shape)" } : {}
-          }
-        >
-          <header>
-            <p>Total</p>
-            <img src="/images/total.svg" alt="Total" />
-          </header>
-          <strong>
-            {new Intl.NumberFormat("pt-BR", {
-              style: "currency",
-              currency: "BRL",
-            }).format(total)}
-          </strong>
-          {/* <label>01 à 15 de abril</label> */}
-        </div>
+        <Divider className="pt-4" />
       </div>
     </>
   );
