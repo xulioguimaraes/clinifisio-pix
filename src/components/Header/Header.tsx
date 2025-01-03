@@ -8,6 +8,10 @@ export const Header = () => {
   const handleLogOut = async () => {};
   const [open, setOpen] = useState(false);
 
+  const onCloseDrawer = () => {
+    setOpen(false);
+  };
+
   return (
     <>
       <header>
@@ -33,7 +37,7 @@ export const Header = () => {
           <Divider />
         </div>
         <Drawer open={open} onClose={() => setOpen(false)}>
-          <MenuHeader />
+          <MenuHeader onCloseDrawer={onCloseDrawer} />
         </Drawer>
       </header>
     </>

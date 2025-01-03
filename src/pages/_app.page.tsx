@@ -30,6 +30,7 @@ export default function App({
 
   const routerNoShowMenu = [
     "/",
+    "/login",
     "/register",
     "/connect-calendar",
     "/time-intervals",

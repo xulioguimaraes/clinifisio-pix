@@ -8,20 +8,28 @@ interface IParams {
 
 export const services = {
   getListServices: async (params: IParams) => {
-    return await api
-      .get("/transction/list-services", { params })
-      .then((item) => {
-        return item;
-      });
+    return await api.get("/services/list-services", { params }).then((item) => {
+      return item;
+    });
   },
   createServices: async (data: IServices) => {
     return await api
-      .post("/transction/create-service", data)
+      .post("/services/create-service", data)
+      .then((item) => item);
+  },
+  updateService: async (data: IServices, id: string) => {
+    return await api
+      .put(`/services/update-service/${id}`, data)
+      .then((item) => item);
+  },
+  toogleService: async (id: string) => {
+    return await api
+      .patch(`/services/toogle-service/${id}`)
       .then((item) => item);
   },
   deleteServices: async (id: string) => {
     return await api
-      .delete(`/transction/deletetransaction/${id}`)
+      .delete(`/services/deletetransaction/${id}`)
       .then((item) => {
         return item;
       });

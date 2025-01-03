@@ -19,7 +19,6 @@ export default async function handle(
     return response.status(401).json({ error: "Unauthorized" });
   }
 
-  // Extrai o ID da transação da URL
   const { id } = request.query;
 
   if (!id || typeof id !== "string") {
@@ -28,12 +27,10 @@ export default async function handle(
       .json({ error: "Invalid or missing ID parameter" });
   }
 
-  // ID do usuário autenticado
   const userId = session.user.id;
 
   if (request.method === "DELETE") {
     try {
-      // Verifica se o registro existe e pertence ao usuário
       const transaction = await prisma.transation.findFirst({
         where: {
           id: parseInt(id, 10),
@@ -47,12 +44,11 @@ export default async function handle(
           .json({ error: "Record not found or unauthorized" });
       }
 
-      // Realiza o delete
-      const deletedTransaction = await prisma.transation.delete({
+      await prisma.transation.delete({
         where: { id: transaction.id },
       });
 
-      return response.status(200).send({});
+      return response.status(200).send({ message: "Successfully deleted" });
     } catch (error) {
       console.error(error);
 

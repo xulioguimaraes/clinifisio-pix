@@ -13,7 +13,7 @@ export const dataMenu = [
     link: "",
     icon: <></>,
     children: [
-      { name: "Serviços", link: "/servicos" },
+      { name: "Serviços", link: "/services" },
       { name: "Horarios", link: "/horarios" },
       { name: "Sobre", link: "/sobre" },
     ],

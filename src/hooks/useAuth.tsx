@@ -29,9 +29,8 @@ const generateToken = (userId: string) => {
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
-  console.log(session);
   useEffect(() => {
-    if (status === "authenticated") {
+    if (status === "authenticated" && router.pathname === "/login") {
       router.push("/painel");
     }
   }, [session]);

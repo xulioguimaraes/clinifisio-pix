@@ -12,13 +12,13 @@ import { Add, Search } from "@mui/icons-material";
 import { columns } from "./columns";
 import { IServices } from "@/types";
 import { services } from "@/services/services";
+import { ModalForm } from "./components/ModalForms";
 
 export const TableServices = () => {
   const [onModal, setOnModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [total, setTotal] = useState(0);
   const [params, setParams] = useState({ per_page: 10, page: 1, search: "" });
-
   const [listServices, setListServices] = useState<IServices[]>([]);
   const [openSearchTerm, setOpenSearchTerm] = useState(false);
   const [service, setService] = useState<IServices>({} as IServices);
@@ -49,6 +49,10 @@ export const TableServices = () => {
   const onCloseModal = () => {
     setOnModal(false);
   };
+  const onOpenModal = () => {
+    setOnModal(true);
+    setService({} as IServices);
+  };
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setSearchTerm(value);
@@ -75,7 +79,7 @@ export const TableServices = () => {
           Pesquisar
         </Button>
         <Button
-          onClick={onCloseModal}
+          onClick={onOpenModal}
           color="success"
           startIcon={<Add />}
           variant="contained"
@@ -104,8 +108,9 @@ export const TableServices = () => {
         {isLoading ? (
           <>
             <div className={styles.desfocado}></div>
-            <div className="absolute z-20 inset-0 flex items-center justify-center">
+            <div className="absolute z-20 inset-0 flex flex-col items-center justify-center">
               <CircularProgress />
+              <p className="text-xs pt-8">Atualizando...</p>
             </div>
           </>
         ) : (
@@ -118,6 +123,11 @@ export const TableServices = () => {
           disableColumnSelector
           onRowClick={({ row }) => {
             handleServices(row);
+          }}
+          onCellClick={(params, event) => {
+            if (params.field === "active") {
+              event.stopPropagation();
+            }
           }}
           paginationMode="server"
           density="compact"
@@ -142,6 +152,12 @@ export const TableServices = () => {
           sx={{ border: 0 }}
         />
       </Paper>
+      <ModalForm
+        isOpen={onModal}
+        service={service}
+        onCloseModal={onCloseModal}
+        setParams={setParams}
+      />
     </>
   );
 };

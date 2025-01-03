@@ -17,7 +17,7 @@ export default async function handler(
   }
   if (request.method === "POST") {
     try {
-      const { name, price, description, porcentagem } = request.body;
+      const { name, price, description, porcentagem, active } = request.body;
 
       if (!name || price == null) {
         return response.status(400).json({
@@ -30,12 +30,13 @@ export default async function handler(
           userId: session.user.id,
           name: String(name),
           description: description,
-          price: 150.0,
+          price: price,
           porcentagem: porcentagem,
+          active,
         },
       });
 
-      return response.status(201).json({});
+      return response.status(201).json({ message: "successfully created" });
     } catch (err) {
       console.log(err);
       return response.status(500).json({ error: "Unexpected server error." });

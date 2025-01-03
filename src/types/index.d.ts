@@ -19,7 +19,7 @@ export interface IValuesTransactionModal {
 }
 
 interface IServices {
-  userId: string;
+  id?: string;
   name: string;
   description: any;
   price: number;

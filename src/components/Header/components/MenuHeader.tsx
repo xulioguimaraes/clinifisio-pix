@@ -1,6 +1,7 @@
 import { Mail } from "@mui/icons-material";
 import {
   Box,
+  Collapse,
   Divider,
   List,
   ListItem,
@@ -13,9 +14,11 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { useState } from "react";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import Link from "next/link";
 const ItemMenu = ({
   name,
   children,
+  onCloseDrawer,
 }: {
   name: string;
   link: string;
@@ -24,6 +27,7 @@ const ItemMenu = ({
     name: string;
     link: string;
   }[];
+  onCloseDrawer: () => void;
 }) => {
   const [open, setOpen] = useState(false);
   return (
@@ -43,14 +47,14 @@ const ItemMenu = ({
           {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
         </ListItemButton>
       </ListItem>
-      {open &&
-        children.map((item) => (
+      <Collapse in={open}>
+        {children.map((item) => (
           <ListItem key={item.name} disablePadding>
             <ListItemButton
+              LinkComponent={Link}
+              href={item.link}
               onClick={() => {
-                if (children.length > 0) {
-                  setOpen(!open);
-                }
+                onCloseDrawer();
               }}
             >
               <ListItemIcon className="pl-4">
@@ -60,19 +64,24 @@ const ItemMenu = ({
             </ListItemButton>
           </ListItem>
         ))}
+      </Collapse>
       <Divider />
     </>
   );
 };
 
-export const MenuHeader = ({}) => {
+export const MenuHeader = ({
+  onCloseDrawer,
+}: {
+  onCloseDrawer: () => void;
+}) => {
   return (
     <Box sx={{ width: 250 }} role="presentation">
       <div className="mt-20"></div>
       <Divider />
       <List>
         {dataMenu.map((item, index) => (
-          <ItemMenu key={item.name} {...item} />
+          <ItemMenu onCloseDrawer={onCloseDrawer} key={item.name} {...item} />
         ))}
       </List>
     </Box>
