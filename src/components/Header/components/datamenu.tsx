@@ -4,7 +4,7 @@ export const dataMenu = [
     link: "",
     icon: <></>,
     children: [
-      { name: "Categorias", link: "/categorias" },
+      { name: "Categorias", link: "/painel/categorias" },
       { name: "Transações", link: "/painel" },
     ],
   },
@@ -13,9 +13,9 @@ export const dataMenu = [
     link: "",
     icon: <></>,
     children: [
-      { name: "Serviços", link: "/services" },
-      { name: "Horarios", link: "/horarios" },
-      { name: "Sobre", link: "/sobre" },
+      { name: "Serviços", link: "/painel/services" },
+      { name: "Horarios", link: "/painel/schedules" },
+      { name: "Sobre", link: "/painel/sobre" },
     ],
   },
 ];

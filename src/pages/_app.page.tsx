@@ -33,9 +33,10 @@ export default function App({
     "/login",
     "/register",
     "/connect-calendar",
-    "/time-intervals",
+    "/register/time-intervals",
     "/update-profile",
   ];
+  console.log(routerNoShowMenu.includes(router.pathname));
   return (
     <QueryClientProviderDep client={queryClientDep}>
       <ThemeProvider theme={darkTheme}>
