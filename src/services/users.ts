@@ -6,4 +6,9 @@ export const users = {
       return item;
     });
   },
+  getServicesUser: async (username: string) => {
+    return await api.get(`/users/user-services/${username}`).then((item) => {
+      return item;
+    });
+  },
 };

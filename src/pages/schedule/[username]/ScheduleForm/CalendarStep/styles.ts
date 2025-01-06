@@ -22,7 +22,6 @@ export const Container = styled(Box, {
     },
   },
   // gridTemplateColumns: "1fr 280px",
-
 });
 
 export const TimePicker = styled("div", {
@@ -33,8 +32,8 @@ export const TimePicker = styled("div", {
   top: 0,
   bottom: 0,
   right: 0,
-  
-  width: "280px",
+  background: "#202024",
+
 });
 export const TimePickerHeader = styled(Text, {
   fontWeight: "$medium",

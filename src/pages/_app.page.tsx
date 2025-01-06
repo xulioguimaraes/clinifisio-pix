@@ -34,8 +34,12 @@ export default function App({
     "/connect-calendar",
     "/register/time-intervals",
     "/update-profile",
-    "/schedule",
+    `/schedule/:username`,
   ];
+  const shouldHideHeader =
+    routerNoShowMenu.includes(router.pathname) ||
+    router.pathname.startsWith("/schedule");
+
   return (
     <QueryClientProviderDep client={queryClientDep}>
       <ThemeProvider theme={darkTheme}>
@@ -53,7 +57,7 @@ export default function App({
                   }}
                 />
                 <div className="max-w-screen-lg mx-auto my-0 ">
-                  {!routerNoShowMenu.includes(router.pathname) && <Header />}
+                  {!shouldHideHeader && <Header />}
                   <main className="px-2">
                     <Component {...pageProps} />
                   </main>

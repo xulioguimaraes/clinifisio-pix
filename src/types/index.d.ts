@@ -23,5 +23,5 @@ interface IServices {
   name: string;
   description: any;
   price: number;
-  porcentagem: any;
+  porcentagem?: any;
 }

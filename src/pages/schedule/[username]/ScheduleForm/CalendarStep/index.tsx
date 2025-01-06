@@ -11,6 +11,8 @@ import {
   TimePickerItem,
   TimePickerList,
 } from "./styles";
+import { CircularProgress } from "@mui/material";
+import { Close } from "@mui/icons-material";
 interface Availability {
   possibleTimes: number[];
   availableTimes: number[];
@@ -32,7 +34,7 @@ export const CalendarStep = ({ onSelectDateTime }: CalendarStepProps) => {
   const selectedDateWithoutTime = selectedDate
     ? dayjs(selectedDate).format("YYYY-MM-DD")
     : null;
-  const { data: availability } = useQuery<Availability>(
+  const { data: availability, isLoading } = useQuery<Availability>(
     ["availability", selectedDateWithoutTime],
     async () => {
       const response = await api.get(`/users/${username}/availability`, {
@@ -58,29 +60,48 @@ export const CalendarStep = ({ onSelectDateTime }: CalendarStepProps) => {
   const unavailableTimes = availability?.availableTimes.map((availableTime) => {
     return dayjs(availableTime).get("hour");
   });
+
   return (
     <Container isTimePickerOpen={isDateSelected}>
       <Calendar selectedDate={selectedDate} onDateSelected={setSelectedDate} />
 
       {isDateSelected && (
-        <TimePicker>
-          <TimePickerHeader>
-            {weekDay} <span>{describedDate}</span>
+        <TimePicker className="md:max-w-[280px] w-full">
+          <TimePickerHeader className="flex justify-between items-center">
+            <p>
+              {weekDay} <span>{describedDate}</span>
+            </p>
+
+            <button
+              type="button"
+              className="md:hidden"
+              onClick={() => setSelectedDate(null)}
+            >
+              <Close fontSize="medium" />
+            </button>
           </TimePickerHeader>
           <TimePickerList>
-            {availability?.possibleTimes?.map((hour) => (
-              <TimePickerItem
-                onClick={() => handleSelectTime(hour)}
-                // disabled={!availability.availableTimes.includes(hour)}
-                disabled={
-                  unavailableTimes?.includes(hour) ||
-                  dayjs(selectedDate).set("hour", hour).isBefore(new Date())
-                }
-                key={hour}
-              >
-                {String(hour).padStart(2, "0")}:00h
-              </TimePickerItem>
-            ))}
+            {isLoading ? (
+              <div className="flex w-full items-center justify-center">
+                <CircularProgress />
+              </div>
+            ) : (
+              <>
+                {availability?.possibleTimes?.map((hour) => (
+                  <TimePickerItem
+                    onClick={() => handleSelectTime(hour)}
+                    // disabled={!availability.availableTimes.includes(hour)}
+                    disabled={
+                      unavailableTimes?.includes(hour) ||
+                      dayjs(selectedDate).set("hour", hour).isBefore(new Date())
+                    }
+                    key={hour}
+                  >
+                    {String(hour).padStart(2, "0")}:00h
+                  </TimePickerItem>
+                ))}
+              </>
+            )}
           </TimePickerList>
         </TimePicker>
       )}

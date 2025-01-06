@@ -7,6 +7,7 @@ import { CalendarBlank, Clock } from "phosphor-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { ConfirmForm, FormActions, FormError, FormHeader } from "./styles";
+import { useState } from "react";
 const confirmFormSchema = z.object({
   name: z.string().min(3, {
     message: "O nome precisa no mínimo 3 caracteres",
@@ -37,6 +38,8 @@ export const ConfrimStep = ({
   });
   const router = useRouter();
   const username = String(router.query.username);
+
+  const [serviceSelect, setServiceSelect] = useState();
   const handleConfirmSheduling = async (data: ConfirmFormData) => {
     const { email, name, observations } = data;
 
@@ -44,9 +47,9 @@ export const ConfrimStep = ({
       name,
       email,
       observations,
-      date: schedulingDate
+      date: schedulingDate,
     });
-    onCancelConfitmation()
+    onCancelConfitmation();
   };
 
   const describedDate = dayjs(schedulingDate).format("DD[ de ]MMMM[ de ]YYYY");
