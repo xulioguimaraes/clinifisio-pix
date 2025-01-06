@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useState } from "react";
 import jwt from "jsonwebtoken";
+import { users } from "@/services/users";
 interface AuthContextType {}
 
 const AuthContext = createContext<AuthContextType>({
@@ -28,10 +29,17 @@ const generateToken = (userId: string) => {
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { data: session, status } = useSession();
+
+  const getUserData = async () => {
+    const response = await users.getUserData();
+
+    console.log(response.data);
+  };
   const router = useRouter();
   useEffect(() => {
     if (status === "authenticated" && router.pathname === "/login") {
       router.push("/painel");
+      getUserData();
     }
   }, [session]);
 

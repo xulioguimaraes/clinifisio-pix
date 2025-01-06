@@ -26,7 +26,6 @@ export default function App({
   pageProps: { session, ...pageProps },
 }: AppProps) {
   const router = useRouter();
-  console.log(router.pathname);
 
   const routerNoShowMenu = [
     "/",
@@ -35,8 +34,8 @@ export default function App({
     "/connect-calendar",
     "/register/time-intervals",
     "/update-profile",
+    "/schedule",
   ];
-  console.log(routerNoShowMenu.includes(router.pathname));
   return (
     <QueryClientProviderDep client={queryClientDep}>
       <ThemeProvider theme={darkTheme}>
@@ -53,9 +52,11 @@ export default function App({
                     siteName: "CALL",
                   }}
                 />
-                <div className="max-w-screen-lg mx-auto my-0">
+                <div className="max-w-screen-lg mx-auto my-0 ">
                   {!routerNoShowMenu.includes(router.pathname) && <Header />}
-                  <Component {...pageProps} />
+                  <main className="px-2">
+                    <Component {...pageProps} />
+                  </main>
                 </div>
               </ToastProvider>
             </AuthProvider>

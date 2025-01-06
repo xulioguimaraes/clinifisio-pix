@@ -2,7 +2,7 @@ import { api } from "@/lib/axios";
 import { converTimeStringToMinutes } from "@/utils/conver-time-string-to-minutes";
 import { getWeekDays } from "@/utils/get-weekdays";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Checkbox, Text } from "@ignite-ui/react";
+import { Checkbox, Text, TextInput } from "@ignite-ui/react";
 import { NextSeo } from "next-seo";
 
 import { Controller, useFieldArray, useForm } from "react-hook-form";
@@ -16,7 +16,7 @@ import {
   IntervalInput,
   IntervalItem,
 } from "./styles";
-import { Button, TextField } from "@mui/material";
+import { Button } from "@mui/material";
 
 const timeIntervalsFormSchema = z.object({
   intervals: z
@@ -164,14 +164,18 @@ export default function TimeIntervals() {
                       </IntervalDay>
 
                       <IntervalInput>
-                        <TextField
+                        <TextInput
+                          size={"sm"}
                           type="time"
+                          step={60}
                           disabled={intervals[index].enabled === false}
                           {...register(`intervals.${index}.startTime`)}
                         />
-                        <TextField
+                        <TextInput
+                          size={"sm"}
                           type="time"
                           disabled={intervals[index].enabled === false}
+                          step={60}
                           {...register(`intervals.${index}.endTime`)}
                         />
                       </IntervalInput>
