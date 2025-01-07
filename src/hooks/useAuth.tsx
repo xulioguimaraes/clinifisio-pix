@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
   const router = useRouter();
   useEffect(() => {
-    if (status === "authenticated" && router.pathname === "/login") {
+    if (status === "authenticated" && router.pathname === "/") {
       router.push("/painel");
       getUserData();
     }

@@ -14,7 +14,7 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       // Redireciona para a página de login
       if (typeof window !== "undefined") {
-        window.location.href = "/login"; // Altere a rota para a página de login
+        window.location.href = "/"; // Altere a rota para a página de login
       }
     }
 

@@ -1,5 +1,8 @@
 import { api } from "@/lib/axios";
-import { converTimeStringToMinutes } from "@/utils/conver-time-string-to-minutes";
+import {
+  converTimeStringToMinutes,
+  convertMinutesToTimeString,
+} from "@/utils/conver-time-string-to-minutes";
 import { getWeekDays } from "@/utils/get-weekdays";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Checkbox, Text, TextInput } from "@ignite-ui/react";
@@ -16,7 +19,11 @@ import {
   IntervalInput,
   IntervalItem,
 } from "./styles";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
+import { withAuth } from "@/hoc/withAuth";
+import { users } from "@/services/users";
+import { useEffect, useState } from "react";
+import { useToastContext } from "@/hooks/useToast";
 
 const timeIntervalsFormSchema = z.object({
   intervals: z
@@ -53,77 +60,119 @@ const timeIntervalsFormSchema = z.object({
     ),
 });
 
+const defaultValues = [
+  {
+    weekDay: 0,
+    enabled: false,
+    startTime: "08:00",
+    endTime: "08:00",
+  },
+  {
+    weekDay: 1,
+    enabled: false,
+    startTime: "08:00",
+    endTime: "08:00",
+  },
+  {
+    weekDay: 2,
+    enabled: false,
+    startTime: "08:00",
+    endTime: "08:00",
+  },
+  {
+    weekDay: 3,
+    enabled: false,
+    startTime: "08:00",
+    endTime: "08:00",
+  },
+  {
+    weekDay: 4,
+    enabled: false,
+    startTime: "08:00",
+    endTime: "08:00",
+  },
+  {
+    weekDay: 5,
+    enabled: false,
+    startTime: "08:00",
+    endTime: "08:00",
+  },
+  {
+    weekDay: 6,
+    enabled: false,
+    startTime: "08:00",
+    endTime: "08:00",
+  },
+];
+
+interface IIntervalResponse {
+  week_day: number;
+  time_start_in_minutes: number;
+  time_end_in_minutes: number;
+}
+
 type TimeIntervalsFormInput = z.input<typeof timeIntervalsFormSchema>;
 type TimeIntervalsFormOutput = z.output<typeof timeIntervalsFormSchema>;
 
-export default function TimeIntervals() {
+function TimeIntervals() {
   const {
     register,
     control,
     handleSubmit,
     watch,
+    setValue,
     formState: { isSubmitting, errors },
   } = useForm<TimeIntervalsFormInput>({
     resolver: zodResolver(timeIntervalsFormSchema),
     defaultValues: {
-      intervals: [
-        {
-          weekDay: 0,
-          enabled: false,
-          startTime: "08:00",
-          endTime: "08:00",
-        },
-        {
-          weekDay: 1,
-          enabled: true,
-          startTime: "08:00",
-          endTime: "08:00",
-        },
-        {
-          weekDay: 2,
-          enabled: true,
-          startTime: "08:00",
-          endTime: "08:00",
-        },
-        {
-          weekDay: 3,
-          enabled: true,
-          startTime: "08:00",
-          endTime: "08:00",
-        },
-        {
-          weekDay: 4,
-          enabled: true,
-          startTime: "08:00",
-          endTime: "08:00",
-        },
-        {
-          weekDay: 5,
-          enabled: true,
-          startTime: "08:00",
-          endTime: "08:00",
-        },
-        {
-          weekDay: 6,
-          enabled: false,
-          startTime: "08:00",
-          endTime: "08:00",
-        },
-      ],
+      intervals: defaultValues,
     },
   });
-  const { fields } = useFieldArray({
+
+  const [isLoading, setIsLoading] = useState(false);
+  const { fields, update } = useFieldArray({
     control,
     name: "intervals",
   });
 
   const weekDays = getWeekDays();
 
+  const toast = useToastContext();
   const intervals = watch("intervals");
+
+  const getTimeIntervals = async () => {
+    setIsLoading(true);
+    const response = await users.getTimeIntervals();
+    setIsLoading(false);
+    const formattedIntervals = response.data.map(
+      (interval: IIntervalResponse) => ({
+        weekDay: interval.week_day,
+        startTime: convertMinutesToTimeString(interval.time_start_in_minutes),
+        endTime: convertMinutesToTimeString(interval.time_end_in_minutes),
+        enabled: true,
+      })
+    );
+
+    const newFormattedIntervals = defaultValues.map((item) => {
+      const newInterval = formattedIntervals.find(
+        (interval: { weekDay: number }) => interval.weekDay === item.weekDay
+      );
+      if (!!newInterval) {
+        item = newInterval;
+      }
+      return item;
+    });
+    setValue("intervals", newFormattedIntervals);
+  };
+
+  useEffect(() => {
+    getTimeIntervals();
+  }, []);
 
   const handleSetTimeIntervals = async (data: any) => {
     const { intervals } = data as TimeIntervalsFormOutput;
     await api.post("/users/time-intervals", { intervals });
+    toast.success("Horaios atualizados com sucesso");
   };
   return (
     <>
@@ -154,6 +203,7 @@ export default function TimeIntervals() {
                               onCheckedChange={(checked) => {
                                 field.onChange(checked === true);
                               }}
+                              disabled={true}
                               checked={field.value}
                             />
                           );
@@ -192,9 +242,21 @@ export default function TimeIntervals() {
               variant="contained"
               color="success"
               type="submit"
-              disabled={isSubmitting}
+              sx={{
+                display: "flex",
+                gap: 2,
+                alignItems: "center",
+              }}
+              disabled={isSubmitting || isLoading}
             >
-              Salvar
+              {isLoading ? (
+                <>
+                  <CircularProgress size={20} />
+                  <p className="pr-4">Buscando Informações</p>
+                </>
+              ) : (
+                "Salvar"
+              )}
             </Button>
           </IntervalBox>
         </Header>
@@ -202,3 +264,5 @@ export default function TimeIntervals() {
     </>
   );
 }
+
+export default withAuth(TimeIntervals);

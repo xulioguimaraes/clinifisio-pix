@@ -2,17 +2,20 @@ import { Heading, Text } from "@ignite-ui/react";
 import Image from "next/image";
 import previewImage from "../../assets/home.png";
 import { NextSeo } from "next-seo";
-import { Button, Divider } from "@mui/material";
+import { Button, CircularProgress, Divider } from "@mui/material";
 import { FcGoogle } from "react-icons/fc";
 import { signIn } from "next-auth/react";
-import { withAuth } from "@/hoc/withAuth";
 import { Container, Hero, Preview } from "./styles";
 import { ClaimUsernameForm } from "./components/ClaimUsernameForm/ClaimUsernameForm";
 import { Form } from "./components/ClaimUsernameForm/styles";
+import { useState } from "react";
 
 export function Home() {
+  const [isLoading, setIsLoading] = useState(false);
   const handleConnectCalendar = async () => {
+    setIsLoading(true);
     await signIn("google");
+    setIsLoading(false);
   };
   return (
     <>
@@ -49,12 +52,18 @@ export function Home() {
             <Button
               variant="contained"
               color="primary"
+              type="button"
+              disabled={isLoading}
               onClick={handleConnectCalendar}
               sx={{
                 minWidth: "100px",
               }}
             >
-              <FcGoogle size={24} className="bg-white p-1  rounded-full" />
+              {isLoading ? (
+                <CircularProgress size={20} />
+              ) : (
+                <FcGoogle size={24} className="bg-white p-1  rounded-full" />
+              )}
             </Button>
           </Form>
         </Hero>

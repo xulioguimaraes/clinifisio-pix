@@ -1,5 +1,7 @@
+import { withAuth } from "@/hoc/withAuth";
 import { Transactions } from "@/views/Transactions";
 
-export default function Painel() {
+function Painel() {
   return <Transactions />;
 }
+export default withAuth(Painel);

@@ -14,6 +14,13 @@ export const transaction = {
         return item;
       });
   },
+  getSumTransaction: async () => {
+    return await api
+      .get("/transction/sum-transaction")
+      .then((item) => {
+        return item;
+      });
+  },
   createTransaction: async (data: IValuesTransactionModal) => {
     return await api
       .post("/transction/newtransaction", data)
