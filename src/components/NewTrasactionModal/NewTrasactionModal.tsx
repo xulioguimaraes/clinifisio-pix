@@ -163,7 +163,7 @@ export const NewTrasactionModal = () => {
             color="success"
             type="submit"
           >
-            {isLoading ? <CircularProgress size={20} /> : "Cadastrar"}
+            {isLoading ? <CircularProgress size={22} /> : "Cadastrar"}
           </Button>
         </Box>
       </Modal>

@@ -31,10 +31,10 @@ export default function App({
     "/",
     "/login",
     "/register",
-    "/connect-calendar",
+    "/register/connect-calendar",
     "/register/time-intervals",
-    "/update-profile",
-    `/schedule/:username`,
+    "/register/update-profile",
+    `/schedule`,
   ];
   const shouldHideHeader =
     routerNoShowMenu.includes(router.pathname) ||

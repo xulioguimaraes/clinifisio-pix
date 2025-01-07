@@ -198,7 +198,7 @@ export const ModalForm = ({
           disabled={isLoading}
           fullWidth
         >
-          {isLoading ? <CircularProgress size={20} /> : "Criar Serviço"}
+          {isLoading ? <CircularProgress size={22} /> : "Criar Serviço"}
         </Button>
       </Box>
     </Modal>

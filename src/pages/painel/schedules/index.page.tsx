@@ -251,7 +251,7 @@ function TimeIntervals() {
             >
               {isLoading ? (
                 <>
-                  <CircularProgress size={20} />
+                  <CircularProgress size={22} />
                   <p className="pr-4">Buscando Informações</p>
                 </>
               ) : (

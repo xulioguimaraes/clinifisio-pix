@@ -157,7 +157,7 @@ export const TransactionModal = ({
               className={styles.delete}
               fullWidth
             >
-              {isLoading ? <CircularProgress size={20} /> : "Deletar"}
+              {isLoading ? <CircularProgress size={22} /> : "Deletar"}
             </Button>
             <Button
               onClick={onRequestClose}
@@ -168,7 +168,7 @@ export const TransactionModal = ({
               type="submit"
               fullWidth
             >
-              {isLoading ? <CircularProgress size={20} /> : "Fechar"}
+              {isLoading ? <CircularProgress size={22} /> : "Fechar"}
             </Button>
           </div>
         </form>

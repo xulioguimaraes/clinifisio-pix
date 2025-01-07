@@ -8,12 +8,16 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { ConfirmForm, FormActions, FormError, FormHeader } from "./styles";
 import { useState } from "react";
+import { IServices } from "@/types";
 const confirmFormSchema = z.object({
   name: z.string().min(3, {
     message: "O nome precisa no mínimo 3 caracteres",
   }),
   email: z.string().email({
     message: "Digite um email valido",
+  }),
+  phone: z.string().min(11, {
+    message: "Digite um telefone valido",
   }),
   observations: z.string().nullable(),
 });
@@ -23,11 +27,13 @@ type ConfirmFormData = z.infer<typeof confirmFormSchema>;
 interface ConfirmStepProps {
   schedulingDate: Date;
   onCancelConfitmation: () => void;
+  service: IServices;
 }
 
 export const ConfrimStep = ({
   schedulingDate,
   onCancelConfitmation,
+  service,
 }: ConfirmStepProps) => {
   const {
     register,
@@ -39,15 +45,16 @@ export const ConfrimStep = ({
   const router = useRouter();
   const username = String(router.query.username);
 
-  const [serviceSelect, setServiceSelect] = useState();
   const handleConfirmSheduling = async (data: ConfirmFormData) => {
-    const { email, name, observations } = data;
+    const { email, name, observations, phone } = data;
 
     await api.post(`/users/${username}/schedule`, {
       name,
       email,
       observations,
+      phone,
       date: schedulingDate,
+      id_service: service.id
     });
     onCancelConfitmation();
   };
@@ -77,6 +84,15 @@ export const ConfrimStep = ({
           type={"email"}
           placeholder="john@gmail.com"
           {...register("email")}
+        />
+        {errors.email && <FormError>{errors.email.message}</FormError>}
+      </label>
+      <label>
+        <Text size="sm">Telefone</Text>
+        <TextInput
+          type={"phone"}
+          placeholder="(99) 99999-9999"
+          {...register("phone")}
         />
         {errors.email && <FormError>{errors.email.message}</FormError>}
       </label>

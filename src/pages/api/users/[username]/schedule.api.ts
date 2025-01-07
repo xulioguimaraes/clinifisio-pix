@@ -19,7 +19,9 @@ export default async function handler(
     name: z.string(),
     email: z.string().email(),
     observations: z.string(),
+    phone: z.string().optional(),
     date: z.string().datetime(),
+    id_service: z.string(),
   });
 
   const user = await prisma.user.findUnique({
@@ -31,9 +33,9 @@ export default async function handler(
   if (!user) {
     return res.status(400).json({ message: "User not found" });
   }
-  const { name, email, observations, date } = createSchedulingBody.parse(
-    req.body
-  );
+
+  const { name, email, observations, date, phone, id_service } =
+    createSchedulingBody.parse(req.body);
 
   const schedulingDate = dayjs(date).startOf("hour");
 
@@ -63,6 +65,8 @@ export default async function handler(
       observations,
       date: schedulingDate.toDate(),
       user_id: user.id,
+      phone,
+      id_service,
     },
   });
 

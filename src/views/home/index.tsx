@@ -15,7 +15,6 @@ export function Home() {
   const handleConnectCalendar = async () => {
     setIsLoading(true);
     await signIn("google");
-    setIsLoading(false);
   };
   return (
     <>
@@ -60,7 +59,7 @@ export function Home() {
               }}
             >
               {isLoading ? (
-                <CircularProgress size={20} />
+                <CircularProgress size={22} />
               ) : (
                 <FcGoogle size={24} className="bg-white p-1  rounded-full" />
               )}

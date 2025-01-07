@@ -9,10 +9,9 @@ export function withAuth(WrappedComponent: React.FC) {
     const router = useRouter();
 
     useEffect(() => {
-      if (router.pathname === "/") return;
-
-      if (status === "unauthenticated") {
+      if (status === "unauthenticated" && router.pathname !== "/") {
         router.push("/");
+        return;
       } else if (status === "authenticated" && router.pathname === "/") {
         router.push("/painel");
       }
