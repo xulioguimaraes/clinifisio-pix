@@ -1,6 +1,6 @@
 import { api } from "@/lib/axios";
 import { buildNextAuthOption } from "@/pages/api/auth/[...nextauth].api";
-import { FormAnnotation } from "@/pages/home/components/ClaimUsernameForm/styles";
+import { FormAnnotation } from "@/views/home/components/ClaimUsernameForm/styles";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Avatar,
