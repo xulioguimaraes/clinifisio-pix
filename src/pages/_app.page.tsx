@@ -56,8 +56,9 @@ export default function App({
                     siteName: "CALL",
                   }}
                 />
-                <div className="max-w-screen-lg mx-auto my-0 ">
+                <div className="max-w-screen-xl mx-auto my-0 ">
                   {!shouldHideHeader && <Header />}
+
                   <main className="px-2">
                     <Component {...pageProps} />
                   </main>

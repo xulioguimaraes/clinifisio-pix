@@ -15,6 +15,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { useState } from "react";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import Link from "next/link";
+
 const ItemMenu = ({
   name,
   children,
@@ -76,7 +77,7 @@ export const MenuHeader = ({
   onCloseDrawer: () => void;
 }) => {
   return (
-    <Box sx={{ width: 250 }} role="presentation">
+    <Box sx={{ width: 350 }} role="presentation">
       <div className="mt-20"></div>
       <Divider />
       <List>

@@ -61,8 +61,6 @@ export const Calendar = ({ onDateSelected, selectedDate }: CalendarProps) => {
   const currentMonth = currentDate.format("MMMM");
   const currentYear = currentDate.format("YYYY");
   const calendarWeeks = useMemo(() => {
-    console.log(currentDate.daysInMonth());
-    console.log({ blockedDates });
     if (!blockedDates) {
       return [];
     }

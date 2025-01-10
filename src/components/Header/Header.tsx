@@ -1,11 +1,10 @@
 import { Button, Divider, Drawer } from "@mui/material";
 
-import { IoMdMenu } from "react-icons/io";
 import { useState } from "react";
-import { MenuHeader } from "./components/MenuHeader";
 import { Copy } from "phosphor-react";
 import { useSession } from "next-auth/react";
 import { useToastContext } from "@/hooks/useToast";
+import MiniDrawer from "./Mini";
 
 export const Header = () => {
   const handleLogOut = async () => {};
@@ -37,14 +36,7 @@ export const Header = () => {
         <div className="mb-4">
           <div className="flex px-2 pt-8 pb-4 items-center justify-between">
             <div className="flex gap-2">
-              <Button
-                size="large"
-                variant="outlined"
-                onClick={() => setOpen(true)}
-                color="info"
-              >
-                <IoMdMenu size={24} />
-              </Button>
+              <div></div>
               <Button
                 type="button"
                 onClick={copyToClipboard}
@@ -66,9 +58,7 @@ export const Header = () => {
           </div>
           <Divider />
         </div>
-        <Drawer open={open} onClose={() => setOpen(false)}>
-          <MenuHeader onCloseDrawer={onCloseDrawer} />
-        </Drawer>
+        <MiniDrawer />
       </header>
     </>
   );

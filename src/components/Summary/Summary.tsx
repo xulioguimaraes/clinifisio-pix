@@ -26,10 +26,12 @@ export const Summary = () => {
         (response.data.total_incomes - response.data.total_expenses) / 100
       );
       setdateTransaction({
-        entry: convertDateInFormatLongPtBr(response.data.date_last_incomes),
-        withdrawal: convertDateInFormatLongPtBr(
-          response?.data.date_last_expenses
-        ),
+        entry: response.data.date_last_incomes
+          ? convertDateInFormatLongPtBr(response.data.date_last_incomes)
+          : "",
+        withdrawal: response?.data.date_last_expenses
+          ? convertDateInFormatLongPtBr(response?.data.date_last_expenses)
+          : "",
       });
     }
   };
@@ -38,6 +40,7 @@ export const Summary = () => {
     getSumTransaction();
   }, []);
 
+  console.log(dateTransaction.entry);
   return (
     <>
       <Head>
@@ -51,8 +54,7 @@ export const Summary = () => {
               <img src="/images/income.svg" alt="Entradas" />
             </header>
             <strong className={styles.deposit}>{entrada}</strong>
-            {(dateTransaction.entry !== "Invalid Date" ||
-              !!dateTransaction.entry) && (
+            {!!dateTransaction.entry && (
               <label>Ultima entrada dia {dateTransaction.entry}</label>
             )}
           </div>
@@ -62,8 +64,7 @@ export const Summary = () => {
               <img src="/images/outcome.svg" alt="Saidas" />
             </header>
             <strong className={styles.withraw}>{saida}</strong>
-            {(dateTransaction.withdrawal !== "Invalid Date" ||
-              !!dateTransaction.entry) && (
+            {!!dateTransaction.entry && (
               <label>Ultima saida dia {dateTransaction.withdrawal}</label>
             )}
           </div>

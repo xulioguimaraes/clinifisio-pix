@@ -70,38 +70,41 @@ export default async function handler(
     },
   });
 
-  const calendar = await google.calendar({
-    version: "v3",
-    auth: await getGoogleOAuthToken(user.id),
-  });
+  if (!!email) {
+    const calendar = google.calendar({
+      version: "v3",
+      auth: await getGoogleOAuthToken(user.id),
+    });
 
-  await calendar.events.insert({
-    calendarId: "primary",
-    conferenceDataVersion: 1,
-    requestBody: {
-      summary: `Call: ${name}`,
-      description: observations,
-      start: {
-        dateTime: schedulingDate.format(),
-      },
-      end: {
-        dateTime: schedulingDate.add(1, "hour").format(),
-      },
-      attendees: [
-        {
-          email,
-          displayName: name,
+    await calendar.events.insert({
+      calendarId: "primary",
+      conferenceDataVersion: 1,
+      requestBody: {
+        summary: `Call: ${name}`,
+        description: observations,
+        start: {
+          dateTime: schedulingDate.format(),
         },
-      ],
-      conferenceData: {
-        createRequest: {
-          requestId: scheduling.id,
-          conferenceSolutionKey: {
-            type: "hangoutsMeet",
+        end: {
+          dateTime: schedulingDate.add(1, "hour").format(),
+        },
+        attendees: [
+          {
+            email,
+            displayName: name,
+          },
+        ],
+        conferenceData: {
+          createRequest: {
+            requestId: scheduling.id,
+            conferenceSolutionKey: {
+              type: "hangoutsMeet",
+            },
           },
         },
       },
-    },
-  });
-  return res.status(201).end();
+    });
+  }
+
+  return res.status(201).json({ message: "Agendamento feito com sucesso" });
 }

@@ -1,6 +1,7 @@
 import { ArrowLeft, CalendarBlank, Clock } from "phosphor-react";
 import dayjs from "dayjs";
 import { IServices } from "@/types";
+import { Button } from "@mui/material";
 
 export const ServicesStep = ({
   schedulingDate,
@@ -62,6 +63,10 @@ export const ServicesStep = ({
             </>
           );
         })}
+
+        <Button onClick={handleBackStepService} variant="outlined">
+          Voltar
+        </Button>
       </div>
     </div>
   );

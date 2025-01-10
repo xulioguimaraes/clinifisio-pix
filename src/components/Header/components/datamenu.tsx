@@ -14,8 +14,19 @@ export const dataMenu = [
     icon: <></>,
     children: [
       { name: "Serviços", link: "/painel/services" },
-      { name: "Horarios", link: "/painel/schedules" },
+      { name: "Configurar Horarios", link: "/painel/schedules", icon: <></> },
+      { name: "Horarios Agendados", link: "/painel/schedules", icon: <></> },
       { name: "Sobre", link: "/painel/sobre" },
     ],
   },
+];
+
+export const links = [
+  { name: "Categorias", link: "/painel/categorias", icon: <></> },
+  { name: "Transações", link: "/painel", icon: <></> },
+
+  { name: "Serviços", link: "/painel/services", icon: <></> },
+  { name: "Configurar Horarios", link: "/painel/schedules", icon: <></> },
+  { name: "Horarios Agendados", link: "/painel/schedules", icon: <></> },
+  { name: "Sobre", link: "/painel/sobre", icon: <></> },
 ];
