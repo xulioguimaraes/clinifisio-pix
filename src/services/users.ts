@@ -16,4 +16,14 @@ export const users = {
       return item;
     });
   },
+  getBlockedDays: async (username: string, params: any) => {
+    return await api.get(`/users/${username}/blocked-dates`, {
+      params,
+    });
+  },
+  getAvailableTimes: async (username: string, params: any) => {
+    return await api.get(`/users/${username}/week-availability`, {
+      params,
+    });
+  },
 };

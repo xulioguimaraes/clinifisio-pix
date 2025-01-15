@@ -15,6 +15,7 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import { links } from "./components/datamenu";
+import Link from "next/link";
 
 const drawerWidth = 340;
 
@@ -91,7 +92,7 @@ export default function MiniDrawer({}: {}) {
 
   return (
     <Box>
-      <Drawer variant="permanent" open={open}>
+      <Drawer variant="permanent" open={open} onClose={() => setOpen(false)}>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
             {!open ? <ChevronRightIcon /> : <ChevronLeftIcon />}
@@ -102,6 +103,11 @@ export default function MiniDrawer({}: {}) {
           {links.map((text, index) => (
             <ListItem key={text.name} disablePadding sx={{ display: "block" }}>
               <ListItemButton
+                LinkComponent={Link}
+                href={text.link}
+                onClick={(e) => {
+                  setOpen(false);
+                }}
                 sx={[
                   {
                     minHeight: 48,
@@ -121,29 +127,15 @@ export default function MiniDrawer({}: {}) {
                     {
                       minWidth: 0,
                       justifyContent: "center",
+                      mr: open ? 3 : "auto",
                     },
-                    open
-                      ? {
-                          mr: 3,
-                        }
-                      : {
-                          mr: "auto",
-                        },
                   ]}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  {text.icon}
                 </ListItemIcon>
                 <ListItemText
                   primary={text.name}
-                  sx={[
-                    open
-                      ? {
-                          opacity: 1,
-                        }
-                      : {
-                          opacity: 0,
-                        },
-                  ]}
+                  sx={[{ opacity: open ? 1 : 0 }]}
                 />
               </ListItemButton>
             </ListItem>

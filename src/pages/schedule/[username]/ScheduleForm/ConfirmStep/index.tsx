@@ -9,6 +9,7 @@ import { z } from "zod";
 import { ConfirmForm, FormActions, FormError, FormHeader } from "./styles";
 import { useState } from "react";
 import { IServices } from "@/types";
+import { useToastContext } from "@/hooks/useToast";
 const confirmFormSchema = z.object({
   name: z.string().min(3, {
     message: "O nome precisa no mínimo 3 caracteres",
@@ -44,19 +45,22 @@ export const ConfrimStep = ({
   });
   const router = useRouter();
   const username = String(router.query.username);
-
+  const toast = useToastContext();
   const handleConfirmSheduling = async (data: ConfirmFormData) => {
     const { email, name, observations, phone } = data;
 
-    await api.post(`/users/${username}/schedule`, {
+    const response = await api.post(`/users/${username}/schedule`, {
       name,
       email,
       observations,
       phone,
       date: schedulingDate,
-      id_service: service.id
+      id_service: service.id,
     });
-    onCancelConfitmation();
+
+    if (response.status === 201) {
+      toast.success(response.data.message);
+    }
   };
 
   const describedDate = dayjs(schedulingDate).format("DD[ de ]MMMM[ de ]YYYY");

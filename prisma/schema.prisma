@@ -75,14 +75,14 @@ model Scheduling {
   id           String   @id @default(uuid())
   date         DateTime
   name         String
-  email        String? // Coluna opcional para email
-  phone        String? // Coluna opcional para telefone
+  email        String?
   observations String?
   created_at   DateTime @default(now())
   user_id      String
+  phone        String?
+  id_service   String
   user         User     @relation(fields: [user_id], references: [id])
-  id_service   String // Coluna para o ID do serviço
-  service      Service  @relation(fields: [id_service], references: [id]) // Relação com o modelo Service
+  service      Service  @relation(fields: [id_service], references: [id])
 
   @@index([user_id])
   @@map("schedulings")
@@ -104,20 +104,17 @@ model Transation {
 }
 
 model Service {
-  id          String  @id @default(uuid())
+  id          String       @id @unique @default(uuid())
   userId      String
   name        String
   description String?
-  price       Decimal @default(0.0)
-  porcentagem Decimal @default(0.0)
-  active      Boolean @default(true)
+  price       Decimal      @default(0.0)
+  porcentagem Decimal      @default(0.0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  active      Boolean      @default(true)
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Scheduling  Scheduling[]
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  Scheduling Scheduling[]
-
-  @@unique([id])
   @@map("services")
 }

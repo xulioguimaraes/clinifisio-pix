@@ -33,9 +33,10 @@ interface CalendarProps {
   onDateSelected: (date: Date) => void;
 }
 export const Calendar = ({ onDateSelected, selectedDate }: CalendarProps) => {
-  const shortWeekDays = getWeekDays({
-    short: true,
-  });
+  const startOfWeek = dayjs(new Date()).startOf("week");
+  const shortWeekDays = Array.from({ length: 7 }).map((item, index) =>
+    startOfWeek.add(index, "day").format("ddd")
+  );
   const router = useRouter();
   const [currentDate, setCurrentDate] = useState(() => {
     return dayjs().set("date", 1);
@@ -44,7 +45,7 @@ export const Calendar = ({ onDateSelected, selectedDate }: CalendarProps) => {
 
   const year = currentDate.get("year");
   const month = currentDate.get("month");
-  console.log({ year, month: String(month + 1).padStart(2, "0") });
+
   const { data: blockedDates } = useQuery<BlockedDates>(
     ["blocked-dates", year, month],
     async () => {
@@ -146,7 +147,9 @@ export const Calendar = ({ onDateSelected, selectedDate }: CalendarProps) => {
         <thead>
           <tr>
             {shortWeekDays.map((weekDay) => (
-              <th key={weekDay}>{weekDay}.</th>
+              <th className="uppercase" key={weekDay}>
+                {weekDay}.
+              </th>
             ))}
           </tr>
         </thead>

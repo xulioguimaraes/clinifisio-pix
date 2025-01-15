@@ -70,7 +70,7 @@ export const ScheduleForm = () => {
         <ConfrimStep
           schedulingDate={selectedDateTime!}
           service={selectedService!}
-          onCancelConfitmation={handleClearSelectedDateTime}
+          onCancelConfitmation={handleBackStepService}
         />
       )}
     </>

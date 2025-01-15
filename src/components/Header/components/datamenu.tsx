@@ -1,3 +1,12 @@
+import {
+  FaTags,
+  FaExchangeAlt,
+  FaConciergeBell,
+  FaClock,
+  FaCalendarAlt,
+  FaInfoCircle,
+} from "react-icons/fa";
+
 export const dataMenu = [
   {
     name: "Transações",
@@ -15,18 +24,37 @@ export const dataMenu = [
     children: [
       { name: "Serviços", link: "/painel/services" },
       { name: "Configurar Horarios", link: "/painel/schedules", icon: <></> },
-      { name: "Horarios Agendados", link: "/painel/schedules", icon: <></> },
+      {
+        name: "Horarios Agendados",
+        link: "/painel/scheduled-times",
+        icon: <></>,
+      },
       { name: "Sobre", link: "/painel/sobre" },
     ],
   },
 ];
 
 export const links = [
-  { name: "Categorias", link: "/painel/categorias", icon: <></> },
-  { name: "Transações", link: "/painel", icon: <></> },
-
-  { name: "Serviços", link: "/painel/services", icon: <></> },
-  { name: "Configurar Horarios", link: "/painel/schedules", icon: <></> },
-  { name: "Horarios Agendados", link: "/painel/schedules", icon: <></> },
-  { name: "Sobre", link: "/painel/sobre", icon: <></> },
+  {
+    name: "Categorias",
+    link: "/painel/categorias",
+    icon: <FaTags size={22} />,
+  },
+  { name: "Transações", link: "/painel", icon: <FaExchangeAlt size={22} /> },
+  {
+    name: "Serviços",
+    link: "/painel/services",
+    icon: <FaConciergeBell size={22} />,
+  },
+  {
+    name: "Configurar Horários",
+    link: "/painel/schedules",
+    icon: <FaClock size={22} />,
+  },
+  {
+    name: "Horários Agendados",
+    link: "/painel/scheduled-times",
+    icon: <FaCalendarAlt size={22} />,
+  },
+  { name: "Sobre", link: "/painel/sobre", icon: <FaInfoCircle size={22} /> },
 ];

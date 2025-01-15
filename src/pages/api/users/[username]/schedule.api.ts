@@ -69,11 +69,12 @@ export default async function handler(
       id_service,
     },
   });
+  return res.status(201).json({ message: "Agendamento feito com sucesso" });
 
   if (!!email) {
     const calendar = google.calendar({
       version: "v3",
-      auth: await getGoogleOAuthToken(user.id),
+      auth: await getGoogleOAuthToken(user.id!),
     });
 
     await calendar.events.insert({
@@ -105,6 +106,4 @@ export default async function handler(
       },
     });
   }
-
-  return res.status(201).json({ message: "Agendamento feito com sucesso" });
 }
