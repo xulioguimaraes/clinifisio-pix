@@ -18,10 +18,40 @@ export interface IValuesTransactionModal {
   type: boolean;
 }
 
-interface IServices {
+export interface IServices {
   id?: string;
   name: string;
   description: any;
   price: number;
   porcentagem?: any;
+}
+
+export interface IAppointments {
+  name: string;
+  email: string;
+  observations: string;
+  phone: string;
+  hours: number;
+  service: {
+    name: string;
+  };
+}
+export interface IWeekData {
+  weekNumber: number;
+  daysOfWeek: {
+    date: string;
+    dayName: string;
+    blocked: boolean;
+    hoursDay: number[];
+    appointments: IAppointments[];
+  }[];
+  hoursdays: number[]; // Certifique-se que o nome da propriedade esteja correto
+  monthName: string;
+}
+export interface IAvailableTimes {
+  weekAvailability: {
+    availableTimes: number[];
+    scheduledServices: IAppointments[];
+  }[];
+  uniqueAvailableTimes: number[];
 }
