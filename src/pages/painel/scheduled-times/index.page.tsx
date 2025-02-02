@@ -17,7 +17,7 @@ function IntervalsTime() {
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <div style={{ width: "100%" }}>
       <Tabs
         value={value}
         onChange={handleChange}
@@ -28,7 +28,7 @@ function IntervalsTime() {
       </Tabs>
 
       <TabWeeks isOpen={value === "one"} />
-    </Box>
+    </div>
   );
 }
 

@@ -7,16 +7,23 @@ interface IModal {
   onClose: () => void;
   title: string;
   children: ReactNode;
+  maxW?: string;
 }
 
-export const Modal = ({ isOpen, onClose, title, children }: IModal) => {
+export const Modal = ({
+  isOpen,
+  onClose,
+  title,
+  children,
+  maxW = "496px",
+}: IModal) => {
   return (
     <Dialog
       open={isOpen}
       onClose={onClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
-      className="[&_.MuiPaper-elevation]:max-w-[496px] [&_.MuiPaper-elevation]:w-full"
+      className={`[&_.MuiPaper-elevation]:max-w-[${maxW}] [&_.MuiPaper-elevation]:w-full`}
     >
       <DialogTitle id="alert-dialog-title">
         <h2>{title}</h2>

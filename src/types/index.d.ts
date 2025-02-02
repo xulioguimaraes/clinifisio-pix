@@ -31,9 +31,12 @@ export interface IAppointments {
   email: string;
   observations: string;
   phone: string;
+  date: number;
   hours: number;
   service: {
     name: string;
+    price: string;
+    description: string;
   };
 }
 export interface IWeekData {

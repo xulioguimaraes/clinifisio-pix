@@ -1,11 +1,13 @@
 import { useToastContext } from "@/hooks/useToast";
 import { users } from "@/services/users";
-import { IAvailableTimes, IWeekData } from "@/types";
-import { Skeleton } from "@mui/material";
+import { IAppointments, IAvailableTimes, IWeekData } from "@/types";
+import { Box, Skeleton } from "@mui/material";
 import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
-import { ArrowLeft, ArrowRight } from "phosphor-react";
 import { useEffect, useState } from "react";
+import { Scheduling } from "./Scheduling";
+import { HeaderCalendarWeek } from "./HeaderCalendarWeek";
+import { ModalScheduling } from "./ModalScheduling";
 
 export const TabWeeks = ({ isOpen = false }) => {
   const toast = useToastContext();
@@ -14,6 +16,12 @@ export const TabWeeks = ({ isOpen = false }) => {
   const [isLoadingAvailableTimes, setIsLoadingAvailableTimes] = useState(true);
   const [today, setToday] = useState(dayjs().format("YYYY-MM-DD"));
   const [blockedDays, setBlockedDays] = useState<number[]>([]);
+  const [scheduling, setScheduling] = useState<IAppointments>(
+    {} as IAppointments
+  );
+  const [weekData, setWeekData] = useState<IWeekData>({} as IWeekData);
+  const [openModal, setOpenModal] = useState(false);
+
   const [dateWeeks, setDateWeeks] = useState<
     { date: string; monthName: string; weekNumber: number }[]
   >([]);
@@ -74,8 +82,6 @@ export const TabWeeks = ({ isOpen = false }) => {
     };
   };
 
-  const [weekData, setWeekData] = useState<IWeekData>({} as IWeekData);
-
   const isLoadingAll = !(
     !isLoadingBloacked &&
     !isLoadingAvailableTimes &&
@@ -123,86 +129,97 @@ export const TabWeeks = ({ isOpen = false }) => {
   }, [today]);
 
   const daysOfWeeksIsArray = weekData.daysOfWeek?.length;
+  const handleToogle = () => {
+    setOpenModal((old) => !old);
+  };
+  const handleScheduling = (value: IAppointments) => {
+    setScheduling(value);
+    handleToogle();
+  };
+
+  const handleClose = () => {
+    setOpenModal(false);
+  };
 
   return (
     <>
+      {openModal && (
+        <ModalScheduling
+          isOpen={openModal}
+          onClose={handleToogle}
+          scheduling={scheduling}
+        />
+      )}
       <div className={`p-6 overflow-x-scroll ${isOpen ? "block" : "hidden"}`}>
         <div>
-          <div className="p-4 uppercase border border-gray-600 rounded-t-md bg-[#202024] flex justify-between">
-            <div>
-              <h3>{dateWeeks[0]?.monthName}</h3>
-              <p>Semana: {dateWeeks[0]?.weekNumber}</p>
-            </div>
-            <div>
-              <div>
-                {daysOfWeeksIsArray > 0 && (
-                  <>
-                    <span>{dayjs(dateWeeks[0].date).format("DD/MM")}</span> -{" "}
-                    <span>
-                      {dayjs(dateWeeks[dateWeeks.length - 1].date).format(
-                        "DD/MM"
-                      )}
-                    </span>
-                  </>
-                )}
-              </div>
-              <div className="flex items-center justify-center gap-2">
-                <button
-                  type="button"
-                  disabled={isLoadingAll}
-                  onClick={() => getDayOfInWeeks(false)}
-                  className="border border-gray-600 rounded-md"
-                >
-                  <ArrowLeft size={22} />
-                </button>
-                <button
-                  type="button"
-                  disabled={isLoadingAll}
-                  onClick={() => getDayOfInWeeks(true)}
-                  className="border border-gray-600 rounded-md"
-                >
-                  <ArrowRight size={22} />
-                </button>
-              </div>
-            </div>
-          </div>
-          {false ? (
+          <HeaderCalendarWeek
+            data={dateWeeks}
+            isLoading={isLoadingAll}
+            daysOfWeeksIsArray={daysOfWeeksIsArray}
+            getDayOfInWeeks={getDayOfInWeeks}
+          />
+
+          {isLoadingAll ? (
             <Skeleton
               className="border border-gray-600 rounded-b-md"
               variant="rectangular"
               height={350}
             />
           ) : (
-            <div className="grid bg-[#202024]  grid-flow-col auto-cols-[150px] capitalize border border-gray-600 overflow-x-auto relative ">
+            <div
+              style={{
+                gridTemplateColumns: "repeat(8, 1fr)",
+                overflow: "auto",
+              }}
+              className="grid bg-[#202024] capitalize border border-gray-600 overflow-x-auto relative "
+            >
               {/* Coluna de Horas */}
-              <div className="flex flex-col border-r border-t border-gray-600 sticky left-0 z-10">
-                <div className="flex items-center justify-center h-16 border-b bg-[#202024]  border-gray-600"></div>
+              <Box
+                sx={{
+                  paddingTop: 8,
+                }}
+                minWidth={100}
+                bgcolor={"Highlight"}
+                className="flex flex-col border-gray-600 sticky left-0 z-10 pt-6"
+              >
+                <div className="flex items-center justify-center  border-b  bg-[#202024]  border-gray-600"></div>
                 {weekData.hoursdays?.map((hour, index) => (
-                  <div
+                  <Box
                     key={hour}
-                    className={`flex items-center bg-[#00291D] justify-center h-16  border-gray-600 ${
+                    height={65}
+                    className={`flex items-center bg-[#00291D] justify-center  border-gray-600 ${
                       index + 1 === weekData.hoursdays.length ? "" : "border-b"
                     }`}
                   >
                     {`${String(hour).padStart(2, "0")}:00`}
-                  </div>
+                  </Box>
                 ))}
-              </div>
+              </Box>
               {/* Colunas dos Dias */}
               {weekData.daysOfWeek?.map((day) => (
-                <div
+                <Box
                   key={day.date}
-                  className={`border-r border-gray-600 ${
-                    !day.blocked && "bg-[#323238]"
-                  }`}
+                  borderColor={"#4b5563"}
+                  borderRight={"1px solid #4b5563"}
+                  bgcolor={`${!day.blocked && "#323238"}`}
                 >
-                  <div className="flex flex-col items-center py-2 border-b border-gray-600">
+                  <Box
+                    display={"flex"}
+                    flexDirection={"column"}
+                    alignItems={"center"}
+                    py={1}
+                    borderBottom={1}
+                    borderColor={"#4b5563"}
+                  >
                     <strong>{day.dayName}</strong>
                     <p>{dayjs(day.date).format("DD/MM")}</p>
-                  </div>
+                  </Box>
                   {weekData.hoursdays.map((hour) => (
-                    <div
+                    <Box
                       key={`${day.date}-${hour}`}
+                      height={65}
+                      minWidth={150}
+                      px={1}
                       className={`flex items-center justify-center h-16 border-b border-gray-600 ${
                         !day.hoursDay.some((hourDay) => hour === hourDay) &&
                         "bg-[#202024]"
@@ -212,26 +229,18 @@ export const TabWeeks = ({ isOpen = false }) => {
                       {day.appointments?.find(
                         (appt) => +appt.hours === hour
                       ) ? (
-                        <div className="h-full w-full bg-blue-200 text-black px-1 mx-1 py-1  rounded-md text-sm">
-                          <p>
-                            {
-                              day.appointments.find(
-                                (appt) => +appt.hours === hour
-                              )?.service?.name
-                            }
-                          </p>
-                          <p className="text-xs text-gray-50000">
-                            {
-                              day.appointments.find(
-                                (appt) => +appt.hours === hour
-                              )?.name
-                            }
-                          </p>
-                        </div>
+                        <Scheduling
+                          data={
+                            day.appointments?.find(
+                              (appt) => +appt.hours === hour
+                            )!
+                          }
+                          onScheduling={handleScheduling}
+                        />
                       ) : null}
-                    </div>
+                    </Box>
                   ))}
-                </div>
+                </Box>
               ))}
             </div>
           )}
