@@ -1,5 +1,10 @@
 import { NextApiRequest, NextApiResponse, NextPageContext } from "next";
-import { Adapter } from "next-auth/adapters";
+import {
+  Adapter,
+  AdapterUser,
+  AdapterAccount,
+  AdapterSession,
+} from "next-auth/adapters";
 import { destroyCookie, parseCookies } from "nookies";
 import { prisma } from "../prisma";
 
@@ -8,18 +13,15 @@ export function PrismaAdapter(
   res: NextApiResponse | NextPageContext["res"]
 ): Adapter {
   return {
-    async createUser(user) {
-      const { "@call:userId": userIdOnCookies } = parseCookies({
-        req,
-      });
+    async createUser(user: Omit<AdapterUser, "id">) {
+      const { "@call:userId": userIdOnCookies } = parseCookies({ req });
+
       if (!userIdOnCookies) {
         throw new Error("User ID not found on cookies");
       }
 
       const primaryUser = await prisma.user.update({
-        where: {
-          id: userIdOnCookies,
-        },
+        where: { id: userIdOnCookies },
         data: {
           name: user.name,
           email: user.email,
@@ -37,34 +39,12 @@ export function PrismaAdapter(
         avatar_url: primaryUser.avatar_url!,
       };
     },
-    async getUser(id) {
-      const user = await prisma.user.findUnique({
-        where: {
-          id,
-        },
-      });
-      if (!user) {
-        return null;
-      }
-      return {
-        id: user.id,
-        email: user.email!,
-        name: user.name,
-        username: user.username,
-        emailVerified: null,
-        avatar_url: user.avatar_url!,
-      };
-    },
-    async getUserByEmail(email) {
-      const user = await prisma.user.findUnique({
-        where: {
-          email,
-        },
-      });
 
-      if (!user) {
-        return null;
-      }
+    async getUser(id: string) {
+      const user = await prisma.user.findUnique({ where: { id } });
+
+      if (!user) return null;
+
       return {
         id: user.id,
         email: user.email!,
@@ -74,7 +54,29 @@ export function PrismaAdapter(
         avatar_url: user.avatar_url!,
       };
     },
-    async getUserByAccount({ providerAccountId, provider }) {
+
+    async getUserByEmail(email: string) {
+      const user = await prisma.user.findUnique({ where: { email } });
+
+      if (!user) return null;
+
+      return {
+        id: user.id,
+        email: user.email!,
+        name: user.name,
+        username: user.username,
+        emailVerified: null,
+        avatar_url: user.avatar_url!,
+      };
+    },
+
+    async getUserByAccount({
+      providerAccountId,
+      provider,
+    }: {
+      providerAccountId: string;
+      provider: string;
+    }) {
       const account = await prisma.account.findUnique({
         where: {
           provider_provider_account_id: {
@@ -82,14 +84,13 @@ export function PrismaAdapter(
             provider_account_id: providerAccountId,
           },
         },
-        include: {
-          user: true,
-        },
+        include: { user: true },
       });
-      if (!account) {
-        return null;
-      }
+
+      if (!account) return null;
+
       const { user } = account;
+
       return {
         id: user.id,
         email: user.email!,
@@ -99,17 +100,21 @@ export function PrismaAdapter(
         avatar_url: user.avatar_url!,
       };
     },
-    async updateUser(user) {
+
+    async updateUser(user: Partial<AdapterUser>) {
+      if (!user.id) {
+        throw new Error("User ID is required for update.");
+      }
+
       const prismaUser = await prisma.user.update({
-        where: {
-          id: user.id!,
-        },
+        where: { id: user.id },
         data: {
           name: user.name,
           email: user.email,
           avatar_url: user.avatar_url,
         },
       });
+
       return {
         id: prismaUser.id,
         email: prismaUser.email!,
@@ -119,8 +124,12 @@ export function PrismaAdapter(
         avatar_url: prismaUser.avatar_url!,
       };
     },
-    async deleteUser(userId) {},
-    async linkAccount(account) {
+
+    async deleteUser(userId: string) {
+      await prisma.user.delete({ where: { id: userId } });
+    },
+
+    async linkAccount(account: AdapterAccount) {
       await prisma.account.create({
         data: {
           user_id: account.userId,
@@ -137,35 +146,42 @@ export function PrismaAdapter(
         },
       });
     },
-    async unlinkAccount({ providerAccountId, provider }) {},
-    async createSession({ sessionToken, userId, expires }) {
-      await prisma.session.create({
-        data: {
-          session_token: sessionToken,
-          expires,
-          user_id: userId,
-        },
-      });
-      return {
-        userId,
-        sessionToken,
-        expires,
-      };
-    },
-    async getSessionAndUser(sessionToken) {
-      const prismaSession = await prisma.session.findUnique({
+
+    async unlinkAccount({
+      providerAccountId,
+      provider,
+    }: {
+      providerAccountId: string;
+      provider: string;
+    }) {
+      await prisma.account.delete({
         where: {
-          session_token: sessionToken,
-        },
-        include: {
-          user: true,
+          provider_provider_account_id: {
+            provider,
+            provider_account_id: providerAccountId,
+          },
         },
       });
-      if (!prismaSession) {
-        return null;
-      }
+    },
+
+    async createSession({ sessionToken, userId, expires }: AdapterSession) {
+      await prisma.session.create({
+        data: { session_token: sessionToken, expires, user_id: userId },
+      });
+
+      return { userId, sessionToken, expires };
+    },
+
+    async getSessionAndUser(sessionToken: string) {
+      const prismaSession = await prisma.session.findUnique({
+        where: { session_token: sessionToken },
+        include: { user: true },
+      });
+
+      if (!prismaSession) return null;
 
       const { user, ...session } = prismaSession;
+
       return {
         session: {
           expires: session.expires,
@@ -182,30 +198,31 @@ export function PrismaAdapter(
         },
       };
     },
-    async updateSession({ sessionToken, expires, userId }) {
+
+    async updateSession(
+      session: Partial<AdapterSession> & { sessionToken: string }
+    ) {
+      if (!session.sessionToken) {
+        throw new Error("Session token is required for update.");
+      }
+
       const prismaSession = await prisma.session.update({
-        where: {
-          session_token: sessionToken,
-        },
+        where: { session_token: session.sessionToken },
         data: {
-          expires,
-          user_id: userId,
+          expires: session.expires ?? new Date(), // Garante que não seja undefined
+          user_id: session.userId,
         },
       });
+
       return {
         expires: prismaSession.expires,
         sessionToken: prismaSession.session_token,
         userId: prismaSession.user_id,
       };
     },
-    async deleteSession(sessionToken) {
-      await prisma.session.delete({
-        where: {
-          session_token: sessionToken,
-        },
-      });
+
+    async deleteSession(sessionToken: string) {
+      await prisma.session.delete({ where: { session_token: sessionToken } });
     },
-    // async createVerificationToken({ identifier, expires, token }) {},
-    // async useVerificationToken({ identifier, token }) {},
   };
 }

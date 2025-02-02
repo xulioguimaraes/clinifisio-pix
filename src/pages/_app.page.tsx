@@ -56,7 +56,12 @@ export default function App({
                     siteName: "CALL",
                   }}
                 />
-                <div className="max-w-screen-xl mx-auto my-0 pl-16 ">
+                <div
+                  style={{
+                    paddingLeft: !shouldHideHeader ? "4rem" : "",
+                  }}
+                  className="max-w-screen-xl mx-auto my-0 "
+                >
                   {!shouldHideHeader && <Header />}
 
                   <main className="px-2">
