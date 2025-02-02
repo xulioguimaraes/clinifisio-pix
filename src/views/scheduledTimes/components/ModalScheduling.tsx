@@ -2,7 +2,7 @@ import { Modal } from "@/components/Modal/Modal";
 import { IAppointments } from "@/types";
 import { converNumberForMoney } from "@/utils/conver-time-string-to-minutes";
 import { WhatsApp } from "@mui/icons-material";
-import { Box, Divider } from "@mui/material";
+import { Box, Button, Divider } from "@mui/material";
 import { useEffect, useState } from "react";
 
 export const ModalScheduling = ({
@@ -17,14 +17,15 @@ export const ModalScheduling = ({
   return (
     <Modal onClose={onClose} isOpen={isOpen} title="Informações do Agendamento">
       <Box className="">
-        <Box alignItems={"baseline"} className="flex  gap-2">
+        <Box>Status Agendamento: Pendente</Box>
+        <Box alignItems={"baseline"} display={"flex"} gap={1}>
           <span>Horario:</span>{" "}
           <Box fontSize={22} component={"p"}>
             {scheduling.hours}:00
           </Box>
         </Box>
         <Divider />
-        <Box alignItems={"baseline"} className="flex  gap-2">
+        <Box alignItems={"baseline"} display={"flex"} gap={1}>
           <span>Cliente:</span>{" "}
           <Box fontSize={22} component={"p"}>
             {scheduling.name}
@@ -32,7 +33,7 @@ export const ModalScheduling = ({
         </Box>
         <Divider />
 
-        <Box alignItems={"baseline"} className="flex gap-2">
+        <Box alignItems={"baseline"} display={"flex"} gap={1}>
           <span>Observações:</span>{" "}
           <Box fontSize={22} component={"p"}>
             {scheduling.observations}
@@ -40,11 +41,16 @@ export const ModalScheduling = ({
         </Box>
         <Divider />
 
-        <Box alignItems={"baseline"} className="flex gap-2">
+        <Box alignItems={"baseline"} display={"flex"}  gap={1}>
           <span>Telefone:</span>{" "}
           <Box
-            fontSize={22}
+            fontSize={18}
             component={"a"}
+            borderRadius={12}
+            my={.5}
+            bgcolor="#dcf8c7"
+            px={2}
+            color={'black'}
             href={`https://wa.me/+55${scheduling.phone}`}
           >
             {scheduling.phone} <WhatsApp fontSize="medium" />
@@ -52,7 +58,7 @@ export const ModalScheduling = ({
         </Box>
         <Divider />
 
-        <Box alignItems={"baseline"} className="flex gap-2">
+        <Box alignItems={"baseline"} display={"flex"} gap={1}>
           <span>Email:</span>{" "}
           <Box fontSize={22} component={"p"}>
             {scheduling.email}
@@ -61,10 +67,10 @@ export const ModalScheduling = ({
         <Divider />
       </Box>
 
-      <Box mt={2} border={1} borderColor={'GrayText'} p={2} borderRadius={2}>
+      <Box mt={2} border={1} borderColor={"GrayText"} p={2} borderRadius={2}>
         <h1 className="text-xl">Serviço Agendado</h1>
 
-        <Box alignItems={"baseline"} className="flex gap-2">
+        <Box alignItems={"baseline"} display={"flex"} gap={1}>
           <span>Serviço:</span>{" "}
           <Box fontSize={22} component={"p"}>
             {scheduling.service?.name}
@@ -72,7 +78,7 @@ export const ModalScheduling = ({
         </Box>
         <Divider />
 
-        <Box alignItems={"baseline"} className="flex gap-2">
+        <Box alignItems={"baseline"} display={"flex"} gap={1}>
           <span>Descrição:</span>{" "}
           <Box fontSize={22} component={"p"}>
             {scheduling.service?.description}
@@ -80,13 +86,28 @@ export const ModalScheduling = ({
         </Box>
         <Divider />
 
-        <Box alignItems={"baseline"} className="flex gap-2">
+        <Box alignItems={"baseline"} display={"flex"} gap={1}>
           <span>Preço:</span>{" "}
           <Box fontSize={22} component={"p"}>
             {converNumberForMoney(+scheduling?.service?.price)}
           </Box>
         </Box>
         <Divider />
+      </Box>
+      <Box
+        py={2}
+        display={"flex"}
+        justifyContent={"center"}
+        alignContent={"center"}
+        flexDirection={"column"}
+        gap={1}
+      >
+        <Button fullWidth color="success" variant="contained">
+          Confirmar Agendamento
+        </Button>
+        <Button fullWidth color="secondary" variant="contained">
+          Editar Agendamento
+        </Button>
       </Box>
     </Modal>
   );
