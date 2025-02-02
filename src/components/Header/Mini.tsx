@@ -79,12 +79,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function MiniDrawer({}: {}) {
-  const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
 
   const handleDrawerClose = () => {
     setOpen((old) => !old);
@@ -92,7 +87,12 @@ export default function MiniDrawer({}: {}) {
 
   return (
     <Box>
-      <Drawer variant="permanent" open={open} onClose={() => setOpen(false)}>
+      <Drawer
+        variant="permanent"
+        open={open}
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+      >
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
             {!open ? <ChevronRightIcon /> : <ChevronLeftIcon />}

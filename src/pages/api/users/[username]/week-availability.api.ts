@@ -76,6 +76,7 @@ export default async function handler(
             phone: true,
             observations: true,
             date: true,
+            status: true,
             service: {
               select: {
                 id: true,

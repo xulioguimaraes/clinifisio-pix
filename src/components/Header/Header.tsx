@@ -10,11 +10,7 @@ export const Header = () => {
   const handleLogOut = async () => {};
   const { data: session } = useSession();
   const toast = useToastContext();
-  const [open, setOpen] = useState(false);
 
-  const onCloseDrawer = () => {
-    setOpen(false);
-  };
   function copyToClipboard() {
     if (session?.user.id) {
       navigator.clipboard

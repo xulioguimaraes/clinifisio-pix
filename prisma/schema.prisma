@@ -83,6 +83,7 @@ model Scheduling {
   id_service   String
   user         User     @relation(fields: [user_id], references: [id])
   service      Service  @relation(fields: [id_service], references: [id])
+  status       Int      @default(1) // 1 - Pendente, 2 - Confirmado, 3 - Cancelado, 4 - Atendido
 
   @@index([user_id])
   @@map("schedulings")
@@ -113,7 +114,6 @@ model Service {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   active      Boolean  @default(true)
-  status      Int      @default(1) // 1 - Pendente, 2 - Confirmado, 3 - Cancelado, 4 - Atendido
 
   user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   Scheduling Scheduling[]
