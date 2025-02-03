@@ -6,6 +6,7 @@ import "dayjs/locale/pt-br"; // Importar o idioma Português do Brasil
 import isoWeek from "dayjs/plugin/isoWeek";
 
 import { TabWeeks } from "@/views/scheduledTimes/components/TabWeeks";
+import { ListSchedulings } from "@/views/scheduledTimes/components/ListSchedulings";
 dayjs.extend(isoWeek);
 dayjs.locale("pt-br");
 
@@ -24,10 +25,11 @@ function IntervalsTime() {
         aria-label="wrapped label tabs example"
       >
         <Tab value="one" label="Semana" wrapped />
-        <Tab value="three" label="Lista" />
+        <Tab value="two" label="Lista" />
       </Tabs>
 
       <TabWeeks isOpen={value === "one"} />
+      <ListSchedulings isOpen={value === "two"} />
     </div>
   );
 }

@@ -137,10 +137,6 @@ export const TabWeeks = ({ isOpen = false }) => {
     handleToogle();
   };
 
-  const handleClose = () => {
-    setOpenModal(false);
-  };
-
   return (
     <>
       {openModal && (

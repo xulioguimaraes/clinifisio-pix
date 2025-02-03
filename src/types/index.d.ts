@@ -58,3 +58,20 @@ export interface IAvailableTimes {
   }[];
   uniqueAvailableTimes: number[];
 }
+
+type Scheduling = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  observations: string;
+  date: string;
+  status: 1 | 2 | 3 | 4;
+  service: {
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    porcentagem: number;
+  };
+};
