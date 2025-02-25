@@ -19,10 +19,6 @@ export const ScheduleForm = () => {
   const toast = useToastContext();
   const username = String(router.query.username);
 
-  const handleClearSelectedDateTime = () => {
-    setStepSelect(2);
-    //setSelectedDateTime(null);
-  };
   const handleBackStepService = () => {
     setStepSelect(1);
     setSelectedDateTime(null);

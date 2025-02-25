@@ -69,9 +69,13 @@ export default async function handler(
               gte: day.startOf("day").toDate(),
               lte: day.endOf("day").toDate(),
             },
+            status: {
+              not: 3, //  excluir status 3- Cancelado
+            },
           },
           select: {
             name: true,
+            id: true,
             email: true,
             phone: true,
             observations: true,

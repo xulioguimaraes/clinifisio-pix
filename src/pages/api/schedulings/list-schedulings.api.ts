@@ -3,6 +3,7 @@ import { Prisma } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { buildNextAuthOption } from "../auth/[...nextauth].api";
+import dayjs from "dayjs";
 
 export default async function handler(
   request: NextApiRequest,
@@ -82,7 +83,11 @@ export default async function handler(
       page,
       perPage,
       totalPages: Math.ceil(totalAgendamentos / perPage),
-      data: agendamentos,
+      data: agendamentos.map((item) => ({
+        ...item,
+        date: dayjs(item.date).get("date"),
+        hours: dayjs(item.date).get("hour"),
+      })),
     });
   } catch (error) {
     return response

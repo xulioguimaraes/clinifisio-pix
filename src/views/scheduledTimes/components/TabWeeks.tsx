@@ -1,26 +1,23 @@
 import { useToastContext } from "@/hooks/useToast";
 import { users } from "@/services/users";
 import { IAppointments, IAvailableTimes, IWeekData } from "@/types";
-import { Box, Skeleton } from "@mui/material";
+import { Box, Skeleton, Stack } from "@mui/material";
 import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Scheduling } from "./Scheduling";
 import { HeaderCalendarWeek } from "./HeaderCalendarWeek";
-import { ModalScheduling } from "./ModalScheduling";
+import { useScheduling } from "../hooks/useScheduling";
 
-export const TabWeeks = ({ isOpen = false }) => {
+export const TabWeeks = ({ value }: { value: "one" }) => {
   const toast = useToastContext();
   const { data: session } = useSession();
   const [isLoadingBloacked, setIsLoadingBloacked] = useState(true);
+  const { setToday, today } = useScheduling();
   const [isLoadingAvailableTimes, setIsLoadingAvailableTimes] = useState(true);
-  const [today, setToday] = useState(dayjs().format("YYYY-MM-DD"));
   const [blockedDays, setBlockedDays] = useState<number[]>([]);
-  const [scheduling, setScheduling] = useState<IAppointments>(
-    {} as IAppointments
-  );
+
   const [weekData, setWeekData] = useState<IWeekData>({} as IWeekData);
-  const [openModal, setOpenModal] = useState(false);
 
   const [dateWeeks, setDateWeeks] = useState<
     { date: string; monthName: string; weekNumber: number }[]
@@ -46,6 +43,7 @@ export const TabWeeks = ({ isOpen = false }) => {
       params
     );
     if (response.status === 200) {
+      console.log(response.data);
       setAvailableTimes(response.data);
     }
     setIsLoadingAvailableTimes(false);
@@ -124,29 +122,17 @@ export const TabWeeks = ({ isOpen = false }) => {
     }
   };
   useEffect(() => {
-    getInfoCalendar();
-    getDaysName(today);
+    if (value === "one") {
+      getInfoCalendar();
+      getDaysName(today);
+    }
   }, [today]);
 
   const daysOfWeeksIsArray = weekData.daysOfWeek?.length;
-  const handleToogle = () => {
-    setOpenModal((old) => !old);
-  };
-  const handleScheduling = (value: IAppointments) => {
-    setScheduling(value);
-    handleToogle();
-  };
 
   return (
     <>
-      {openModal && (
-        <ModalScheduling
-          isOpen={openModal}
-          onClose={handleToogle}
-          scheduling={scheduling}
-        />
-      )}
-      <div className={`p-6 overflow-x-scroll ${isOpen ? "block" : "hidden"}`}>
+      <div className={`p-6 overflow-x-scroll `}>
         <div>
           <HeaderCalendarWeek
             data={dateWeeks}
@@ -231,7 +217,6 @@ export const TabWeeks = ({ isOpen = false }) => {
                               (appt) => +appt.hours === hour
                             )!
                           }
-                          onScheduling={handleScheduling}
                         />
                       ) : null}
                     </Box>

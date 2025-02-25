@@ -26,4 +26,35 @@ export const users = {
       params,
     });
   },
+  confirmSheduling: async (
+    username: string,
+    {
+      name,
+      email,
+      observations,
+      phone,
+      date,
+      id_service,
+    }: {
+      name: string;
+      email: string;
+      observations: string;
+      phone: string;
+      date: Date;
+      id_service: string;
+    },
+    toast: any
+  ) => {
+    return await api
+      .post(`/users/${username}/schedule`, {
+        name,
+        email,
+        observations,
+        phone,
+        date,
+        id_service,
+      })
+      .then((item) => item)
+      .catch((item) => toast.error(item));
+  },
 };

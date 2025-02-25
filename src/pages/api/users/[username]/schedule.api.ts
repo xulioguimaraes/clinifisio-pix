@@ -54,11 +54,11 @@ export default async function handler(
 
   if (conflictingScheduling) {
     return res.status(400).json({
-      message: "There is another scheduling at the same time",
+      message: "Há outro agendamento no mesmo horário",
     });
   }
 
-  const scheduling = await prisma.scheduling.create({
+  await prisma.scheduling.create({
     data: {
       name,
       email,
@@ -71,39 +71,39 @@ export default async function handler(
   });
   return res.status(201).json({ message: "Agendamento feito com sucesso" });
 
-  if (!!email) {
-    const calendar = google.calendar({
-      version: "v3",
-      auth: await getGoogleOAuthToken(user.id!),
-    });
+  // if (!!email) {
+  //   const calendar = google.calendar({
+  //     version: "v3",
+  //     auth: await getGoogleOAuthToken(user.id!),
+  //   });
 
-    await calendar.events.insert({
-      calendarId: "primary",
-      conferenceDataVersion: 1,
-      requestBody: {
-        summary: `Call: ${name}`,
-        description: observations,
-        start: {
-          dateTime: schedulingDate.format(),
-        },
-        end: {
-          dateTime: schedulingDate.add(1, "hour").format(),
-        },
-        attendees: [
-          {
-            email,
-            displayName: name,
-          },
-        ],
-        conferenceData: {
-          createRequest: {
-            requestId: scheduling.id,
-            conferenceSolutionKey: {
-              type: "hangoutsMeet",
-            },
-          },
-        },
-      },
-    });
-  }
+  //   await calendar.events.insert({
+  //     calendarId: "primary",
+  //     conferenceDataVersion: 1,
+  //     requestBody: {
+  //       summary: `Call: ${name}`,
+  //       description: observations,
+  //       start: {
+  //         dateTime: schedulingDate.format(),
+  //       },
+  //       end: {
+  //         dateTime: schedulingDate.add(1, "hour").format(),
+  //       },
+  //       attendees: [
+  //         {
+  //           email,
+  //           displayName: name,
+  //         },
+  //       ],
+  //       conferenceData: {
+  //         createRequest: {
+  //           requestId: scheduling.id,
+  //           conferenceSolutionKey: {
+  //             type: "hangoutsMeet",
+  //           },
+  //         },
+  //       },
+  //     },
+  //   });
+  // }
 }

@@ -10,27 +10,35 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "@/styles/global.module.scss";
 import { columns } from "./columns";
 import { Scheduling } from "@/types";
+import { useScheduling } from "../../hooks/useScheduling";
 
-export const ListSchedulings = ({ isOpen }: { isOpen: boolean }) => {
-  const [params, setParams] = useState({ search: "", page: 1, per_page: 10 });
+export const ListSchedulings = ({ value }: { value: "two" }) => {
   const [openSearchTerm, setOpenSearchTerm] = useState(false);
+  const { handleScheduling: onScheduling, params, setParams } = useScheduling();
   const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(
     null
   );
 
-  const [onModal, setOnModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // Armazena o termo de pesquisa
   const [total, setTotal] = useState(0);
+  useEffect(() => {
+    console.log(params);
+  }, [params]);
+
   const { data: listData, isLoading } = useQuery<{ data: Scheduling[] }>(
     ["list-schedulings", params],
     async () => {
-      const response = await scheduling.listSchedulings(params);
-      setTotal(response.data.total);
-      return response.data;
+      if (value === "two") {
+        console.log(params);
+        const response = await scheduling.listSchedulings(params);
+        setTotal(response.data.total);
+        return response.data;
+      }
+      return [];
     },
     { keepPreviousData: false }
   );
@@ -49,20 +57,12 @@ export const ListSchedulings = ({ isOpen }: { isOpen: boolean }) => {
     setDebounceTimeout(timeout);
   };
 
-  const handleScheduling = (item: any) => {};
-  const onCloseModal = () => {
-    setOnModal(false);
+  const handleScheduling = (item: any) => {
+    onScheduling(item);
   };
-  const onOpenModal = () => {
-    setOnModal(true);
-  };
-  console.log(listData);
+
   return (
-    <Box
-      sx={{
-        display: isOpen ? "block" : "none",
-      }}
-    >
+    <Box>
       <>
         <Box display={"flex"} justifyContent={"end"} my={2} gap={1}>
           <Button
@@ -73,14 +73,14 @@ export const ListSchedulings = ({ isOpen }: { isOpen: boolean }) => {
           >
             Pesquisar
           </Button>
-          <Button
+          {/* <Button
             onClick={onOpenModal}
             color="success"
             startIcon={<Add />}
             variant="contained"
           >
             Novo Agendamento
-          </Button>
+          </Button> */}
         </Box>
         <Collapse in={openSearchTerm}>
           <TextField
@@ -147,12 +147,6 @@ export const ListSchedulings = ({ isOpen }: { isOpen: boolean }) => {
             sx={{ border: 0 }}
           />
         </Paper>
-        {/* <ModalForm
-          isOpen={onModal}
-          service={service}
-          onCloseModal={onCloseModal}
-          setParams={setParams}
-        /> */}
       </>
     </Box>
   );

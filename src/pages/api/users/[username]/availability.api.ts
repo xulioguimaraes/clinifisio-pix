@@ -60,6 +60,9 @@ export default async function handler(
     },
     where: {
       user_id: user.id,
+      status: {
+        not: 3,
+      },
       date: {
         gte: referenceDate.set("hour", startHours).toDate(),
         lte: referenceDate.set("hour", endHours).toDate(),
@@ -77,11 +80,9 @@ export default async function handler(
   //   return !isTimeBlocked && !isTimeInPast;
   // });
 
-  const availableTimes  = blockedTimes.map((schedules) => {
-    return schedules.date
-  })
-
-  
+  const availableTimes = blockedTimes.map((schedules) => {
+    return schedules.date;
+  });
 
   return res.json({ possibleTimes, availableTimes });
 }

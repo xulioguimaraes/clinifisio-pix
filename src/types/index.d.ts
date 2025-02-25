@@ -27,7 +27,9 @@ export interface IServices {
 }
 
 export interface IAppointments {
+  status: number;
   name: string;
+  id?: id;
   email: string;
   observations: string;
   phone: string;

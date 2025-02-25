@@ -29,7 +29,7 @@ export const dataMenu = [
         link: "/painel/scheduled-times",
         icon: <></>,
       },
-      { name: "Sobre", link: "/painel/sobre" },
+      { name: "Perfil", link: "/painel/perfil" },
     ],
   },
 ];
@@ -56,5 +56,5 @@ export const links = [
     link: "/painel/scheduled-times",
     icon: <FaCalendarAlt size={22} />,
   },
-  { name: "Sobre", link: "/painel/sobre", icon: <FaInfoCircle size={22} /> },
+  { name: "Perfil", link: "/painel/perfil", icon: <FaInfoCircle size={22} /> },
 ];
