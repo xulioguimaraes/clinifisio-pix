@@ -35,9 +35,9 @@ export default async function handler(
     const filters = search
       ? {
           OR: [
-            { name: { contains: search, mode: Prisma.QueryMode.insensitive } },
-            { email: { contains: search, mode: Prisma.QueryMode.insensitive } },
-            { phone: { contains: search, mode: Prisma.QueryMode.insensitive } },
+            { name: { contains: search, mode: "insensitive" } },
+            { email: { contains: search, mode: "insensitive" } },
+            { phone: { contains: search, mode: "insensitive" } },
           ],
         }
       : {};
@@ -83,11 +83,15 @@ export default async function handler(
       page,
       perPage,
       totalPages: Math.ceil(totalAgendamentos / perPage),
-      data: agendamentos.map((item) => ({
-        ...item,
-        date: dayjs(item.date).get("date"),
-        hours: dayjs(item.date).get("hour"),
-      })),
+      data: agendamentos.map(
+        (item: {
+          date: string | number | Date | dayjs.Dayjs | null | undefined;
+        }) => ({
+          ...item,
+          date: dayjs(item.date).get("date"),
+          hours: dayjs(item.date).get("hour"),
+        })
+      ),
     });
   } catch (error) {
     return response
