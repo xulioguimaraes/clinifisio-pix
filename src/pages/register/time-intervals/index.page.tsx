@@ -1,4 +1,3 @@
-import { api } from "@/lib/axios";
 import { converTimeStringToMinutes } from "@/utils/conver-time-string-to-minutes";
 import { getWeekDays } from "@/utils/get-weekdays";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,6 +23,7 @@ import {
   IntervalInput,
   IntervalItem,
 } from "./styles";
+import { api } from "@/services/api";
 
 const timeIntervalsFormSchema = z.object({
   intervals: z

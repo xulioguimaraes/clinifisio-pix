@@ -1,4 +1,3 @@
-import { api } from "@/lib/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Text, TextArea, TextInput } from "@ignite-ui/react";
 import dayjs from "dayjs";

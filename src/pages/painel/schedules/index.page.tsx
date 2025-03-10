@@ -1,4 +1,3 @@
-import { api } from "@/lib/axios";
 import {
   converTimeStringToMinutes,
   convertMinutesToTimeString,
@@ -24,6 +23,7 @@ import { withAuth } from "@/hoc/withAuth";
 import { users } from "@/services/users";
 import { useEffect, useState } from "react";
 import { useToastContext } from "@/hooks/useToast";
+import { api } from "@/services/api";
 
 const timeIntervalsFormSchema = z.object({
   intervals: z
