@@ -1,4 +1,4 @@
-import { api } from "@/lib/axios";
+import { api } from "./api";
 
 export const scheduling = {
   listSchedulings: async (params: {

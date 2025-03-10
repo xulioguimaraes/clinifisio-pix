@@ -1,4 +1,3 @@
-import { api } from "@/lib/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Heading, MultiStep, Text, TextInput } from "@ignite-ui/react";
 import { AxiosError } from "axios";
@@ -9,6 +8,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Container, Form, FormError, Header } from "./styles";
+import { api } from "@/services/api";
 
 const registerFormSchema = z.object({
   username: z

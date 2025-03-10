@@ -1,5 +1,4 @@
 import { Calendar } from "@/components/Calendar";
-import { api } from "@/lib/axios";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
@@ -13,6 +12,7 @@ import {
 } from "./styles";
 import { CircularProgress } from "@mui/material";
 import { Close } from "@mui/icons-material";
+import { api } from "@/services/api";
 interface Availability {
   possibleTimes: number[];
   availableTimes: number[];

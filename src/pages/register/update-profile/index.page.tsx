@@ -1,4 +1,3 @@
-import { api } from "@/lib/axios";
 import { buildNextAuthOption } from "@/pages/api/auth/[...nextauth].api";
 import { FormAnnotation } from "@/views/home/components/ClaimUsernameForm/styles";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,6 +20,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Container, Form, FormError, Header } from "../styles";
 import { ProfileBox } from "./styles";
+import { api } from "@/services/api";
 
 const updateProfileSchema = z.object({
   bio: z.string(),

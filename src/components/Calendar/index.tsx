@@ -1,5 +1,3 @@
-import { api } from "@/lib/axios";
-import { getWeekDays } from "@/utils/get-weekdays";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
@@ -13,6 +11,7 @@ import {
   CalendarHeader,
   CalendarTiles,
 } from "./styles";
+import { api } from "@/services/api";
 interface CalendarWeek {
   week: number;
   days: Array<{
