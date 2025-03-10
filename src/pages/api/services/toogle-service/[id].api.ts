@@ -29,15 +29,10 @@ export default async function handler(
       const userId = session.user.id;
 
       // Busca o estado atual da coluna 'active'
-      const service = await prisma.service.findUnique({
+      const service = await prisma.service.findFirst({
         where: {
-          id_userId: {
-            id: String(id),
-            userId: userId,
-          },
-        },
-        select: {
-          active: true,
+          id: String(id),
+          userId: userId,
         },
       });
 
@@ -47,13 +42,10 @@ export default async function handler(
 
       await prisma.service.update({
         where: {
-          id_userId: {
-            id: String(id),
-            userId: userId,
-          },
+          id: service.id, // Aqui usamos o id do serviço encontrado
         },
         data: {
-          active: !service.active,
+          active: !service.active, // Alterando o valor de `active`
         },
       });
 

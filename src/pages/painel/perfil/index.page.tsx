@@ -56,6 +56,7 @@ function IntervalsTime() {
     } catch (error) {
       toast.error("Erro ao enviar os dados");
       console.error(error);
+      setIsLoading(false);
     }
   };
   const onFileSelect = (file: File) => {
