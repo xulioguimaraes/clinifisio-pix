@@ -36,10 +36,7 @@ export default async function handler(
       const userId = session.user.id;
       await prisma.service.update({
         where: {
-          id_userId: {
-            id: String(id),
-            userId: userId,
-          },
+          id: String(id), // Aqui você utiliza o `id` único encontrado
         },
         data: {
           ...(name && { name }),
