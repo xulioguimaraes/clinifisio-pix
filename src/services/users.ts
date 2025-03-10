@@ -16,6 +16,11 @@ export const users = {
       return item;
     });
   },
+  updateUser: async (data: any) => {
+    return await api.put(`/users/update-user/`, data).then((item) => {
+      return item;
+    });
+  },
   getBlockedDays: async (username: string, params: any) => {
     return await api.get(`/users/${username}/blocked-dates`, {
       params,
