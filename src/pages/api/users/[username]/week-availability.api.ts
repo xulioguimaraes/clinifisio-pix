@@ -96,11 +96,15 @@ export default async function handler(
         return {
           date: day.format("YYYY-MM-DD"),
           availableTimes,
-          scheduledServices: scheduledServices.map((item) => ({
-            ...item,
-            date: dayjs(item.date).get("date"),
-            hours: dayjs(item.date).get("hour"),
-          })),
+          scheduledServices: scheduledServices.map(
+            (item: {
+              date: string | number | Date | dayjs.Dayjs | null | undefined;
+            }) => ({
+              ...item,
+              date: dayjs(item.date).get("date"),
+              hours: dayjs(item.date).get("hour"),
+            })
+          ),
         };
       })
     );

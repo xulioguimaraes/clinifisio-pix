@@ -32,12 +32,19 @@ export default async function handler(
       return response.status(400).json({ message: "User not found" });
     }
 
-    const filters = search
+    // Ajuste o filtro de busca, especificando o tipo correto para cada campo
+    const filters: Prisma.SchedulingWhereInput = search
       ? {
           OR: [
-            { name: { contains: search, mode: "insensitive" } },
-            { email: { contains: search, mode: "insensitive" } },
-            { phone: { contains: search, mode: "insensitive" } },
+            {
+              name: { contains: search, mode: "insensitive" },
+            },
+            {
+              email: { contains: search, mode: "insensitive" },
+            },
+            {
+              phone: { contains: search, mode: "insensitive" },
+            },
           ],
         }
       : {};
@@ -54,7 +61,6 @@ export default async function handler(
         user_id: user.id,
         ...filters,
       },
-
       select: {
         id: true,
         name: true,

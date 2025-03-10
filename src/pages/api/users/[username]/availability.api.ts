@@ -80,7 +80,7 @@ export default async function handler(
   //   return !isTimeBlocked && !isTimeInPast;
   // });
 
-  const availableTimes = blockedTimes.map((schedules) => {
+  const availableTimes = blockedTimes.map((schedules: { date: any; }) => {
     return schedules.date;
   });
 
