@@ -12,10 +12,16 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+
 import { links } from "./components/datamenu";
 import Link from "next/link";
+import {
+  BottomNavigation,
+  BottomNavigationAction,
+  Paper,
+  useMediaQuery,
+} from "@mui/material";
+import { useRouter } from "next/router";
 
 const drawerWidth = 340;
 
@@ -80,68 +86,125 @@ const Drawer = styled(MuiDrawer, {
 
 export default function MiniDrawer({}: {}) {
   const [open, setOpen] = React.useState(false);
-
+  const matches = useMediaQuery((theme) => theme.breakpoints.up("sm"));
+  const router = useRouter();
   const handleDrawerClose = () => {
     setOpen((old) => !old);
   };
+  const [value, setValue] = React.useState(0);
 
   return (
     <Box>
-      <Drawer
-        variant="permanent"
-        open={open}
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => setOpen(false)}
-      >
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {!open ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          {links.map((text, index) => (
-            <ListItem key={text.name} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                LinkComponent={Link}
-                href={text.link}
-                onClick={(e) => {
-                  setOpen(false);
-                }}
-                sx={[
-                  {
-                    minHeight: 48,
-                    px: 2.5,
+      {!matches ? (
+        <Box
+          sx={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            overflowX: "auto",
+            whiteSpace: "nowrap",
+          }}
+        >
+          <BottomNavigation
+            showLabels
+            value={value}
+            onChange={(event, newValue) => {
+              setValue(newValue);
+            }}
+            sx={{
+              display: "inline-flex",
+              minWidth: "100%",
+              background: "#202024",
+              height: 70,
+            }}
+          >
+            {links.map((item) => (
+              <BottomNavigationAction
+                key={item.name}
+                label={item.name}
+                onClick={() => router.push(item.link)}
+                icon={item.icon}
+                sx={{
+                  minWidth: "70px",
+                  maxWidth: "70px",
+                  flexShrink: 0,
+                  whiteSpace: "break-spaces",
+                  "& svg": {
+                    width: 26,
+                    height: 26,
                   },
-                  open
-                    ? {
-                        justifyContent: "initial",
-                      }
-                    : {
-                        justifyContent: "center",
-                      },
-                ]}
+                  // Estilo para o estado selecionado
+                  "&.Mui-selected": {
+                    minWidth: "70px",
+                    maxWidth: "70px",
+                  },
+                }}
+              />
+            ))}
+          </BottomNavigation>
+        </Box>
+      ) : (
+        <Drawer
+          variant="permanent"
+          open={open}
+          onMouseEnter={() => setOpen(true)}
+          onMouseLeave={() => setOpen(false)}
+        >
+          <DrawerHeader>
+            <IconButton onClick={handleDrawerClose}>
+              {!open ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            </IconButton>
+          </DrawerHeader>
+          <Divider />
+          <List>
+            {links.map((text, index) => (
+              <ListItem
+                key={text.name}
+                disablePadding
+                sx={{ display: "block" }}
               >
-                <ListItemIcon
+                <ListItemButton
+                  LinkComponent={Link}
+                  href={text.link}
+                  onClick={(e) => {
+                    setOpen(false);
+                  }}
                   sx={[
                     {
-                      minWidth: 0,
-                      justifyContent: "center",
-                      mr: open ? 3 : "auto",
+                      minHeight: 48,
+                      px: 2.5,
                     },
+                    open
+                      ? {
+                          justifyContent: "initial",
+                        }
+                      : {
+                          justifyContent: "center",
+                        },
                   ]}
                 >
-                  {text.icon}
-                </ListItemIcon>
-                <ListItemText
-                  primary={text.name}
-                  sx={[{ opacity: open ? 1 : 0 }]}
-                />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
+                  <ListItemIcon
+                    sx={[
+                      {
+                        minWidth: 0,
+                        justifyContent: "center",
+                        mr: open ? 3 : "auto",
+                      },
+                    ]}
+                  >
+                    {text.icon}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={text.name}
+                    sx={[{ opacity: open ? 1 : 0 }]}
+                  />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        </Drawer>
+      )}
     </Box>
   );
 }

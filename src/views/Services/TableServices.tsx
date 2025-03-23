@@ -9,7 +9,7 @@ import styles from "@/styles/global.module.scss";
 import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Add, Search } from "@mui/icons-material";
-import { columns } from "./columns";
+import { useColumns } from "./columns";
 import { IServices } from "@/types";
 import { services } from "@/services/services";
 import { ModalForm } from "./components/ModalForms";
@@ -25,6 +25,7 @@ export const TableServices = () => {
   const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(
     null
   ); // Armazena o timeout do debounce
+  const columns = useColumns();
 
   const getData = async () => {
     setIsLoading(true);

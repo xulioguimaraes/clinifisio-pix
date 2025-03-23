@@ -12,10 +12,9 @@ globalStyles();
 import "@/styles/global.scss";
 import { AuthProvider } from "@/hooks/useAuth";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
-import { Header } from "@/components/Header/Header";
 import { useRouter } from "next/router";
 import { ToastProvider } from "@/hooks/useToast";
-const darkTheme = createTheme({
+export const darkTheme = createTheme({
   palette: {
     mode: "dark",
   },
@@ -27,26 +26,13 @@ export default function App({
 }: AppProps) {
   const router = useRouter();
 
-  const routerNoShowMenu = [
-    "/",
-    "/login",
-    "/register",
-    "/register/connect-calendar",
-    "/register/time-intervals",
-    "/register/update-profile",
-    `/schedule`,
-  ];
-  const shouldHideHeader =
-    routerNoShowMenu.includes(router.pathname) ||
-    router.pathname.startsWith("/schedule");
-
   return (
     <QueryClientProviderDep client={queryClientDep}>
       <ThemeProvider theme={darkTheme}>
         <QueryClientProvider client={queryClient}>
           <SessionProvider session={session}>
-            <AuthProvider>
-              <ToastProvider>
+            <ToastProvider>
+              <AuthProvider>
                 <CssBaseline />
                 <DefaultSeo
                   openGraph={{
@@ -56,20 +42,12 @@ export default function App({
                     siteName: "CALL",
                   }}
                 />
-                <div
-                  style={{
-                    paddingLeft: !shouldHideHeader ? "4rem" : "",
-                  }}
-                  className="max-w-screen-xl mx-auto my-0 "
-                >
-                  {!shouldHideHeader && <Header />}
 
-                  <main className="px-2">
-                    <Component {...pageProps} />
-                  </main>
-                </div>
-              </ToastProvider>
-            </AuthProvider>
+                <main className="px-2">
+                  <Component {...pageProps} />
+                </main>
+              </AuthProvider>
+            </ToastProvider>
           </SessionProvider>
         </QueryClientProvider>
       </ThemeProvider>

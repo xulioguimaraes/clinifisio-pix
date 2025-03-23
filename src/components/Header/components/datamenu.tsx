@@ -47,12 +47,12 @@ export const links = [
     icon: <FaConciergeBell size={22} />,
   },
   {
-    name: "Configurar Horários",
+    name: "Horários",
     link: "/painel/schedules",
     icon: <FaClock size={22} />,
   },
   {
-    name: "Horários Agendados",
+    name: "Agendados",
     link: "/painel/scheduled-times",
     icon: <FaCalendarAlt size={22} />,
   },

@@ -11,7 +11,7 @@ import { useDataTableContext } from "@/hooks/useDataTable";
 import { TransactionModal } from "../TransactionModal/TransactionModal";
 import { useState } from "react";
 import styles from "./styles.module.scss";
-import { columns } from "./columns";
+import { useColumns } from "./columns";
 import { ITransaction } from "@/types";
 
 export const Table = () => {
@@ -57,6 +57,8 @@ export const Table = () => {
 
     setDebounceTimeout(timeout);
   };
+  const columns = useColumns();
+
   return (
     <>
       <div className="flex justify-end my-4 gap-2">

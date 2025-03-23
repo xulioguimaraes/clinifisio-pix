@@ -7,6 +7,7 @@ import {
   ListItemIcon,
   Menu,
   MenuItem,
+  Stack,
   Tooltip,
 } from "@mui/material";
 
@@ -48,7 +49,21 @@ export const Header = () => {
     <>
       <header>
         <div className="mb-4">
-          <div className="flex px-2 pt-8 pb-4 items-center justify-between">
+          <Stack
+            py={{
+              md: 2,
+              xl: 2,
+              xs: 1,
+            }}
+            px={{
+              md: 1,
+              xl: 1,
+              xs: 1,
+            }}
+            alignItems={"center"}
+            justifyContent={"space-between"}
+            flexDirection={"row"}
+          >
             <div className="flex gap-2">
               <div></div>
 
@@ -63,7 +78,6 @@ export const Header = () => {
                   <IconButton
                     onClick={handleClick}
                     size="small"
-                    sx={{ ml: 2 }}
                     aria-controls={open ? "account-menu" : undefined}
                     aria-haspopup="true"
                     aria-expanded={open ? "true" : undefined}
@@ -138,7 +152,7 @@ export const Header = () => {
             >
               Sair
             </Button>
-          </div>
+          </Stack>
           <Divider />
         </div>
         <MiniDrawer />

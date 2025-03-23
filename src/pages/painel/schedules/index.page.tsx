@@ -18,7 +18,7 @@ import {
   IntervalInput,
   IntervalItem,
 } from "./styles";
-import { Button, CircularProgress } from "@mui/material";
+import { Button, CircularProgress, Stack } from "@mui/material";
 import { withAuth } from "@/hoc/withAuth";
 import { users } from "@/services/users";
 import { useEffect, useState } from "react";
@@ -192,29 +192,44 @@ function TimeIntervals() {
             <IntervalContainer>
               {fields.map((field, index) => {
                 return (
-                  <>
-                    <IntervalItem key={field.id}>
-                      <Controller
-                        name={`intervals.${index}.enabled`}
-                        control={control}
-                        render={({ field }) => {
-                          return (
-                            <Checkbox
-                              onCheckedChange={(checked) => {
-                                field.onChange(checked === true);
-                              }}
-                              disabled={true}
-                              checked={field.value}
-                            />
-                          );
+                  <IntervalItem key={field.id}>
+                    <Stack
+                      spacing={1}
+                      sx={{
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      <Stack
+                        sx={{
+                          gap: 2,
+                          flexDirection: "row",
+                          flexWrap: "wrap",
                         }}
-                      />
-                      <IntervalDay>
-                        <Text>{weekDays[field.weekDay]}</Text>
-                      </IntervalDay>
+                      >
+                        <Controller
+                          name={`intervals.${index}.enabled`}
+                          control={control}
+                          render={({ field }) => {
+                            return (
+                              <Checkbox
+                                onCheckedChange={(checked) => {
+                                  field.onChange(checked === true);
+                                }}
+                                checked={field.value}
+                              />
+                            );
+                          }}
+                        />
+                        <IntervalDay>
+                          <Text>{weekDays[field.weekDay]}</Text>
+                        </IntervalDay>
+                      </Stack>
 
                       <IntervalInput>
                         <TextInput
+                          style={{
+                            width: "100%",
+                          }}
                           size={"sm"}
                           type="time"
                           step={60}
@@ -222,6 +237,9 @@ function TimeIntervals() {
                           {...register(`intervals.${index}.startTime`)}
                         />
                         <TextInput
+                          style={{
+                            width: "100%",
+                          }}
                           size={"sm"}
                           type="time"
                           disabled={intervals[index].enabled === false}
@@ -229,8 +247,8 @@ function TimeIntervals() {
                           {...register(`intervals.${index}.endTime`)}
                         />
                       </IntervalInput>
-                    </IntervalItem>
-                  </>
+                    </Stack>
+                  </IntervalItem>
                 );
               })}
             </IntervalContainer>
