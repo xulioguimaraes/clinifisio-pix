@@ -12,8 +12,16 @@ globalStyles();
 import "@/styles/global.scss";
 import { AuthProvider } from "@/hooks/useAuth";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
-import { useRouter } from "next/router";
+import { Router, useRouter } from "next/router";
 import { ToastProvider } from "@/hooks/useToast";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
+
+Router.events.on("routeChangeStart", () => NProgress.start());
+Router.events.on("routeChangeComplete", () => NProgress.done());
+Router.events.on("routeChangeError", () => NProgress.done());
+
+NProgress.configure({ showSpinner: false });
 export const darkTheme = createTheme({
   palette: {
     mode: "dark",
