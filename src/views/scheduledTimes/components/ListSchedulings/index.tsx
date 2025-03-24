@@ -12,7 +12,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import styles from "@/styles/global.module.scss";
-import { columns } from "./columns";
+import { useColumns } from "./columns";
 import { Scheduling } from "@/types";
 import { useScheduling } from "../../hooks/useScheduling";
 
@@ -60,6 +60,8 @@ export const ListSchedulings = ({ value }: { value: "two" }) => {
   const handleScheduling = (item: any) => {
     onScheduling(item);
   };
+
+  const columns = useColumns();
 
   return (
     <Box>

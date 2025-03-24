@@ -35,11 +35,11 @@ export const dataMenu = [
 ];
 
 export const links = [
-  {
-    name: "Categorias",
-    link: "/painel/categorias",
-    icon: <FaTags size={22} />,
-  },
+  // {
+  //   name: "Categorias",
+  //   link: "/painel/categorias",
+  //   icon: <FaTags size={22} />,
+  // },
   { name: "Transações", link: "/painel", icon: <FaExchangeAlt size={22} /> },
   {
     name: "Serviços",

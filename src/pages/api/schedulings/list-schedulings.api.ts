@@ -94,6 +94,7 @@ export default async function handler(
           date: string | number | Date | dayjs.Dayjs | null | undefined;
         }) => ({
           ...item,
+          scheduling_date: item.date,
           date: dayjs(item.date).get("date"),
           hours: dayjs(item.date).get("hour"),
         })

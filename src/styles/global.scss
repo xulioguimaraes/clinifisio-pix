@@ -48,6 +48,19 @@ button {
     // filter: brightness(0.8);
   }
 }
+
+.bg-pendente {
+  background-color: #dcf8c7;
+}
+.bg-confirmado {
+  background-color: #4caf50;
+}
+.bg-cancelado {
+  background-color: #f5c6c1;
+}
+.bg-atendido {
+  background-color: #b6e3f5;
+}
 [disabled] {
   opacity: 0.6;
   cursor: not-allowed;

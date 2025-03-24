@@ -1,7 +1,7 @@
 import { useToastContext } from "@/hooks/useToast";
 import { users } from "@/services/users";
-import { IAppointments, IAvailableTimes, IWeekData } from "@/types";
-import { Box, Skeleton, Stack } from "@mui/material";
+import { IAvailableTimes, IWeekData } from "@/types";
+import { Box, Skeleton } from "@mui/material";
 import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -158,9 +158,17 @@ export const TabWeeks = ({ value }: { value: "one" }) => {
               {/* Coluna de Horas */}
               <Box
                 sx={{
-                  paddingTop: 8,
+                  paddingTop: {
+                    xs: "59px",
+                    md: 8,
+                    xl: 8,
+                  },
                 }}
-                minWidth={100}
+                minWidth={{
+                  md: 100,
+                  xl: 100,
+                  xs: 54,
+                }}
                 bgcolor={"Highlight"}
                 className="flex flex-col border-gray-600 sticky left-0 z-10 pt-6"
               >

@@ -93,7 +93,7 @@ function IntervalsTime() {
             gridTemplateColumns={{
               md: "1fr 1fr 1fr",
               xl: "1fr 1fr 1fr",
-              xs: "1fr 1fr 1fr",
+              xs: "1fr",
             }}
           >
             <TextField

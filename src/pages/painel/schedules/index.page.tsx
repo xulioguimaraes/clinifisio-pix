@@ -18,7 +18,7 @@ import {
   IntervalInput,
   IntervalItem,
 } from "./styles";
-import { Button, CircularProgress, Stack } from "@mui/material";
+import { Box, Button, CircularProgress, Stack } from "@mui/material";
 import { withAuth } from "@/hoc/withAuth";
 import { users } from "@/services/users";
 import { useEffect, useState } from "react";
@@ -178,7 +178,18 @@ function TimeIntervals() {
     <>
       <NextSeo title="Disponibilidade | Call" noindex />
 
-      <Container>
+      <Stack
+        maxWidth={572}
+        py={4}
+        borderRadius={"12px"}
+        component={"main"}
+        mx={"auto"}
+        mb={{
+          xs: 8,
+          md: 0,
+          xl: 0,
+        }}
+      >
         <Header>
           <Text>
             Defina o intervalo de horaios que você esta disponivel em cada dia
@@ -197,6 +208,7 @@ function TimeIntervals() {
                       spacing={1}
                       sx={{
                         flexWrap: "wrap",
+                        flex: 1,
                       }}
                     >
                       <Stack
@@ -225,11 +237,21 @@ function TimeIntervals() {
                         </IntervalDay>
                       </Stack>
 
-                      <IntervalInput>
-                        <TextInput
-                          style={{
+                      <Stack
+                        sx={{
+                          "input::-webkit-calendar-picker-indicator": {
+                            filter: "invert(100%) brightness(30%)",
+                          },
+                          "& div": {
                             width: "100%",
-                          }}
+                          },
+                        }}
+                        width={"100%"}
+                        flexDirection={"row"}
+                        alignItems={"center"}
+                        gap={2}
+                      >
+                        <TextInput
                           size={"sm"}
                           type="time"
                           step={60}
@@ -237,16 +259,13 @@ function TimeIntervals() {
                           {...register(`intervals.${index}.startTime`)}
                         />
                         <TextInput
-                          style={{
-                            width: "100%",
-                          }}
                           size={"sm"}
                           type="time"
                           disabled={intervals[index].enabled === false}
                           step={60}
                           {...register(`intervals.${index}.endTime`)}
                         />
-                      </IntervalInput>
+                      </Stack>
                     </Stack>
                   </IntervalItem>
                 );
@@ -278,7 +297,7 @@ function TimeIntervals() {
             </Button>
           </IntervalBox>
         </Header>
-      </Container>
+      </Stack>
     </>
   );
 }

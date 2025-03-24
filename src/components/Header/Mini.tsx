@@ -101,6 +101,7 @@ export default function MiniDrawer({}: {}) {
             position: "fixed",
             bottom: 0,
             left: 0,
+            zIndex: 2,
             right: 0,
             overflowX: "auto",
             whiteSpace: "nowrap",
