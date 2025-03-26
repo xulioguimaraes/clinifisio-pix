@@ -26,15 +26,20 @@ interface DataProps {
 export default function Schedule({}: ScheduleProps) {
   const router = useRouter();
   const { username } = router.query;
+  console.log(router.query);
   const {
     data: user,
     isLoading,
     error,
-  } = useQuery(["user"], async () => {
-    const response = await api.get(`/users/${username}/get`);
-    return response.data;
+  } = useQuery({
+    queryKey: ["user", username],
+    queryFn: async () => {
+      const response = await api.get(`/users/${username}/get`);
+      return response.data;
+    },
+    enabled: !!username,
   });
-  
+
   return (
     <>
       <NextSeo title={`Agendar com ${user?.name} | Call`} />
@@ -68,5 +73,3 @@ export default function Schedule({}: ScheduleProps) {
     </>
   );
 }
-
-
