@@ -1,7 +1,5 @@
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { createContext, useContext } from "react";
-import { users } from "@/services/users";
 import { Header } from "@/components/Header/Header";
 import { useMediaQuery } from "@mui/material";
 interface AuthContextType {}
@@ -14,13 +12,6 @@ const AuthContext = createContext<AuthContextType>({
 export const useAuthContext = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const { data: session, status } = useSession();
-
-  const getUserData = async () => {
-    const response = await users.getUserData();
-
-    console.log(response.data);
-  };
   const router = useRouter();
   const matches = useMediaQuery((theme) => theme?.breakpoints.up("sm"));
   const routerNoShowMenu = [
@@ -40,7 +31,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     <AuthContext.Provider value={{}}>
       <div
         style={{
-          paddingLeft: !shouldHideHeader && !matches === false  ?  "4rem" : "",
+          paddingLeft: !shouldHideHeader && !matches === false ? "4rem" : "",
         }}
         className="max-w-screen-xl mx-auto my-0 "
       >
