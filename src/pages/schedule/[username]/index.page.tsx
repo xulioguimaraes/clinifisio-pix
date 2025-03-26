@@ -4,6 +4,7 @@ import { GetServerSideProps, GetStaticPaths } from "next";
 import { NextSeo } from "next-seo";
 import { ScheduleForm } from "./ScheduleForm";
 import { Container, UserHeader } from "./styles";
+import { api } from "@/services/api";
 interface ScheduleProps {
   user: {
     name: string;
@@ -39,9 +40,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetServerSideProps = async ({ params }) => {
   const username = String(params?.username);
 
-  const user = await prisma.user.findUnique({
-    where: { username },
-  });
+  const { data: user } = await api.get(`/users/${username}/get`);
 
   if (!user) {
     return {
@@ -56,6 +55,6 @@ export const getStaticProps: GetServerSideProps = async ({ params }) => {
         avatarUrl: user.avatar_url,
       },
     },
-    revalidate: 60 * 60 * 24, // 24horas
+   // revalidate: 60 * 60 * 24, // 24horas
   };
 };
