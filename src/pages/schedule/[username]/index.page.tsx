@@ -61,7 +61,7 @@ export default function Schedule({}: ScheduleProps) {
         ) : (
           <>
             <UserHeader>
-              <Avatar src={user?.avatarUrl} alt={user?.name} />
+              <Avatar src={user?.avatar_url} alt={user?.name} />
               <Heading>{user?.name}</Heading>
               <Text>{user?.bio}</Text>
             </UserHeader>
