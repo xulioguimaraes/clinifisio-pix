@@ -10,7 +10,7 @@ import {
   TimePickerItem,
   TimePickerList,
 } from "./styles";
-import { CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Stack, Typography } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import { api } from "@/services/api";
 interface Availability {
@@ -66,7 +66,32 @@ export const CalendarStep = ({ onSelectDateTime }: CalendarStepProps) => {
       <Calendar selectedDate={selectedDate} onDateSelected={setSelectedDate} />
 
       {isDateSelected && (
-        <TimePicker className="md:max-w-[280px] w-full">
+        <Stack
+          border={"1px solid $gray600"}
+          px={2}
+          pt={2}
+          borderRadius={2}
+          overflow={{
+            xs: "hidden",
+            xl: "scroll",
+            md: "scroll",
+          }}
+          position={{
+            md: "absolute",
+            xl: "absolute",
+            xs: "relative",
+          }}
+          top={0}
+          bottom={0}
+          right={0}
+          bgcolor={"#202024"}
+          maxWidth={{
+            md: 280,
+            xs: "auto",
+            xl: 280,
+          }}
+          width={"100%"}
+        >
           <TimePickerHeader className="flex justify-between items-center">
             <p>
               {weekDay} <span>{describedDate}</span>
@@ -82,9 +107,19 @@ export const CalendarStep = ({ onSelectDateTime }: CalendarStepProps) => {
           </TimePickerHeader>
           <TimePickerList>
             {isLoading ? (
-              <div className="flex w-full items-center justify-center">
+              <Box
+                width={"100%"}
+                height={196}
+                display={"flex"}
+                justifyContent={"center"}
+                flexDirection={"column"}
+                gap={2}
+                alignItems={"center"}
+                overflow={"hidden"}
+              >
                 <CircularProgress />
-              </div>
+                <Typography>Carregando...</Typography>
+              </Box>
             ) : (
               <>
                 {availability?.possibleTimes?.map((hour) => (
@@ -103,7 +138,7 @@ export const CalendarStep = ({ onSelectDateTime }: CalendarStepProps) => {
               </>
             )}
           </TimePickerList>
-        </TimePicker>
+        </Stack>
       )}
     </Container>
   );

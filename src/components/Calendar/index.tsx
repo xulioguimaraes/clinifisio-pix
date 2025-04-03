@@ -12,6 +12,13 @@ import {
   CalendarTiles,
 } from "./styles";
 import { api } from "@/services/api";
+import {
+  Box,
+  CircularProgress,
+  Theme,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 interface CalendarWeek {
   week: number;
   days: Array<{
@@ -19,6 +26,13 @@ interface CalendarWeek {
     disabled: boolean;
   }>;
 }
+
+const HEIGHT_MOBILE_CALENDAR = 215;
+const HEIGHT_DESKTOP_CALENDAR = 380;
+
+const HEIGHT_SHADOW_MOBILE_CALENDAR = 195;
+const HEIGHT_SHADOW_DESKTOP_CALENDAR = 360;
+import styles from "@/styles/global.module.scss";
 
 interface BlockedDates {
   blockedWeekDays: number[];
@@ -36,6 +50,8 @@ export const Calendar = ({ onDateSelected, selectedDate }: CalendarProps) => {
   const shortWeekDays = Array.from({ length: 7 }).map((item, index) =>
     startOfWeek.add(index, "day").format("ddd")
   );
+  const isXs = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
+
   const router = useRouter();
   const [currentDate, setCurrentDate] = useState(() => {
     return dayjs().set("date", 1);
@@ -45,7 +61,7 @@ export const Calendar = ({ onDateSelected, selectedDate }: CalendarProps) => {
   const year = currentDate.get("year");
   const month = currentDate.get("month");
 
-  const { data: blockedDates } = useQuery<BlockedDates>(
+  const { data: blockedDates, isLoading } = useQuery<BlockedDates>(
     ["blocked-dates", year, month],
     async () => {
       const response = await api.get(`/users/${username}/blocked-dates`, {
@@ -125,51 +141,120 @@ export const Calendar = ({ onDateSelected, selectedDate }: CalendarProps) => {
 
     setCurrentDate(nextMonthDate);
   };
-  console.log({ calendarWeeks });
-
   return (
-    <CalendarContainer>
+    <CalendarContainer
+      style={{
+        display: selectedDate && isXs ? "none" : "flex",
+      }}
+    >
       <CalendarHeader>
         <CalendarTiles>
           {currentMonth} <span>{currentYear}</span>
         </CalendarTiles>
         <CalendarActions>
-          <button onClick={handlePreviousMonth} title="Previous mouth">
+          <button
+            disabled={isLoading}
+            onClick={handlePreviousMonth}
+            title="Previous mouth"
+          >
             <ArrowLeft />
           </button>
-          <button onClick={handleNextMonth} title="Next mouth">
+          <button
+            disabled={isLoading}
+            onClick={handleNextMonth}
+            title="Next mouth"
+          >
             <ArrowRight />
           </button>
         </CalendarActions>
       </CalendarHeader>
-      <CalendarBody>
-        <thead>
-          <tr>
-            {shortWeekDays.map((weekDay) => (
-              <th className="uppercase" key={weekDay}>
-                {weekDay}.
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {calendarWeeks.map(({ days, week }) => {
-            return (
-              <tr key={week}>
-                {days.map(({ date, disabled }) => (
-                  <td key={date.toString()}>
-                    <Calendarday
-                      onClick={() => onDateSelected(date.toDate())}
-                      disabled={disabled}
-                    >
-                      {date.get("date")}
-                    </Calendarday>
-                  </td>
-                ))}
-              </tr>
-            );
-          })}
-        </tbody>
+      <CalendarBody
+        style={{
+          minHeight: isXs ? HEIGHT_MOBILE_CALENDAR : HEIGHT_DESKTOP_CALENDAR,
+        }}
+      >
+        <>
+          <thead>
+            <tr>
+              {shortWeekDays.map((weekDay) => (
+                <th className="uppercase" key={weekDay}>
+                  {weekDay}.
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <Box component={"tbody"} position={"relative"}>
+            <>
+              {isLoading && (
+                <Box
+                  width={"100%"}
+                  height={"100%"}
+                  minHeight={
+                    isXs
+                      ? HEIGHT_SHADOW_MOBILE_CALENDAR
+                      : HEIGHT_SHADOW_DESKTOP_CALENDAR
+                  }
+                  display={"flex"}
+                  position={"absolute"}
+                  justifyContent={"center"}
+                  flexDirection={"column"}
+                  gap={2}
+                  alignItems={"center"}
+                  borderRadius={2}
+                  overflow={"hidden"}
+                >
+                  <div className={styles.desfocado}></div>
+                  <CircularProgress
+                    sx={{
+                      zIndex: 20,
+                    }}
+                  />
+                  <Typography
+                    sx={{
+                      zIndex: 20,
+                    }}
+                  >
+                    Carregando...
+                  </Typography>
+                </Box>
+              )}
+              {calendarWeeks.map(({ days, week }) => {
+                return (
+                  <tr key={week}>
+                    {days.map(({ date, disabled }) => {
+                      const isOutsideCurrentMonth =
+                        date.month() !== currentDate.month();
+
+                      return (
+                        <td
+                          style={{
+                            padding: "2px",
+                            opacity: isOutsideCurrentMonth ? 0.3 : 1,
+                            pointerEvents: isOutsideCurrentMonth
+                              ? "none"
+                              : "auto",
+                          }}
+                          key={date.toString()}
+                        >
+                          {isOutsideCurrentMonth ? (
+                            <></>
+                          ) : (
+                            <Calendarday
+                              onClick={() => onDateSelected(date.toDate())}
+                              disabled={disabled}
+                            >
+                              {date.get("date")}
+                            </Calendarday>
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </>
+          </Box>
+        </>
       </CalendarBody>
     </CalendarContainer>
   );

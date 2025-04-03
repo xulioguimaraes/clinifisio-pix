@@ -1,8 +1,13 @@
-import { Heading, Text } from "@ignite-ui/react";
 import Image from "next/image";
 import previewImage from "../../assets/home.png";
 import { NextSeo } from "next-seo";
-import { Button, CircularProgress, Divider } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Divider,
+  Typography,
+} from "@mui/material";
 import { FcGoogle } from "react-icons/fc";
 import { signIn } from "next-auth/react";
 import { Container, Hero, Preview } from "./styles";
@@ -12,56 +17,72 @@ import { useState } from "react";
 
 export function Home() {
   const [isLoading, setIsLoading] = useState(false);
+
   const handleConnectCalendar = async () => {
     setIsLoading(true);
     await signIn("google");
   };
+
   return (
     <>
       <NextSeo
-        title="Descomplique sua agenda | Call"
-        description="Conecte seu calendario e permita que as pessoas marquem agendamentos no seu tempo livre"
+        title="Agende suas reuniões com facilidade | Agendamento"
+        description="Conecte seu calendário e compartilhe sua disponibilidade com facilidade."
       />
       <Container>
         <Hero>
-          <Heading size={"4xl"}>Agendamento descomplicado</Heading>
-          <Text size={"xl"}>
-            Conecte seu calendário e permita que as pessoas marquem agendamentos
-            no seu tempo livre.
-          </Text>
+          <Typography component={"h1"} variant="h2" fontWeight={600}>
+            Organize seus agendamentos
+          </Typography>
+          <Typography
+            color="textSecondary"
+            pt={2}
+            component={"h6"}
+            variant="subtitle2"
+          >
+            Compartilhe sua agenda e deixe que outras pessoas escolham horários
+            disponíveis.
+          </Typography>
 
           <ClaimUsernameForm />
 
-          <Divider
-            sx={{
-              my: 4,
-            }}
-          />
+          <Divider sx={{ my: 4 }} />
+
           <Form
             as="div"
             style={{
               background: "var(--colors-gray700)",
               display: "flex",
+              flexDirection: "column",
               alignItems: "center",
               justifyContent: "space-between",
             }}
           >
-            <p className="text-lg">Faça seu login com Google</p>
+            <Typography className="text-lg">
+              Já possui conta? Acesse com sua conta Google e acesse seus dados.
+            </Typography>
 
             <Button
               variant="contained"
               color="primary"
               type="button"
+              fullWidth
               disabled={isLoading}
               onClick={handleConnectCalendar}
-              sx={{
-                minWidth: "100px",
-              }}
+              sx={{ minWidth: "100px" }}
             >
               {isLoading ? (
                 <CircularProgress size={22} />
               ) : (
-                <FcGoogle size={24} className="bg-white p-1  rounded-full" />
+                <Box
+                  sx={{
+                    background: "white",
+                  }}
+                  p={'2px'}
+                  borderRadius={999}
+                >
+                  <FcGoogle size={28} className="bg-white p-1 rounded-full" />
+                </Box>
               )}
             </Button>
           </Form>
@@ -72,7 +93,7 @@ export function Home() {
             height={400}
             priority
             quality={100}
-            alt="Calendario sinbolizanfgo aplicação em funcionamento"
+            alt="Exemplo de agendamento no calendário"
           />
         </Preview>
       </Container>

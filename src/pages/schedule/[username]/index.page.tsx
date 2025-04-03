@@ -32,7 +32,11 @@ export default function Schedule({}: ScheduleProps) {
 
   return (
     <>
-      <NextSeo title={`Agendar com ${user?.name} | Call`} />
+      <NextSeo
+        title={`${
+          user?.name ? `Agendar com ${user?.name} | ` : ""
+        } Agendamento`}
+      />
 
       <Container>
         {isAuth && (

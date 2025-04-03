@@ -38,12 +38,12 @@ export const ClaimUsernameForm = () => {
       <Form as="form" onSubmit={handleSubmit(handleClainUsername)}>
         <TextInput
           size={"sm"}
-          prefix="ignite.com/"
+          // prefix="ignite.com/"
           placeholder="seu-usuario"
           {...register("username")}
         />
         <Button size="sm" type="submit" disabled={isSubmitting}>
-          Reservar usuário
+          Criar usuário
           <ArrowRight />
         </Button>
       </Form>
