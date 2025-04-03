@@ -23,8 +23,8 @@ export const HeaderCalendarWeek = ({
         <div>
           {daysOfWeeksIsArray > 0 && (
             <>
-              <span>{dayjs(data[0].date).format("DD/MM")}</span> -{" "}
-              <span>{dayjs(data[data.length - 1].date).format("DD/MM")}</span>
+              <span>{dayjs(data[0]?.date).format("DD/MM")}</span> -{" "}
+              <span>{dayjs(data[data?.length - 1]?.date).format("DD/MM")}</span>
             </>
           )}
         </div>
