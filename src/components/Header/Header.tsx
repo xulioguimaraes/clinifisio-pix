@@ -17,10 +17,12 @@ import { useSession } from "next-auth/react";
 import { useToastContext } from "@/hooks/useToast";
 import MiniDrawer from "./Mini";
 import TelegramIcon from "@mui/icons-material/Telegram";
+
 import PersonIcon from "@mui/icons-material/Person";
+import { useAuthContext } from "@/hooks/useAuth";
 export const Header = () => {
-  const handleLogOut = async () => {};
   const { data: session } = useSession();
+  const { handleLogOut } = useAuthContext();
   const toast = useToastContext();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);

@@ -47,24 +47,28 @@ export const ConfrimStep = ({
   const username = String(router.query.username);
   const toast = useToastContext();
   const handleConfirmSheduling = async (data: ConfirmFormData) => {
-    const { email, name, observations, phone } = data;
+    try {
+      const { email, name, observations, phone } = data;
 
-    const response = await users.confirmSheduling(
-      username,
-      {
-        name,
-        email,
-        observations: observations!,
-        phone,
-        date: schedulingDate,
-        id_service: service.id!,
-      },
-      toast
-    );
+      const response = await users.confirmSheduling(
+        username,
+        {
+          name,
+          email,
+          observations: observations!,
+          phone,
+          date: schedulingDate,
+          id_service: service.id!,
+        },
+        toast
+      );
 
-    if (response.status === 201) {
-      toast.success(response.data.message);
-      onCancelConfitmation();
+      if (response?.status === 201) {
+        toast.success(response.data.message);
+        onCancelConfitmation();
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -99,7 +103,7 @@ export const ConfrimStep = ({
       <label>
         <Text size="sm">Telefone</Text>
         <TextInput
-          type={"phone"}
+          type={"number"}
           placeholder="(99) 99999-9999"
           {...register("phone")}
         />

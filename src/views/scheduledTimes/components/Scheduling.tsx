@@ -1,5 +1,5 @@
 import { IAppointments } from "@/types";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { useScheduling } from "../hooks/useScheduling";
 
 export const Scheduling = ({ data }: { data: IAppointments }) => {
@@ -19,13 +19,42 @@ export const Scheduling = ({ data }: { data: IAppointments }) => {
       sx={{
         bgcolor: statusColors[data?.status],
         width: "100%",
+        maxWidth: 150,
         flexDirection: "column",
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        p: 1,
       }}
       type="button"
       onClick={handleScheduling}
     >
-      <p>{data?.service?.name}</p>
-      <p className="text-xs text-gray-500">{data?.name}</p>
+      <Typography
+        style={{
+          maxWidth: "100%",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {data?.service?.name}
+      </Typography>
+      <Typography
+        className="text-xs text-gray-500"
+        style={{
+          maxWidth: "100%",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+          fontSize: "0.75rem", // Equivalente ao text-xs
+          color: "#6b7280", // Equivalente ao text-gray-500
+        }}
+      >
+        {data?.name}
+      </Typography>
     </Button>
   );
 };

@@ -60,6 +60,6 @@ export const users = {
         id_service,
       })
       .then((item) => item)
-      .catch((item) => toast.error(item));
+      .catch((item) => item);
   },
 };

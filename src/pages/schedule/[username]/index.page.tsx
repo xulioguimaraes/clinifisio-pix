@@ -6,9 +6,9 @@ import { api } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { Box, CircularProgress, Link, Stack, Typography } from "@mui/material";
-import { useSession } from "next-auth/react";
 import { ArrowRight } from "phosphor-react";
 import NextLink from "next/link";
+import { useAuthContext } from "@/hooks/useAuth";
 interface ScheduleProps {
   user: {
     name: string;
@@ -18,10 +18,9 @@ interface ScheduleProps {
 }
 
 export default function Schedule({}: ScheduleProps) {
-  const { status } = useSession();
-
   const router = useRouter();
   const { username } = router.query;
+  const { isAuth } = useAuthContext();
   const { data: user, isLoading } = useQuery({
     queryKey: ["user", username],
     queryFn: async () => {
@@ -30,8 +29,6 @@ export default function Schedule({}: ScheduleProps) {
     },
     enabled: !!username,
   });
-
-  const isAuth = status === "authenticated";
 
   return (
     <>

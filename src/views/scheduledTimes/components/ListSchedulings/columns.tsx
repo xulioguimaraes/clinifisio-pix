@@ -14,23 +14,26 @@ export const useColumns = () => {
       filterable: false,
       cellClassName: ({ row }) => {
         let className = "";
-        switch (row.status) {
-          case 1:
-            className = "bg-pendente";
-            break;
-          case 2:
-            className = "bg-confirmado";
-            break;
-          case 3:
-            className = "bg-cancelado";
-            break;
-          case 4:
-            className = "bg-atendido";
-            break;
-          default:
-            className = "bg-pendente";
-            break;
+        if (isXs) {
+          switch (row.status) {
+            case 1:
+              className = "bg-pendente";
+              break;
+            case 2:
+              className = "bg-confirmado";
+              break;
+            case 3:
+              className = "bg-cancelado";
+              break;
+            case 4:
+              className = "bg-atendido";
+              break;
+            default:
+              className = "bg-pendente";
+              break;
+          }
         }
+
         return className;
       },
     },
@@ -45,23 +48,24 @@ export const useColumns = () => {
       },
       cellClassName: ({ row }) => {
         let className = "";
-        switch (row.status) {
-          case 1:
-            className = "bg-pendente";
-            break;
-          case 2:
-            className = "bg-confirmado";
-            break;
-          case 3:
-            className = "bg-cancelado";
-            break;
-          case 4:
-            className = "bg-atendido";
-            break;
-          default:
-            className = "bg-pendente";
-            break;
-        }
+        if (isXs)
+          switch (row.status) {
+            case 1:
+              className = "bg-pendente";
+              break;
+            case 2:
+              className = "bg-confirmado";
+              break;
+            case 3:
+              className = "bg-cancelado";
+              break;
+            case 4:
+              className = "bg-atendido";
+              break;
+            default:
+              className = "bg-pendente";
+              break;
+          }
         return className;
       },
     },
@@ -76,23 +80,24 @@ export const useColumns = () => {
       },
       cellClassName: ({ row }) => {
         let className = "";
-        switch (row.status) {
-          case 1:
-            className = "bg-pendente";
-            break;
-          case 2:
-            className = "bg-confirmado";
-            break;
-          case 3:
-            className = "bg-cancelado";
-            break;
-          case 4:
-            className = "bg-atendido";
-            break;
-          default:
-            className = "bg-pendente";
-            break;
-        }
+        if (isXs)
+          switch (row.status) {
+            case 1:
+              className = "bg-pendente";
+              break;
+            case 2:
+              className = "bg-confirmado";
+              break;
+            case 3:
+              className = "bg-cancelado";
+              break;
+            case 4:
+              className = "bg-atendido";
+              break;
+            default:
+              className = "bg-pendente";
+              break;
+          }
         return className;
       },
     },

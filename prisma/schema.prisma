@@ -105,18 +105,17 @@ model Transation {
 }
 
 model Service {
-  id          String   @id @unique @default(uuid())
+  id          String       @id @unique @default(uuid())
   userId      String
   name        String
   description String?
-  price       Decimal  @default(0.0)
-  porcentagem Decimal  @default(0.0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  active      Boolean  @default(true)
-
-  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Scheduling Scheduling[]
+  price       Decimal      @default(0.0)
+  porcentagem Decimal      @default(0.0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  active      Boolean      @default(true)
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Scheduling  Scheduling[]
 
   @@map("services")
 }

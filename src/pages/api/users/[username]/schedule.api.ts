@@ -1,7 +1,7 @@
-import { getGoogleOAuthToken } from "@/lib/google";
+
 import { prisma } from "@/lib/prisma";
 import dayjs from "dayjs";
-import { google } from "googleapis";
+
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 
@@ -21,7 +21,7 @@ export default async function handler(
     observations: z.string(),
     phone: z.string().optional(),
     date: z.string().datetime(),
-    id_service: z.string(),
+    id_service: z.string()
   });
 
   const user = await prisma.user.findUnique({
@@ -66,7 +66,7 @@ export default async function handler(
       date: schedulingDate.toDate(),
       user_id: user.id,
       phone,
-      id_service,
+      id_service: id_service || '0', 
     },
   });
   return res.status(201).json({ message: "Agendamento feito com sucesso" });

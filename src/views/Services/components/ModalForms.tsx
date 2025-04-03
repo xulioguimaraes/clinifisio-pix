@@ -45,7 +45,11 @@ export const ModalForm = ({
   const [checked, setChecked] = useState(true);
   const toast = useToastContext();
   const [isLoading, setIsLoading] = useState(false);
-  const { register, handleSubmit, control, reset } = useForm<IServices>();
+  const { register, handleSubmit, control, reset } = useForm<IServices>({
+    defaultValues: {
+      porcentagem: "0",
+    },
+  });
 
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
@@ -55,7 +59,10 @@ export const ModalForm = ({
     const price = String(data.price).replace(/[^0-9]/g, ""); // Conversão explícita para número
     const newData = {
       ...data,
-      porcentagem: data.porcentagem.replace(/[^0-9]/g, ""),
+      active: checked,
+      porcentagem: !!data.porcentagem
+        ? data.porcentagem.replace(/[^0-9]/g, "")
+        : 0,
       price: +price, // Agora `price` é um número
     };
     setIsLoading(true);
@@ -70,7 +77,7 @@ export const ModalForm = ({
     setIsLoading(false);
 
     if (response.status === 201) {
-      reset({ price: 0, porcentagem: "", name: "", description: "" });
+      reset({ price: 0, porcentagem: "0", name: "", description: "" });
       toast.success(response.data.message);
       setParams((old) => {
         const newOld = { ...old };
@@ -85,7 +92,16 @@ export const ModalForm = ({
         style: "currency",
         currency: "BRL",
       }).format(service.price / 100);
-      reset({ ...service, price: value as any, porcentagem: `${service.porcentagem} %` });
+      reset({
+        ...service,
+        price: value as any,
+        porcentagem: `${service.porcentagem} %`,
+      });
+      handleChange({
+        target: {
+          checked: service.active,
+        },
+      } as any);
     }
   }, [service]);
   useEffect(() => {
@@ -155,13 +171,21 @@ export const ModalForm = ({
           control={control}
           name="porcentagem"
           render={({ field }) => (
-            <FormControl disabled={isLoading} fullWidth variant="outlined">
+            <FormControl
+              sx={{
+                display: "none",
+              }}
+              disabled={isLoading}
+              fullWidth
+              variant="outlined"
+            >
               <InputLabel htmlFor="outlined-adornment-percentage">
                 Porcentagem
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-percentage"
                 {...field}
+                defaultValue={"0 %"}
                 onChange={(e) => {
                   const rawValue = e.target.value.replace(/[^0-9]/g, ""); // Remove caracteres não numéricos
                   let numericValue = Number(rawValue); // Converte para número

@@ -2,17 +2,23 @@ import { useRouter } from "next/router";
 import { createContext, useContext } from "react";
 import { Header } from "@/components/Header/Header";
 import { useMediaQuery } from "@mui/material";
-interface AuthContextType {}
+import { signOut, useSession } from "next-auth/react";
+interface AuthContextType {
+  handleLogOut: () => void;
+  isAuth: boolean;
+}
 
 const AuthContext = createContext<AuthContextType>({
-  count: 0,
-  increment: () => {},
+  handleLogOut: () => {},
+  isAuth: false,
 });
 
 export const useAuthContext = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
+  const { status } = useSession();
+
   const matches = useMediaQuery((theme) => theme?.breakpoints.up("sm"));
   const routerNoShowMenu = [
     "/",
@@ -27,8 +33,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     routerNoShowMenu.includes(router.pathname) ||
     router.pathname.startsWith("/schedule");
 
+  const handleLogOut = async () => {
+    signOut();
+    router.push("/");
+  };
+
+  const isAuth = status === "authenticated";
+
   return (
-    <AuthContext.Provider value={{}}>
+    <AuthContext.Provider value={{ handleLogOut, isAuth }}>
       <div
         style={{
           paddingLeft: !shouldHideHeader && !matches === false ? "4rem" : "",

@@ -43,11 +43,12 @@ export default async function get(
         take: limitInt, // Limita o número de resultados por página
       });
 
-      const totalServices = await prisma.transation.count({
+      const totalServices = await prisma.service.count({
         where: {
           userId: session.user.id,
         },
       });
+      console.log({ totalServices });
 
       return response.status(200).json({
         data: services,
@@ -57,9 +58,7 @@ export default async function get(
       });
     } catch (error) {
       console.error("Error fetching services:", error);
-      return response
-        .status(500)
-        .json({ error: "Error fetching services" });
+      return response.status(500).json({ error: "Error fetching services" });
     }
   } else {
     return response.status(405).json({ error: "Method not allowed" });

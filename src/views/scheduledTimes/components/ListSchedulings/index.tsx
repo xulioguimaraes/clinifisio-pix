@@ -1,5 +1,5 @@
 import { scheduling } from "@/services/schedulings";
-import { Add, Search } from "@mui/icons-material";
+import { Search } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styles from "@/styles/global.module.scss";
 import { useColumns } from "./columns";
 import { Scheduling } from "@/types";
@@ -25,9 +25,6 @@ export const ListSchedulings = ({ value }: { value: "two" }) => {
 
   const [searchTerm, setSearchTerm] = useState(""); // Armazena o termo de pesquisa
   const [total, setTotal] = useState(0);
-  useEffect(() => {
-    console.log(params);
-  }, [params]);
 
   const { data: listData, isLoading } = useQuery<{ data: Scheduling[] }>(
     ["list-schedulings", params],
