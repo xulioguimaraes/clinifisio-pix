@@ -43,9 +43,6 @@ export const Summary = () => {
   console.log(dateTransaction.entry);
   return (
     <>
-      <Head>
-        <title>Painel | Clinifisio</title>
-      </Head>
       <div>
         <div className={styles.container}>
           <div>

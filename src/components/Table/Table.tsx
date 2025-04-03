@@ -95,12 +95,17 @@ export const Table = () => {
           height: 450,
           width: "100%",
           position: "relative",
+          mb: {
+            md: 0,
+            xl: 0,
+            xs: 10,
+          },
         }}
       >
         {isLoading ? (
           <>
             <div className={styles.desfocado}></div>
-            <div className="absolute z-20 inset-0 flex items-center justify-center">
+            <div className="absolute z-2 inset-0 flex items-center justify-center">
               <CircularProgress />
             </div>
           </>
@@ -135,7 +140,9 @@ export const Table = () => {
               page: row.page + 1,
             }));
           }}
-          sx={{ border: 0 }}
+          sx={{
+            border: 0,
+          }}
         />
       </Paper>
 

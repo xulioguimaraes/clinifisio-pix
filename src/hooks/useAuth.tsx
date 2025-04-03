@@ -3,6 +3,8 @@ import { createContext, useContext } from "react";
 import { Header } from "@/components/Header/Header";
 import { useMediaQuery } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
+import { links } from "@/components/Header/components/datamenu";
+import { NextSeo } from "next-seo";
 interface AuthContextType {
   handleLogOut: () => void;
   isAuth: boolean;
@@ -17,7 +19,7 @@ export const useAuthContext = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
-  const { status } = useSession();
+  const { status, data } = useSession();
 
   const matches = useMediaQuery((theme) => theme?.breakpoints.up("sm"));
   const routerNoShowMenu = [
@@ -40,8 +42,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const isAuth = status === "authenticated";
 
+  const namePage = links.find((item) => item.link === router.pathname);
   return (
     <AuthContext.Provider value={{ handleLogOut, isAuth }}>
+      <NextSeo
+        title={`${namePage?.name || "Agendamento"} ${
+          data?.user.name ? ` | ${data?.user?.name}` : ""
+        }`}
+        noindex
+      />
       <div
         style={{
           paddingLeft: !shouldHideHeader && !matches === false ? "4rem" : "",

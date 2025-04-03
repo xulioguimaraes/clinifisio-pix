@@ -101,7 +101,7 @@ export default function MiniDrawer({}: {}) {
             position: "fixed",
             bottom: 0,
             left: 0,
-            zIndex: 2,
+            zIndex: 20,
             right: 0,
             overflowX: "auto",
             whiteSpace: "nowrap",
@@ -121,27 +121,29 @@ export default function MiniDrawer({}: {}) {
             }}
           >
             {links.map((item) => (
-              <BottomNavigationAction
-                key={item.name}
-                label={item.name}
-                onClick={() => router.push(item.link)}
-                icon={item.icon}
-                sx={{
-                  minWidth: "70px",
-                  maxWidth: "70px",
-                  flexShrink: 0,
-                  whiteSpace: "break-spaces",
-                  "& svg": {
-                    width: 26,
-                    height: 26,
-                  },
-                  // Estilo para o estado selecionado
-                  "&.Mui-selected": {
+              <>
+                <BottomNavigationAction
+                  key={item.name}
+                  label={item.name}
+                  onClick={() => router.push(item.link)}
+                  icon={item.icon}
+                  sx={{
                     minWidth: "70px",
                     maxWidth: "70px",
-                  },
-                }}
-              />
+                    flexShrink: 0,
+                    whiteSpace: "break-spaces",
+                    "& svg": {
+                      width: 26,
+                      height: 26,
+                    },
+                    // Estilo para o estado selecionado
+                    "&.Mui-selected": {
+                      minWidth: "70px",
+                      maxWidth: "70px",
+                    },
+                  }}
+                />
+              </>
             ))}
           </BottomNavigation>
         </Box>
