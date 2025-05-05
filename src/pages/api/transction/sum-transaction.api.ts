@@ -20,7 +20,7 @@ export default async function handler(
 
   if (request.method === "GET") {
     try {
-      const thirtyDaysAgo = dayjs().subtract(30, "days").toDate();
+      const firstDayOfMonth = dayjs().startOf("month").toDate();
 
       const { _sum: sumIncomes } = await prisma.transation.aggregate({
         _sum: {
@@ -30,7 +30,7 @@ export default async function handler(
           userId: session.user.id,
           type: true,
           createdAt: {
-            gte: thirtyDaysAgo,
+            gte: firstDayOfMonth,
           },
         },
       });
@@ -42,6 +42,9 @@ export default async function handler(
         where: {
           userId: session.user.id,
           type: false,
+          createdAt: {
+            gte: firstDayOfMonth,
+          },
         },
       });
 
