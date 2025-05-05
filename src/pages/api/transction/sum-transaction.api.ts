@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { buildNextAuthOption } from "@/pages/api/auth/[...nextauth].api";
+import dayjs from "dayjs";
 
 export default async function handler(
   request: NextApiRequest,
@@ -19,6 +20,8 @@ export default async function handler(
 
   if (request.method === "GET") {
     try {
+      const thirtyDaysAgo = dayjs().subtract(30, "days").toDate();
+
       const { _sum: sumIncomes } = await prisma.transation.aggregate({
         _sum: {
           price: true,
@@ -26,6 +29,9 @@ export default async function handler(
         where: {
           userId: session.user.id,
           type: true,
+          createdAt: {
+            gte: thirtyDaysAgo,
+          },
         },
       });
 
