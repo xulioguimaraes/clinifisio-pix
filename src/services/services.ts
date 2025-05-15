@@ -1,5 +1,6 @@
 import { IServices } from "@/types";
 import { api } from "./api";
+import { AxiosRequestConfig } from "axios";
 interface IParams {
   per_page: number;
   page: number;
@@ -12,15 +13,31 @@ export const services = {
       return item;
     });
   },
-  createServices: async (data: IServices) => {
-    return await api
-      .post("/services/create-service", data)
-      .then((item) => item);
+
+  getService: async (id: string) => {
+    return await api.get(`/services/${id}`).then((item) => {
+      return item;
+    });
   },
-  updateService: async (data: IServices, id: string) => {
-    return await api
-      .put(`/services/update-service/${id}`, data)
-      .then((item) => item);
+  createServices: async (formData: FormData, config?: AxiosRequestConfig) => {
+    return api.post("/services/create-service", formData, {
+      ...config,
+      headers: {
+        ...config?.headers,
+      },
+    });
+  },
+  updateService: async (
+    formData: FormData,
+    id: string,
+    config?: AxiosRequestConfig
+  ) => {
+    return api.put(`/services/update-service/${id}`, formData, {
+      ...config,
+      headers: {
+        ...config?.headers,
+      },
+    });
   },
   toogleService: async (id: string) => {
     return await api

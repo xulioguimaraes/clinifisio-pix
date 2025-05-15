@@ -1,9 +1,10 @@
+import { IsLoadingCompoenent } from "@/components/IsLoadingComponent";
 import { CircularProgress } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-export function withAuth(WrappedComponent: React.FC) {
+export function withAuth(WrappedComponent: React.FC | any) {
   return function ProtectedComponent(props: any) {
     const { data: session, status } = useSession();
     const router = useRouter();
@@ -18,12 +19,7 @@ export function withAuth(WrappedComponent: React.FC) {
     }, [status, router]);
 
     if (status === "loading") {
-      return (
-        <div className="h-screen flex w-screen items-center justify-center flex-col">
-          <CircularProgress />
-          <p className="text-sm pt-4">Carregando...</p>
-        </div>
-      );
+      return <IsLoadingCompoenent />;
     }
 
     return <WrappedComponent {...props} />;

@@ -30,6 +30,7 @@ export default async function handler(
           price: true,
           porcentagem: true,
           active: true,
+          images: true,
           createdAt: true,
           updatedAt: true,
         },

@@ -44,7 +44,10 @@ export const useColumns = () => {
       sortable: isXs ? false : true,
       filterable: false,
       renderCell: ({ row }) => {
-        return dayjs(row?.scheduling_date).format("DD/MM/YYYY");
+
+        return `${dayjs(row?.scheduling_date).format("DD/MM/YYYY")} às ${
+          row.hours
+        }:00`;
       },
       cellClassName: ({ row }) => {
         let className = "";

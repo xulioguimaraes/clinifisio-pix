@@ -1,3 +1,4 @@
+import { IsLoadingCompoenent } from "@/components/IsLoadingComponent";
 import AvatarUpload from "@/components/Profile/components/AvatarUpload";
 import { withAuth } from "@/hoc/withAuth";
 import { useToastContext } from "@/hooks/useToast";
@@ -65,17 +66,7 @@ function IntervalsTime() {
   return (
     <>
       {isLoading ? (
-        <Box
-          width={"100%"}
-          display={"flex"}
-          justifyContent={"center"}
-          flexDirection={"column"}
-          gap={2}
-          alignItems={"center"}
-        >
-          <CircularProgress />
-          <Typography>Carregando...</Typography>
-        </Box>
+        <IsLoadingCompoenent />
       ) : (
         <Stack
           spacing={2}

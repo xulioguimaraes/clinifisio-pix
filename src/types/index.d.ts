@@ -25,6 +25,7 @@ export interface IServices {
   price: number;
   porcentagem?: any;
   active?: boolean;
+  images: string[];
 }
 
 export interface IAppointments {

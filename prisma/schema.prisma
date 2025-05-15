@@ -111,6 +111,7 @@ model Service {
   description String?
   price       Decimal      @default(0.0)
   porcentagem Decimal      @default(0.0)
+  images      String[]     @default([]) // Nova coluna para armazenar URLs das imagens
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   active      Boolean      @default(true)

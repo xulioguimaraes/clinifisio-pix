@@ -9,6 +9,7 @@ import { Box, CircularProgress, Link, Stack, Typography } from "@mui/material";
 import { ArrowRight } from "phosphor-react";
 import NextLink from "next/link";
 import { useAuthContext } from "@/hooks/useAuth";
+import { IsLoadingCompoenent } from "@/components/IsLoadingComponent";
 interface ScheduleProps {
   user: {
     name: string;
@@ -61,18 +62,7 @@ export default function Schedule({}: ScheduleProps) {
           </Stack>
         )}
         {isLoading ? (
-          <Box
-            width={"100%"}
-            height={"100vh"}
-            display={"flex"}
-            justifyContent={"center"}
-            flexDirection={"column"}
-            gap={2}
-            alignItems={"center"}
-          >
-            <CircularProgress />
-            <Typography>Carregando...</Typography>
-          </Box>
+          <IsLoadingCompoenent />
         ) : (
           <>
             <UserHeader>

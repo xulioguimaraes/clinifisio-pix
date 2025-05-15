@@ -13,6 +13,7 @@ import { useColumns } from "./columns";
 import { IServices } from "@/types";
 import { services } from "@/services/services";
 import { ModalForm } from "./components/ModalForms";
+import { useRouter } from "next/router";
 
 export const TableServices = () => {
   const [onModal, setOnModal] = useState(false);
@@ -26,6 +27,8 @@ export const TableServices = () => {
     null
   ); // Armazena o timeout do debounce
   const columns = useColumns();
+
+  const router = useRouter();
 
   const getData = async () => {
     setIsLoading(true);
@@ -80,7 +83,7 @@ export const TableServices = () => {
           Pesquisar
         </Button>
         <Button
-          onClick={onOpenModal}
+          onClick={() => router.push("/painel/services/new")}
           color="success"
           startIcon={<Add />}
           variant="contained"
@@ -123,7 +126,7 @@ export const TableServices = () => {
           disableAutosize
           disableColumnSelector
           onRowClick={({ row }) => {
-            handleServices(row);
+            router.push(`/painel/services/${row.id}`);
           }}
           onCellClick={(params, event) => {
             if (params.field === "active") {
@@ -153,12 +156,6 @@ export const TableServices = () => {
           sx={{ border: 0 }}
         />
       </Paper>
-      <ModalForm
-        isOpen={onModal}
-        service={service}
-        onCloseModal={onCloseModal}
-        setParams={setParams}
-      />
     </>
   );
 };
