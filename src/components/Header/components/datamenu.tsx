@@ -4,7 +4,7 @@ import {
   FaConciergeBell,
   FaClock,
   FaCalendarAlt,
-  FaInfoCircle,
+  FaUser,
 } from "react-icons/fa";
 
 export const dataMenu = [
@@ -56,5 +56,5 @@ export const links = [
     link: "/painel/scheduled-times",
     icon: <FaCalendarAlt size={22} />,
   },
-  { name: "Perfil", link: "/painel/perfil", icon: <FaInfoCircle size={22} /> },
+  { name: "Perfil", link: "/painel/perfil", icon: <FaUser size={22} /> },
 ];
