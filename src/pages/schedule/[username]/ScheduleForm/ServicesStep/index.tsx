@@ -113,14 +113,26 @@ export const ServicesStep = ({
               <div key={item.id} className="relative">
                 <button
                   onClick={() => handleSelectService(item)}
-                  className="md:flex w-full bg-[#323238] justify-between items-center py-2 px-4 border border-gray-700 rounded-lg"
+                  className="md:flex w-full bg-[#323238] justify-between items-center py-2  border border-gray-700 rounded-lg"
                 >
-                  <Stack spacing={1} direction={"row"}>
+                  <Stack
+                    sx={{
+                      px: {
+                        md: 2,
+                        xs: 1,
+                      },
+                    }}
+                    spacing={1}
+                    direction={"row"}
+                  >
                     <Box
                       borderRadius={4}
                       overflow={"hidden"}
-                      width={100}
-                      height={100}
+                      maxWidth={{ md: 100, xs: 70 }}
+                      minWidth={{ md: 100, xs: 70 }}
+                      maxHeight={{ md: 100, xs: 70 }}
+                      width={"100%"}
+                      height={"100%"}
                     >
                       {item?.images?.length === 0 ? (
                         <Image

@@ -1,11 +1,11 @@
 import { Avatar, Heading, Text } from "@ignite-ui/react";
 import { NextSeo } from "next-seo";
 import { ScheduleForm } from "./ScheduleForm";
-import { Container, UserHeader } from "./styles";
+import { UserHeader } from "./styles";
 import { api } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import { Box, CircularProgress, Link, Stack, Typography } from "@mui/material";
+import { Box, Link, Stack } from "@mui/material";
 import { ArrowRight } from "phosphor-react";
 import NextLink from "next/link";
 import { useAuthContext } from "@/hooks/useAuth";
@@ -39,7 +39,16 @@ export default function Schedule({}: ScheduleProps) {
         } Agendamento`}
       />
 
-      <Container>
+      <Box
+        maxWidth={852}
+        py={0}
+        px={{
+          md: "14px",
+          xs: 0,
+        }}
+        mt={"6rem"}
+        mb={"1rem"}
+      >
         {isAuth && (
           <Stack direction={"row"} alignItems={"center"} spacing={1}>
             <Link
@@ -68,13 +77,19 @@ export default function Schedule({}: ScheduleProps) {
             <UserHeader>
               <Avatar src={user?.avatar_url} alt={user?.name} />
               <Heading>{user?.name}</Heading>
-              <Text>{user?.bio}</Text>
+              <Text
+                style={{
+                  textAlign: "center",
+                }}
+              >
+                {user?.bio}
+              </Text>
             </UserHeader>
 
             <ScheduleForm />
           </>
         )}
-      </Container>
+      </Box>
     </>
   );
 }
