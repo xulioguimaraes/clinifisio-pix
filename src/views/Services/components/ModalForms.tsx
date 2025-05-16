@@ -70,9 +70,9 @@ export const ModalForm = ({
     let response;
 
     if (service?.id) {
-      response = await services.updateService(newData, service.id);
+      response = await services.updateService(newData as any, service.id);
     } else {
-      response = await services.createServices(newData);
+      response = await services.createServices(newData as any);
     }
     setIsLoading(false);
 

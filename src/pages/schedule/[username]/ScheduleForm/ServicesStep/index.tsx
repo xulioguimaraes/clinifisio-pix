@@ -122,7 +122,7 @@ export const ServicesStep = ({
                       width={100}
                       height={100}
                     >
-                      {item.images.length === 0 ? (
+                      {item?.images?.length === 0 ? (
                         <Image
                           style={{
                             width: "100%",
@@ -141,7 +141,7 @@ export const ServicesStep = ({
                             height: "100%",
                             objectFit: "cover",
                           }}
-                          src={item.images[0]}
+                          src={item?.images ? item?.images[0] : ""}
                           alt={item.name}
                           width={100}
                           height={100}
@@ -168,7 +168,7 @@ export const ServicesStep = ({
                 </button>
 
                 {/* Botão "Ver mais imagens" */}
-                {item.images.length > 1 && (
+                {!!item?.images && item?.images?.length > 1 && (
                   <Button
                     variant="contained"
                     size="small"
@@ -182,7 +182,7 @@ export const ServicesStep = ({
                     }}
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleOpenGallery(item.images);
+                      handleOpenGallery(!!item?.images ? item?.images : []);
                     }}
                   >
                     Ver mais ({item.images.length})
