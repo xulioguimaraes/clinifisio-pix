@@ -46,8 +46,12 @@ export default function Schedule({}: ScheduleProps) {
           md: "14px",
           xs: 0,
         }}
-        mt={"6rem"}
+        mt={{
+          md: "3rem",
+          xs: "6rem",
+        }}
         mb={"1rem"}
+        mx={"auto"}
       >
         {isAuth && (
           <Stack direction={"row"} alignItems={"center"} spacing={1}>
