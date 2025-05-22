@@ -1,5 +1,4 @@
 import React, { FormEvent, useEffect, useState } from "react";
-
 import styles from "./styles.module.scss";
 import { Modal } from "../Modal/Modal";
 import {
@@ -9,17 +8,29 @@ import {
   Snackbar,
   SnackbarCloseReason,
   TextField,
+  Box,
 } from "@mui/material";
 import { transaction as transactionservice } from "@/services/transaction";
 import { useDataTableContext } from "@/hooks/useDataTable";
 import { useToastContext } from "@/hooks/useToast";
 import { ITransaction } from "@/types";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
+import "dayjs/locale/pt-br";
+import utc from "dayjs/plugin/utc";
+
+// Configure dayjs to use Brazilian locale and UTC
+dayjs.extend(utc);
+dayjs.locale("pt-br");
 
 interface ITransactionModal {
   isOpen: boolean;
   setModal: () => void;
   transaction: ITransaction;
 }
+
 const initialValues = () => {
   return {
     id: "",
@@ -28,6 +39,7 @@ const initialValues = () => {
     description: "",
     type: true,
     createdAt: "",
+    transactionDate: dayjs().format("YYYY-MM-DD"),
   };
 };
 
@@ -42,6 +54,10 @@ export const TransactionModal = ({
   const [open, setOpen] = useState(false);
   const { params, setParams } = useDataTableContext();
   const toast = useToastContext();
+  const [selectedDate, setSelectedDate] = useState(
+    dayjs(transaction.createdAt).utc()
+  );
+
   const handleClick = () => {
     setOpen(true);
   };
@@ -56,16 +72,22 @@ export const TransactionModal = ({
 
     setOpen(false);
   };
+
   useEffect(() => {
     setValues(transaction);
+    setSelectedDate(dayjs(transaction.createdAt).utc());
   }, [transaction, isOpen]);
+
   const handleCreateNewTransaction = async (e: FormEvent) => {
     e.preventDefault();
   };
+
   const onRequestClose = () => {
     setValues(initialValues);
+    setSelectedDate(dayjs());
     setModal();
   };
+
   const handleDelete = async (id: string) => {
     try {
       setIsLoading(true);
@@ -77,13 +99,13 @@ export const TransactionModal = ({
       toast.success("Transação excluida com sucesso");
       onRequestClose();
     } catch (error: any) {
-      //falta implementar um hook para o toast para se usar em todos os lugares do projeto
       console.log(error.response.data.error);
       setIsLoading(false);
     } finally {
       setIsLoading(false);
     }
   };
+
   return (
     <>
       <Modal
@@ -117,9 +139,34 @@ export const TransactionModal = ({
               currency: "BRL",
             }).format(Number(values?.price) / 100)}
             disabled
-            // onChange={e => onChangeInputs(e)}
             placeholder="Valor"
           />
+
+          <Box
+            sx={{ width: "100%" }}
+            display="flex"
+            gap={1}
+            justifyContent={"center"}
+          >
+            <LocalizationProvider
+              dateAdapter={AdapterDayjs}
+              adapterLocale="pt-br"
+            >
+              <DatePicker
+                label="Data da Transação"
+                value={selectedDate}
+                disabled
+                format="DD/MM/YYYY"
+                slotProps={{
+                  textField: {
+                    fullWidth: true,
+                    variant: "outlined",
+                  },
+                }}
+              />
+            </LocalizationProvider>
+          </Box>
+
           <div className={styles.typeTransaction}>
             <button
               className={values?.type ? styles.deposit : ""}

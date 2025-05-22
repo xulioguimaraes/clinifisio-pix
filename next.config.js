@@ -13,6 +13,14 @@ const nextConfig = {
       },
     ],
   },
+  transpilePackages: ['@mui/x-date-pickers', '@mui/material', '@mui/icons-material'],
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@mui/material/styles': '@mui/material/styles/index.js',
+    };
+    return config;
+  },
 };
 
 module.exports = nextConfig;

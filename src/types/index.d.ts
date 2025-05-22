@@ -5,6 +5,7 @@ export interface ITransaction {
   description: string;
   type: boolean;
   createdAt: string;
+  transactionDate: string;
 }
 export interface ITable {
   handleTransaction: (e: ITransaction) => void;

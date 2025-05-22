@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { buildNextAuthOption } from "@/pages/api/auth/[...nextauth].api";
+import dayjs from "dayjs";
 
 export default async function handler(
   request: NextApiRequest,
@@ -17,7 +18,7 @@ export default async function handler(
   }
   if (request.method === "POST") {
     try {
-      const { title, price, description, type } = request.body;
+      const { title, price, description, type, transactionDate } = request.body;
 
       if (!title || price == null || type == null) {
         return response.status(400).json({
@@ -33,6 +34,10 @@ export default async function handler(
           price: Number(price),
           description: description ? String(description) : null,
           type: Boolean(type),
+          createdAt: transactionDate ? new Date(transactionDate) : new Date(),
+          transactionDate: transactionDate
+            ? new Date(transactionDate)
+            : new Date(),
         },
       });
 

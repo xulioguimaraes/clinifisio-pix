@@ -10,19 +10,20 @@ datasource db {
 }
 
 model User {
-  id            String             @id @default(uuid())
-  username      String             @unique
-  name          String
-  bio           String?
-  email         String?            @unique
-  created_at    DateTime           @default(now()) @map("create_at")
-  avatar_url    String?
-  accounts      Account[]
-  sessions      Session[]
-  timeIntervals UserTimeInterval[]
-  schedulings   Scheduling[]
-  transactions  Transation[]
-  services      Service[]
+  id             String             @id @default(uuid())
+  username       String             @unique
+  name           String
+  bio            String?
+  email          String?            @unique
+  created_at     DateTime           @default(now()) @map("create_at")
+  avatar_url     String?
+  accounts       Account[]
+  sessions       Session[]
+  timeIntervals  UserTimeInterval[]
+  schedulings    Scheduling[]
+  transactions   Transation[]
+  services       Service[]
+  TransactionPix TransactionPix[]
 
   @@map("users")
 }
@@ -72,51 +73,81 @@ model UserTimeInterval {
 }
 
 model Scheduling {
-  id           String   @id @default(uuid())
-  date         DateTime
-  name         String
-  email        String?
-  observations String?
-  created_at   DateTime @default(now())
-  user_id      String
-  phone        String?
-  id_service   String
-  user         User     @relation(fields: [user_id], references: [id])
-  service      Service  @relation(fields: [id_service], references: [id])
-  status       Int      @default(1) // 1 - Pendente, 2 - Confirmado, 3 - Cancelado, 4 - Atendido
+  id             String           @id @default(uuid())
+  date           DateTime
+  name           String
+  email          String?
+  observations   String?
+  created_at     DateTime         @default(now())
+  user_id        String
+  phone          String?
+  id_service     String
+  user           User             @relation(fields: [user_id], references: [id])
+  service        Service          @relation(fields: [id_service], references: [id])
+  status         Int              @default(1) // 1 - Pendente, 2 - Confirmado, 3 - Cancelado, 4 - Atendido
+  TransactionPix TransactionPix[]
 
   @@index([user_id])
   @@map("schedulings")
 }
 
 model Transation {
-  id          Int      @id @default(autoincrement())
-  title       String
-  price       Int
-  description String?
-  type        Boolean
-  createdAt   DateTime @default(now()) @map("created_at")
-  accountId   String?  @map("accountId")
-  userId      String?  @map("userId")
-  User        User?    @relation(fields: [userId], references: [id])
-  Account     Account? @relation(fields: [accountId], references: [id])
+  id              Int      @id @default(autoincrement())
+  title           String
+  price           Int
+  description     String?
+  type            Boolean
+  createdAt       DateTime @default(now()) @map("created_at")
+  transactionDate DateTime @map("transaction_date") @db.Date
+  accountId       String?  @map("accountId")
+  userId          String?  @map("userId")
+  User            User?    @relation(fields: [userId], references: [id])
+  Account         Account? @relation(fields: [accountId], references: [id])
 
   @@map("transation")
 }
 
 model Service {
-  id          String       @id @unique @default(uuid())
-  userId      String
-  name        String
-  description String?
-  price       Decimal      @default(0.0)
-  porcentagem Decimal      @default(0.0)
-  images      String[]     @default([]) // Nova coluna para armazenar URLs das imagens
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  active      Boolean      @default(true)
-  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Scheduling  Scheduling[]
+  id             String           @id @unique @default(uuid())
+  userId         String
+  name           String
+  description    String?
+  price          Decimal          @default(0.0)
+  porcentagem    Decimal          @default(0.0)
+  images         String[]         @default([]) // Nova coluna para armazenar URLs das imagens
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  active         Boolean          @default(true)
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Scheduling     Scheduling[]
+  TransactionPix TransactionPix[]
 
   @@map("services")
+}
+
+model TransactionPix {
+  id             String   @id @default(uuid())
+  userId         String
+  serviceId      String
+  pixId          String   @unique // ID retornado pela API do Asaas
+  transactionId  String? // ID da transação financeira (opcional)
+  qrCode         String // QR Code em base64
+  payload        String // Código copiável do PIX
+  value          Decimal // Valor do serviço
+  status         Int      @default(1) // 1-Pendente, 2-Pago, 3-Expirado, 4-Cancelado
+  expirationDate DateTime // Data de expiração do QR Code
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relações
+  user         User        @relation(fields: [userId], references: [id])
+  service      Service     @relation(fields: [serviceId], references: [id])
+  scheduling   Scheduling? @relation(fields: [schedulingId], references: [id])
+  schedulingId String?
+
+  @@index([userId])
+  @@index([serviceId])
+  @@index([pixId])
+  @@index([status])
+  @@map("transaction_pix")
 }
