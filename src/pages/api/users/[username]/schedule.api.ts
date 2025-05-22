@@ -1,109 +1,153 @@
-
 import { prisma } from "@/lib/prisma";
+import { api } from "@/services/api";
+import { asaasApi } from "@/services/asaas";
+import { Prisma } from "@prisma/client";
 import dayjs from "dayjs";
-
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
+
+interface CreatePixQrCodeRequest {
+  value: number;
+  format?: "ALL" | "BASE64" | "SVG" | "JPEG";
+  expirationSeconds?: number;
+  description?: string;
+}
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   if (req.method !== "POST") {
-    return res.status(405).end();
+    return res
+      .setHeader("Allow", ["POST"])
+      .status(405)
+      .json({ message: "Método não permitido" });
   }
 
-  const username = String(req.query.username);
+  try {
+    const username = String(req.query.username);
 
-  const createSchedulingBody = z.object({
-    name: z.string(),
-    email: z.string().email(),
-    observations: z.string(),
-    phone: z.string().optional(),
-    date: z.string().datetime(),
-    id_service: z.string()
-  });
+    // Schema de validação
+    const createSchedulingBody = z.object({
+      name: z.string().min(3, "Nome muito curto"),
+      email: z.string().email("Email inválido"),
+      observations: z.string().optional(),
+      phone: z.string().min(11, "Telefone inválido").optional(),
+      date: z.string().datetime(),
+      id_service: z.string().uuid("ID do serviço inválido"),
+    });
 
-  const user = await prisma.user.findUnique({
-    where: {
-      username,
-    },
-  });
+    // Busca o usuário
+    const user = await prisma.user.findUnique({
+      where: { username },
+      include: { services: true },
+    });
 
-  if (!user) {
-    return res.status(400).json({ message: "User not found" });
-  }
+    if (!user) {
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
 
-  const { name, email, observations, date, phone, id_service } =
-    createSchedulingBody.parse(req.body);
+    // Valida os dados do corpo
+    const { name, email, observations, date, phone, id_service } =
+      createSchedulingBody.parse(req.body);
 
-  const schedulingDate = dayjs(date).startOf("hour");
+    // Busca o serviço para obter o preço
+    const service = await prisma.service.findUnique({
+      where: { id: id_service },
+    });
 
-  if (schedulingDate.isBefore(new Date())) {
-    return res.status(400).json({
-      message: "Date is in the past",
+    if (!service) {
+      return res.status(404).json({ message: "Serviço não encontrado" });
+    }
+
+    const schedulingDate = dayjs(date).startOf("hour");
+
+    // Validações de data
+    if (schedulingDate.isBefore(new Date())) {
+      return res.status(400).json({ message: "Data não pode ser no passado" });
+    }
+
+    // Verifica conflito de agendamentos
+    const conflictingScheduling = await prisma.scheduling.findFirst({
+      where: {
+        user_id: user.id,
+        date: schedulingDate.toDate(),
+      },
+    });
+
+    if (conflictingScheduling) {
+      return res
+        .status(400)
+        .json({ message: "Já existe um agendamento neste horário" });
+    }
+    const serviceValue = Number(service.price);
+    // Configuração do PIX
+    const pixPayload: CreatePixQrCodeRequest = {
+      value: serviceValue,
+      format: "ALL",
+      expirationSeconds: 86400,
+      description: `Agendamento: ${service.name}`,
+    };
+
+    // Cria o QR Code PIX
+    const pixResponse = await api.post("/pix/criar-qrcode", pixPayload);
+    console.log(pixResponse);
+
+    // Cria o agendamento no banco de dados
+    const scheduling = await prisma.scheduling.create({
+      data: {
+        name,
+        email,
+        observations: observations || "",
+        date: schedulingDate.toDate(),
+        user_id: user.id,
+        phone: phone || "",
+        id_service,
+      },
+    });
+    console.log({ scheduling });
+    const transactionPix = await prisma.transactionPix.create({
+      data: {
+        userId: user.id,
+        serviceId: service.id,
+        pixId: pixResponse.data.data.id,
+        qrCode: pixResponse.data.formatted.encodedImage || "",
+        payload: pixResponse.data.formatted.payload || "",
+        value: new Prisma.Decimal(Number(service.price)), // Já está em reais (não precisa dividir por 100)
+        expirationDate: new Date(
+          Date.now() + pixPayload.expirationSeconds! * 1000
+        ),
+        schedulingId: scheduling.id,
+      },
+    });
+    console.log({ transactionPix });
+
+    // Retorna a resposta com os dados do PIX e do agendamento
+    return res.status(201).json({
+      success: true,
+      message: "Agendamento criado com sucesso",
+      scheduling,
+      pix: {
+        base64Image: pixResponse.data.formatted.base64Image,
+        payload: pixResponse.data.formatted.payload,
+        expirationDate: new Date(
+          Date.now() + pixPayload.expirationSeconds! * 1000
+        ),
+      },
+    });
+  } catch (error: any) {
+    console.error("Erro no agendamento:", error);
+
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        message: "Dados inválidos",
+        errors: error.errors,
+      });
+    }
+
+    return res.status(500).json({
+      message: "Erro interno no servidor",
+      error: error.message,
     });
   }
-
-  const conflictingScheduling = await prisma.scheduling.findFirst({
-    where: {
-      user_id: user.id,
-      date: schedulingDate.toDate(),
-    },
-  });
-
-  if (conflictingScheduling) {
-    return res.status(400).json({
-      message: "Há outro agendamento no mesmo horário",
-    });
-  }
-
-  await prisma.scheduling.create({
-    data: {
-      name,
-      email,
-      observations,
-      date: schedulingDate.toDate(),
-      user_id: user.id,
-      phone,
-      id_service: id_service || '0', 
-    },
-  });
-  return res.status(201).json({ message: "Agendamento feito com sucesso" });
-
-  // if (!!email) {
-  //   const calendar = google.calendar({
-  //     version: "v3",
-  //     auth: await getGoogleOAuthToken(user.id!),
-  //   });
-
-  //   await calendar.events.insert({
-  //     calendarId: "primary",
-  //     conferenceDataVersion: 1,
-  //     requestBody: {
-  //       summary: `Call: ${name}`,
-  //       description: observations,
-  //       start: {
-  //         dateTime: schedulingDate.format(),
-  //       },
-  //       end: {
-  //         dateTime: schedulingDate.add(1, "hour").format(),
-  //       },
-  //       attendees: [
-  //         {
-  //           email,
-  //           displayName: name,
-  //         },
-  //       ],
-  //       conferenceData: {
-  //         createRequest: {
-  //           requestId: scheduling.id,
-  //           conferenceSolutionKey: {
-  //             type: "hangoutsMeet",
-  //           },
-  //         },
-  //       },
-  //     },
-  //   });
-  // }
 }

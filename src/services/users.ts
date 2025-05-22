@@ -47,8 +47,7 @@ export const users = {
       phone: string;
       date: Date;
       id_service: string;
-    },
-    toast: any
+    }
   ) => {
     return await api
       .post(`/users/${username}/schedule`, {

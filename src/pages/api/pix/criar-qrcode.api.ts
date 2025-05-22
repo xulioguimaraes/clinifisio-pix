@@ -25,6 +25,7 @@ export default async function handler(
   try {
     // Validação básica dos dados de entrada
     const { value } = req.body;
+    console.log({ value });
 
     if (!value || typeof value !== "number" || value <= 0) {
       return res.status(400).json({
