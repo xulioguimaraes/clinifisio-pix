@@ -25,7 +25,6 @@ export default async function handler(
   try {
     // Validação básica dos dados de entrada
     const { value } = req.body;
-    console.log({ value });
 
     if (!value || typeof value !== "number" || value <= 0) {
       return res.status(400).json({
@@ -35,7 +34,7 @@ export default async function handler(
 
     // Configuração padrão com valores opcionais
     const payload: CreatePixQrCodeRequest = {
-      value,
+      value: value / 100,
       format: req.body.format || "ALL", // Padrão: retorna todos os formatos
       expirationSeconds: req.body.expirationSeconds || 86400, // 24 horas
       description: req.body.description || "Pagamento de serviço",
@@ -55,7 +54,7 @@ export default async function handler(
           Date.now() + payload.expirationSeconds! * 1000
         ),
         base64Image: response.data.encodedImage,
-        value: response.data.value,
+        value: response.data.value / 100,
       },
     });
   } catch (error: any) {

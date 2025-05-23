@@ -13,13 +13,21 @@ const nextConfig = {
       },
     ],
   },
-  transpilePackages: ['@mui/x-date-pickers', '@mui/material', '@mui/icons-material'],
+  transpilePackages: [
+    "@mui/x-date-pickers",
+    "@mui/material",
+    "@mui/icons-material",
+  ],
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@mui/material/styles': '@mui/material/styles/index.js',
+      "@mui/material/styles": "@mui/material/styles/index.js",
     };
     return config;
+  },
+  env: {
+    NEXT_PUBLIC_ASAAS_API_KEY: process.env.NEXT_PUBLIC_ASAAS_API_KEY,
+    NEXT_PUBLIC_ASAAS_API_URL: process.env.NEXT_PUBLIC_ASAAS_API_URL,
   },
 };
 

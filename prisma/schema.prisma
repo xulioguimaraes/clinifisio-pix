@@ -136,6 +136,7 @@ model TransactionPix {
   value          Decimal // Valor do serviço
   status         String   @default("pending") // pending, paid, expired, canceled
   expirationDate DateTime // Data de expiração do QR Code
+  receiptUrl     String? // URL do comprovante do pagamento
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 

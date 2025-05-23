@@ -84,7 +84,7 @@ export const ConfrimStep = ({
 
       if (response?.status === 201) {
         // toast.success(response.data.message);
-        onCancelConfitmation();
+       // onCancelConfitmation();
         setPixData({
           qrCode: response.data.pix.base64Image,
           payloadPix: response.data.pix.payload,
