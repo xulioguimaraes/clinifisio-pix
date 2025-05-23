@@ -59,11 +59,11 @@ export const ModalForm = ({
     const price = String(data.price).replace(/[^0-9]/g, ""); // Conversão explícita para número
     const newData = {
       ...data,
-      active: checked,
+      active: checked ? "1" : "0",
       porcentagem: !!data.porcentagem
         ? data.porcentagem.replace(/[^0-9]/g, "")
         : 0,
-      price: +price, // Agora `price` é um número
+      price: +price,
     };
     setIsLoading(true);
 

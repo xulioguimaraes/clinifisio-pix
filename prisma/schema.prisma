@@ -134,7 +134,7 @@ model TransactionPix {
   qrCode         String // QR Code em base64
   payload        String // Código copiável do PIX
   value          Decimal // Valor do serviço
-  status         Int      @default(1) // 1-Pendente, 2-Pago, 3-Expirado, 4-Cancelado
+  status         String   @default("pending") // pending, paid, expired, canceled
   expirationDate DateTime // Data de expiração do QR Code
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt

@@ -10,7 +10,8 @@ import { useState } from "react";
 import { IServices } from "@/types";
 import { useToastContext } from "@/hooks/useToast";
 import { users } from "@/services/users";
-import { Dialog } from "@mui/material";
+import { ConfirmModalPix } from "../ConfirmModalPix/ConfirmModalPix";
+import { ModalPixQrCode } from "../ModalPixQrCode/ModalPixQrCode";
 
 const confirmFormSchema = z.object({
   name: z.string().min(3, {
@@ -50,6 +51,10 @@ export const ConfrimStep = ({
   const username = String(router.query.username);
   const toast = useToastContext();
   const [showPixModal, setShowPixModal] = useState(false);
+  const [pixData, setPixData] = useState<{
+    qrCode: string;
+    payloadPix: string;
+  } | null>(null);
   const [formData, setFormData] = useState<ConfirmFormData | null>(null);
 
   const handleConfirmSheduling = async (data: ConfirmFormData) => {
@@ -78,8 +83,13 @@ export const ConfrimStep = ({
       });
 
       if (response?.status === 201) {
-        toast.success(response.data.message);
+        // toast.success(response.data.message);
         onCancelConfitmation();
+        setPixData({
+          qrCode: response.data.pix.base64Image,
+          payloadPix: response.data.pix.payload,
+        });
+        setShowPixModal(false);
       }
     } catch (error) {
       console.log(error);
@@ -147,56 +157,18 @@ export const ConfrimStep = ({
       </ConfirmForm>
 
       {/* Modal de confirmação do PIX */}
-      {showPixModal && (
-        <Dialog open={showPixModal} onClose={() => setShowPixModal(false)}>
-          <div style={{ textAlign: "center", padding: "20px" }}>
-            <Text size="xl" as="h2">
-              Pagamento via PIX
-            </Text>
-
-            <div style={{ margin: "20px 0" }}>
-              {/* Aqui você colocaria o componente do QR Code */}
-              <div
-                style={{
-                  width: "200px",
-                  height: "200px",
-                  margin: "0 auto",
-                  backgroundColor: "#f0f0f0",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: "8px",
-                }}
-              >
-                <Text>[QR Code aqui]</Text>
-              </div>
-
-              <Text size="sm" style={{ marginTop: "10px" }}>
-                Valor: R$ 100
-              </Text>
-            </div>
-
-            <Text size="sm" style={{ marginBottom: "20px" }}>
-              Escaneie o QR Code acima para realizar o pagamento via PIX e
-              confirmar seu agendamento.
-            </Text>
-
-            <div
-              style={{ display: "flex", gap: "10px", justifyContent: "center" }}
-            >
-              <Button variant="tertiary" onClick={() => setShowPixModal(false)}>
-                Cancelar
-              </Button>
-              <Button
-                onClick={handlePixPaymentConfirmed}
-                disabled={isSubmitting}
-              >
-                Já efetuei o pagamento
-              </Button>
-            </div>
-          </div>
-        </Dialog>
-      )}
+      <ConfirmModalPix
+        showPixModal={showPixModal}
+        setShowPixModal={setShowPixModal}
+        handlePixPaymentConfirmed={handlePixPaymentConfirmed}
+        isSubmitting={isSubmitting}
+      />
+      <ModalPixQrCode
+        showPixModal={pixData !== null}
+        setShowPixModal={() => setPixData(null)}
+        qrCode={pixData?.qrCode!}
+        payloadPix={pixData?.payloadPix!}
+      />
     </>
   );
 };

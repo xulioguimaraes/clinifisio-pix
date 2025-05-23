@@ -79,7 +79,7 @@ export default async function handler(
           description: description?.[0],
           price: Number(price[0]),
           porcentagem: porcentagem?.[0] ? Number(porcentagem[0]) : 0,
-          active: active?.[0] === "true",
+          active: active?.[0] === "1" || active?.[0] === "true",
           images: imageUrls, // Array de URLs das imagens
         },
       });

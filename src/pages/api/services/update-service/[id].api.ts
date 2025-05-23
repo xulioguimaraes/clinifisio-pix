@@ -81,7 +81,7 @@ export default async function handler(
         porcentagem: fields.porcentagem?.[0]
           ? Number(fields.porcentagem[0])
           : 0,
-        active: fields.active?.[0] === "true",
+        active: fields.active?.[0] === "1" || fields.active?.[0] === "true",
       };
 
       // Processar upload das imagens

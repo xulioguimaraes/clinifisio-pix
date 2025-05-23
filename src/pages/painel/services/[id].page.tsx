@@ -30,7 +30,7 @@ function EditServices({ id }: { id: any }) {
   if (isLoading) {
     return <IsLoadingCompoenent />;
   }
-  console.log(data);
+
   return (
     <>
       <Edit service={data.data} />
