@@ -8,6 +8,7 @@ export function withAuth(WrappedComponent: React.FC | any) {
   return function ProtectedComponent(props: any) {
     const { data: session, status } = useSession();
     const router = useRouter();
+   
 
     useEffect(() => {
       if (status === "unauthenticated" && router.pathname !== "/") {
