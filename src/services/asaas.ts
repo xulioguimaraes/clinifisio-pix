@@ -10,7 +10,6 @@ export const asaasApi = axios.create({
   headers: {
     accept: "application/json",
     "content-type": "application/json",
-    access_token:
-      "$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OmExNWQ1NDYyLWU5NmYtNDI3Ny04ZDhjLTYwOTE4MWRiM2E0YTo6JGFhY2hfM2FhMmJhYzctNzA2NC00ZGMwLTg3MTAtZjFkNmFiNDQ1ZDFm",
+    access_token: asaasKey,
   },
 });
