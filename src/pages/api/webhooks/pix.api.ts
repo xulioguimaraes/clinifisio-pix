@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/prisma";
-import { asaasApi } from "@/services/asaas";
 
 export default async function handler(
   request: NextApiRequest,
@@ -56,11 +55,16 @@ export default async function handler(
             receiptUrl: payment.transactionReceiptUrl,
           });
         } else {
-          console.log("Transação PIX não encontrada para o QR Code:", payment.pixQrCodeId);
+          console.log(
+            "Transação PIX não encontrada para o QR Code:",
+            payment.pixQrCodeId
+          );
         }
       }
 
-      return response.status(200).json({ message: "Webhook processado com sucesso" });
+      return response
+        .status(200)
+        .json({ message: "Webhook processado com sucesso" });
     } catch (error) {
       console.error("Erro ao processar webhook:", error);
       return response.status(500).json({ error: "Erro interno do servidor" });
@@ -68,4 +72,4 @@ export default async function handler(
   }
 
   return response.status(405).json({ error: "Método não permitido" });
-} 
+}

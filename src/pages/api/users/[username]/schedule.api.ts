@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { api } from "@/services/api";
-import { asaasApi } from "@/services/asaas";
+
 import { Prisma } from "@prisma/client";
 import dayjs from "dayjs";
 import { NextApiRequest, NextApiResponse } from "next";

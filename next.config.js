@@ -25,10 +25,6 @@ const nextConfig = {
     };
     return config;
   },
-  env: {
-    NEXT_PUBLIC_ASAAS_API_KEY: process.env.NEXT_PUBLIC_ASAAS_API_KEY,
-    NEXT_PUBLIC_ASAAS_API_URL: process.env.NEXT_PUBLIC_ASAAS_API_URL,
-  },
 };
 
 module.exports = nextConfig;
