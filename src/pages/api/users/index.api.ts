@@ -29,12 +29,9 @@ export default async function handler(
     },
   });
 
-  setCookie(
-    {res}, "@call:userId", user.id,{
-      maxAge:60 * 60 * 40 * 7, // 7 dias
-      path:"/"
-      
-    }
-  )
+  setCookie({ res }, "@call:userId", user.id, {
+    maxAge: 60 * 60 * 40 * 7, // 7 dias
+    path: "/",
+  });
   return res.status(201).json(user);
 }
