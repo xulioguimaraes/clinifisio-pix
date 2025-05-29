@@ -86,7 +86,7 @@ export const Header = () => {
                   >
                     <Avatar
                       sx={{ width: 32, height: 32 }}
-                      src={session?.user?.avatar_url}
+                      src={session?.user?.avatar_url ?? ""}
                     ></Avatar>
                   </IconButton>
                 </Tooltip>
