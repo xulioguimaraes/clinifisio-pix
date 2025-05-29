@@ -11,7 +11,6 @@ import { IServices } from "@/types";
 import { useToastContext } from "@/hooks/useToast";
 import { users } from "@/services/users";
 import { ConfirmModalPix } from "../ConfirmModalPix/ConfirmModalPix";
-import { ModalPixQrCode } from "../ModalPixQrCode/ModalPixQrCode";
 
 const confirmFormSchema = z.object({
   name: z.string().min(3, {
@@ -46,56 +45,18 @@ export const ConfrimStep = ({
   } = useForm<ConfirmFormData>({
     resolver: zodResolver(confirmFormSchema),
   });
-  console.log(service);
   const router = useRouter();
   const username = String(router.query.username);
   const toast = useToastContext();
   const [showPixModal, setShowPixModal] = useState(false);
-  const [pixData, setPixData] = useState<{
-    qrCode: string;
-    payloadPix: string;
-  } | null>(null);
   const [formData, setFormData] = useState<ConfirmFormData | null>(null);
 
   const handleConfirmSheduling = async (data: ConfirmFormData) => {
     try {
-      // Mostra o modal do PIX primeiro
       setFormData(data);
       setShowPixModal(true);
     } catch (error) {
       console.log(error);
-    }
-  };
-
-  const handlePixPaymentConfirmed = async () => {
-    if (!formData) return;
-
-    try {
-      const { email, name, observations, phone } = formData;
-
-      const response = await users.confirmSheduling(username, {
-        name,
-        email,
-        observations: observations!,
-        phone,
-        date: schedulingDate,
-        id_service: service.id!,
-      });
-
-      if (response?.status === 201) {
-        // toast.success(response.data.message);
-       // onCancelConfitmation();
-        setPixData({
-          qrCode: response.data.pix.base64Image,
-          payloadPix: response.data.pix.payload,
-        });
-        setShowPixModal(false);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Ocorreu um erro ao confirmar o agendamento");
-    } finally {
-      setShowPixModal(false);
     }
   };
 
@@ -156,18 +117,16 @@ export const ConfrimStep = ({
         </FormActions>
       </ConfirmForm>
 
-      {/* Modal de confirmação do PIX */}
+      {/* Modal de confirmação do Mercado Pago Checkout Pro */}
       <ConfirmModalPix
         showPixModal={showPixModal}
         setShowPixModal={setShowPixModal}
-        handlePixPaymentConfirmed={handlePixPaymentConfirmed}
         isSubmitting={isSubmitting}
-      />
-      <ModalPixQrCode
-        showPixModal={pixData !== null}
-        setShowPixModal={() => setPixData(null)}
-        qrCode={pixData?.qrCode!}
-        payloadPix={pixData?.payloadPix!}
+        agendamentoInfo={formData ? {
+          title: service?.name || "Consulta",
+          price: service?.price || 100,
+          quantity: 1,
+        } : { title: '', price: 0, quantity: 1 }}
       />
     </>
   );

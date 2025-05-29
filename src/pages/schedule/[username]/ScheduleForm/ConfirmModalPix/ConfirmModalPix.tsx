@@ -1,17 +1,39 @@
+import { useState } from "react";
 import { Button, Text } from "@ignite-ui/react";
-import { Dialog, Button as MuiButton } from "@mui/material";
+import { Dialog, Button as MuiButton, CircularProgress } from "@mui/material";
 
 export const ConfirmModalPix = ({
   showPixModal,
   setShowPixModal,
-  handlePixPaymentConfirmed,
   isSubmitting,
+  agendamentoInfo, // { title, price, quantity }
 }: {
   showPixModal: boolean;
   setShowPixModal: (showPixModal: boolean) => void;
-  handlePixPaymentConfirmed: () => void;
   isSubmitting: boolean;
+  agendamentoInfo: { title: string; price: number; quantity: number };
 }) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleCheckoutPro = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/mercadopago-checkout-pro", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(agendamentoInfo),
+      });
+      const data = await res.json();
+      if (data.init_point) {
+        window.location.href = data.init_point;
+      }
+    } catch (e) {
+      alert("Erro ao redirecionar para o Mercado Pago");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Dialog
       open={showPixModal}
@@ -49,7 +71,7 @@ export const ConfirmModalPix = ({
             }}
           >
             Para garantir seu horário, é necessário realizar o pagamento via
-            PIX.
+            Mercado Pago.
           </Text>
         </div>
 
@@ -135,16 +157,20 @@ export const ConfirmModalPix = ({
             variant="outlined"
             onClick={() => setShowPixModal(false)}
             style={{ minWidth: "120px" }}
+            disabled={loading}
           >
             Cancelar
           </MuiButton>
-          <Button
-            onClick={handlePixPaymentConfirmed}
-            disabled={isSubmitting}
-            style={{ minWidth: "160px" }}
+          <MuiButton
+            onClick={handleCheckoutPro}
+            disabled={loading}
+            variant="contained"
+            color="primary"
+            style={{ minWidth: "180px" }}
+            startIcon={loading && <CircularProgress size={20} />}
           >
-            Gerar QR Code PIX
-          </Button>
+            {loading ? "Redirecionando..." : "Pagar com Mercado Pago"}
+          </MuiButton>
         </div>
       </div>
     </Dialog>
