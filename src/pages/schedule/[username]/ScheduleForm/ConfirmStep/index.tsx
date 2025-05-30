@@ -47,13 +47,11 @@ export const ConfrimStep = ({
   });
   const router = useRouter();
   const username = String(router.query.username);
-  const toast = useToastContext();
+
   const [showPixModal, setShowPixModal] = useState(false);
-  const [formData, setFormData] = useState<ConfirmFormData | null>(null);
 
   const handleConfirmSheduling = async (data: ConfirmFormData) => {
     try {
-      setFormData(data);
       setShowPixModal(true);
     } catch (error) {
       console.log(error);
@@ -122,11 +120,9 @@ export const ConfrimStep = ({
         showPixModal={showPixModal}
         setShowPixModal={setShowPixModal}
         isSubmitting={isSubmitting}
-        agendamentoInfo={formData ? {
-          title: service?.name || "Consulta",
-          price: service?.price || 100,
-          quantity: 1,
-        } : { title: '', price: 0, quantity: 1 }}
+        agendamentoInfo={{
+          serviceId: service.id!,
+        }}
       />
     </>
   );

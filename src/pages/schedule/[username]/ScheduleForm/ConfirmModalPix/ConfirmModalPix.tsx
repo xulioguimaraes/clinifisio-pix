@@ -11,7 +11,7 @@ export const ConfirmModalPix = ({
   showPixModal: boolean;
   setShowPixModal: (showPixModal: boolean) => void;
   isSubmitting: boolean;
-  agendamentoInfo: { title: string; price: number; quantity: number };
+  agendamentoInfo: { serviceId: string };
 }) => {
   const [loading, setLoading] = useState(false);
 
