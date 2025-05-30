@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmação de Email</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+        .header {
+            background-color: #2563eb;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            padding: 30px;
+            color: #333333;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666666;
+            font-size: 14px;
+            border-top: 1px solid #eeeeee;
+        }
+        .logo {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Bem-vindo ao GUIMARAES DESENVOLVIMENTO!</h1>
+        </div>
+        <div class="content">
+            <p>Olá,</p>
+            
+            <p>É com grande satisfação que damos as boas-vindas a você! Agradecemos por escolher a GUIMARAES DESENVOLVIMENTO como sua solução de negócios.</p>
+            
+            <p>Para garantir a segurança da sua conta e começar a utilizar todos os recursos disponíveis, por favor, confirme seu endereço de email clicando no botão abaixo:</p>
+            
+            <div style="text-align: center;">
+                <a href="{{confirmationLink}}" class="button">Confirmar Email</a>
+            </div>
+            
+            <p>Se o botão não funcionar, você também pode copiar e colar o seguinte link no seu navegador:</p>
+            <p style="word-break: break-all; color: #2563eb;">{{confirmationLink}}</p>
+            
+            <p>Após a confirmação, você terá acesso completo à nossa plataforma e poderá começar a utilizar todos os recursos disponíveis.</p>
+            
+            <p>Se você tiver qualquer dúvida ou precisar de assistência, não hesite em nos contatar através do email: xulioguimaraes@gmail.com</p>
+            
+            <p>Atenciosamente,<br>
+            Equipe GUIMARAES DESENVOLVIMENTO</p>
+        </div>
+        <div class="footer">
+            <p>© 2024 GUIMARAES DESENVOLVIMENTO. Todos os direitos reservados.</p>
+            <p>Este é um email automático, por favor não responda.</p>
+        </div>
+    </div>
+</body>
+</html> 
