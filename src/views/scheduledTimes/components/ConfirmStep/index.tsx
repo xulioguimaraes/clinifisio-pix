@@ -1,15 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Text, TextArea, TextInput } from "@ignite-ui/react";
 import dayjs from "dayjs";
-import { useRouter } from "next/router";
+
 import { CalendarBlank, Clock } from "phosphor-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { ConfirmForm, FormActions, FormError, FormHeader } from "./styles";
-import { useState } from "react";
-import { IServices } from "@/types";
 
-import { ConfirmModalPix } from "../ConfirmModalPix/ConfirmModalPix";
+import { IServices } from "@/types";
+import { MenuItem, Select } from "@mui/material";
 
 const confirmFormSchema = z.object({
   name: z.string().min(3, {
@@ -22,20 +21,26 @@ const confirmFormSchema = z.object({
     message: "Digite um telefone valido",
   }),
   observations: z.string().nullable(),
+  service: z.string().min(1, {
+    message: "Selecione um serviço",
+  }),
 });
 
 type ConfirmFormData = z.infer<typeof confirmFormSchema>;
 
 interface ConfirmStepProps {
-  schedulingDate: Date;
+  schedulingDate: {
+    date: string;
+    hour: number;
+  };
   onCancelConfitmation: () => void;
-  service: IServices;
+  service: IServices[];
 }
 
 export const ConfrimStep = ({
   schedulingDate,
   onCancelConfitmation,
-  service,
+  service = [],
 }: ConfirmStepProps) => {
   const {
     register,
@@ -45,18 +50,14 @@ export const ConfrimStep = ({
     resolver: zodResolver(confirmFormSchema),
   });
 
-  const [showPixModal, setShowPixModal] = useState(false);
-
   const handleConfirmSheduling = async (data: ConfirmFormData) => {
-    try {
-      setShowPixModal(true);
-    } catch (error) {
-      console.log(error);
-    }
+    console.log(data);
   };
 
-  const describedDate = dayjs(schedulingDate).format("DD[ de ]MMMM[ de ]YYYY");
-  const describedTime = dayjs(schedulingDate).format("HH:mm[h]");
+  const describedDate = dayjs(schedulingDate.date).format(
+    "DD[ de ]MMMM[ de ]YYYY"
+  );
+  const describedTime = `${schedulingDate.hour}:00h`;
 
   return (
     <>
@@ -72,10 +73,37 @@ export const ConfrimStep = ({
           </Text>
         </FormHeader>
         <label>
+          <Text size="sm">Serviço</Text>
+          <Select
+            sx={{
+              bgcolor: "#121214",
+              borderRadius: "6px",
+              "& .MuiSelect-select": {
+                p: "0.75rem 1rem",
+              },
+            }}
+            size="small"
+            displayEmpty
+            {...register("service")}
+            defaultValue=""
+          >
+            <MenuItem value="" disabled>
+              Selecione um serviço
+            </MenuItem>
+            {service.map((item) => (
+              <MenuItem key={item.id} value={item.id}>
+                {item.name}
+              </MenuItem>
+            ))}
+          </Select>
+          {errors.service && <FormError>{errors.service.message}</FormError>}
+        </label>
+        <label>
           <Text size="sm">Nome completo</Text>
           <TextInput placeholder="Seu nome" {...register("name")} />
           {errors.name && <FormError>{errors.name.message}</FormError>}
         </label>
+
         <label>
           <Text size="sm">Email</Text>
           <TextInput
@@ -111,16 +139,6 @@ export const ConfrimStep = ({
           </Button>
         </FormActions>
       </ConfirmForm>
-
-      {/* Modal de confirmação do Mercado Pago Checkout Pro */}
-      <ConfirmModalPix
-        showPixModal={showPixModal}
-        setShowPixModal={setShowPixModal}
-        isSubmitting={isSubmitting}
-        agendamentoInfo={{
-          serviceId: service.id!,
-        }}
-      />
     </>
   );
 };

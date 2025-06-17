@@ -14,7 +14,7 @@ export const convertMinutesToTimeString = (totalMinutes: number) => {
 
 export const converNumberForMoney = (value: number) => {
   if (!value) {
-    return "";
+    return "R$ 0";
   }
   return new Intl.NumberFormat("pt-BR", {
     style: "currency",

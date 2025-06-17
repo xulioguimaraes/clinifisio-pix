@@ -1,6 +1,13 @@
 import { users } from "@/services/users";
 import { IAvailableTimes, IWeekData } from "@/types";
-import { Box, Skeleton, Popover, IconButton } from "@mui/material";
+import {
+  Box,
+  Skeleton,
+  Popover,
+  IconButton,
+  Dialog,
+  Modal,
+} from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
 import isBetweenPlugin from "dayjs/plugin/isBetween";
 import updateLocale from "dayjs/plugin/updateLocale";
@@ -16,6 +23,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { PickersDay, PickersDayProps } from "@mui/x-date-pickers/PickersDay";
+import { ConfrimStep } from "./ConfirmStep";
 
 dayjs.extend(isBetweenPlugin);
 dayjs.extend(updateLocale);
@@ -93,6 +101,12 @@ export const TabWeeks = ({ value }: { value: "one" }) => {
   const [hoveredDay, setHoveredDay] = useState<Dayjs | null>(null);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs(today));
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
+  const [showModalRegister, setShowModalRegister] = useState(false);
+  const [dataRegister, setDataRegister] = useState<any>(null);
+
+  const onChangeShowModalRegister = () => {
+    setShowModalRegister(!showModalRegister);
+  };
 
   const username = session?.user?.username;
 
@@ -182,6 +196,14 @@ export const TabWeeks = ({ value }: { value: "one" }) => {
     setToday(newDate);
     setSelectedDate(dayjs(newDate));
   };
+  const { data: services = [] } = useQuery({
+    queryKey: ["services", username],
+    queryFn: async () => {
+      const { data } = await users.getServicesUser(username!);
+      return data;
+    },
+    enabled: !!username,
+  });
 
   const handleDateChange = (newValue: Dayjs | null) => {
     if (newValue) {
@@ -203,6 +225,14 @@ export const TabWeeks = ({ value }: { value: "one" }) => {
 
   return (
     <div className={`p-6 overflow-x-scroll`}>
+      <Modal open={showModalRegister} onClose={onChangeShowModalRegister}>
+        <ConfrimStep
+          schedulingDate={dataRegister}
+          onCancelConfitmation={onChangeShowModalRegister}
+          service={services}
+        />
+      </Modal>
+
       <Box
         mb={{
           mb: 0,
@@ -340,6 +370,15 @@ export const TabWeeks = ({ value }: { value: "one" }) => {
                     height={65}
                     minWidth={150}
                     px={1}
+                    onClick={() => {
+                      if (!!day.hoursDay.includes(hour)) {
+                        setDataRegister({
+                          date: day.date,
+                          hour,
+                        });
+                        setShowModalRegister(true);
+                      }
+                    }}
                     className={`flex items-center justify-center h-16 border-b border-gray-600 ${
                       !day.hoursDay.includes(hour) && "bg-[#202024]"
                     }`}
