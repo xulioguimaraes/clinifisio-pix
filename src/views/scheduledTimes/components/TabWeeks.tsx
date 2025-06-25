@@ -392,7 +392,14 @@ export const TabWeeks = ({ value }: { value: "one" }) => {
                     height={65}
                     minWidth={150}
                     px={1}
-                    onClick={() => handleTimeSlotClick(day, hour)}
+                    onClick={() => {
+                      if (
+                        day.appointments?.find((appt) => +appt.hours === hour)
+                      ) {
+                        return;
+                      }
+                      handleTimeSlotClick(day, hour);
+                    }}
                     className={`flex items-center justify-center h-16 border-b border-gray-600 ${
                       !day.hoursDay.includes(hour) && "bg-[#202024]"
                     } ${
