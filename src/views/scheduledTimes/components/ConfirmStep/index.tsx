@@ -9,6 +9,9 @@ import { ConfirmForm, FormActions, FormError, FormHeader } from "./styles";
 
 import { IServices } from "@/types";
 import { MenuItem, Select } from "@mui/material";
+import { useSession } from "next-auth/react";
+import { users } from "@/services/users";
+import { useToastContext } from "@/hooks/useToast";
 
 const confirmFormSchema = z.object({
   name: z.string().min(3, {
@@ -49,9 +52,30 @@ export const ConfrimStep = ({
   } = useForm<ConfirmFormData>({
     resolver: zodResolver(confirmFormSchema),
   });
+  const { data: session } = useSession();
+  const toast = useToastContext();
 
   const handleConfirmSheduling = async (data: ConfirmFormData) => {
-    console.log(data);
+    const { email, name, observations, phone, service } = data;
+
+    const [year, month, day] = schedulingDate.date.split('-').map(Number);
+    const dateTime = new Date(year, month - 1, day, schedulingDate.hour);
+
+
+    const response = await users.confirmSheduling(session?.user?.username!, {
+      name,
+      email,
+      observations: observations!,
+      phone,
+      date: dateTime,
+      id_service: service,
+    });
+
+    if (response.status === 201) {
+      toast.success(response.data.message);
+      onCancelConfitmation();
+    }
+
   };
 
   const describedDate = dayjs(schedulingDate.date).format(

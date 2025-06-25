@@ -24,6 +24,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { PickersDay, PickersDayProps } from "@mui/x-date-pickers/PickersDay";
 import { ConfrimStep } from "./ConfirmStep";
+import { useToastContext } from "@/hooks/useToast";
 
 dayjs.extend(isBetweenPlugin);
 dayjs.extend(updateLocale);
@@ -103,7 +104,7 @@ export const TabWeeks = ({ value }: { value: "one" }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
   const [showModalRegister, setShowModalRegister] = useState(false);
   const [dataRegister, setDataRegister] = useState<any>(null);
-
+  const toast = useToastContext();
   const onChangeShowModalRegister = () => {
     setShowModalRegister(!showModalRegister);
   };
@@ -222,6 +223,27 @@ export const TabWeeks = ({ value }: { value: "one" }) => {
   };
 
   const open = Boolean(anchorEl);
+
+  const isTimeInPast = (date: string, hour: number) => {
+    const now = new Date();
+    const [year, month, day] = date.split("-").map(Number);
+    const appointmentTime = new Date(year, month - 1, day, hour);
+    return appointmentTime <= now;
+  };
+
+  const handleTimeSlotClick = (day: any, hour: number) => {
+    // Verifica se o horário está disponível e não passou
+    if (day.hoursDay.includes(hour) && !isTimeInPast(day.date, hour)) {
+      setDataRegister({
+        date: day.date,
+        hour,
+      });
+      setShowModalRegister(true);
+    }
+    if (isTimeInPast(day.date, hour)) {
+      toast.error("Horário já passou");
+    }
+  };
 
   return (
     <div className={`p-6 overflow-x-scroll`}>
@@ -371,16 +393,18 @@ export const TabWeeks = ({ value }: { value: "one" }) => {
                     minWidth={150}
                     px={1}
                     onClick={() => {
-                      if (!!day.hoursDay.includes(hour)) {
-                        setDataRegister({
-                          date: day.date,
-                          hour,
-                        });
-                        setShowModalRegister(true);
+                      if (
+                        day.appointments?.find((appt) => +appt.hours === hour)
+                      ) {
+                        return;
                       }
+                      handleTimeSlotClick(day, hour);
                     }}
                     className={`flex items-center justify-center h-16 border-b border-gray-600 ${
                       !day.hoursDay.includes(hour) && "bg-[#202024]"
+                    } ${
+                      isTimeInPast(day.date, hour) &&
+                      "opacity-50 cursor-not-allowed"
                     }`}
                   >
                     {day.appointments?.find((appt) => +appt.hours === hour) ? (
