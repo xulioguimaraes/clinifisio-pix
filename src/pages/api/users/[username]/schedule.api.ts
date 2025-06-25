@@ -89,12 +89,7 @@ export default async function handler(
       description: `Agendamento: ${service.name}`,
     };
 
-    // Cria o QR Code PIX
-    const pixResponse = await api.post("/pix/criar-qrcode", pixPayload);
-    console.log(pixResponse);
-
-    // Cria o agendamento no banco de dados
-    const scheduling = await prisma.scheduling.create({
+    await prisma.scheduling.create({
       data: {
         name,
         email,
@@ -105,35 +100,11 @@ export default async function handler(
         id_service,
       },
     });
-    console.log({ scheduling });
-    const transactionPix = await prisma.transactionPix.create({
-      data: {
-        userId: user.id,
-        serviceId: service.id,
-        pixId: pixResponse.data.data.id,
-        qrCode: pixResponse.data.formatted.encodedImage || "",
-        payload: pixResponse.data.formatted.payload || "",
-        value: new Prisma.Decimal(Number(service.price)), // Já está em reais (não precisa dividir por 100)
-        expirationDate: new Date(
-          Date.now() + pixPayload.expirationSeconds! * 1000
-        ),
-        schedulingId: scheduling.id,
-      },
-    });
-    console.log({ transactionPix });
 
     // Retorna a resposta com os dados do PIX e do agendamento
     return res.status(201).json({
       success: true,
       message: "Agendamento criado com sucesso",
-      scheduling,
-      pix: {
-        base64Image: pixResponse.data.formatted.base64Image,
-        payload: pixResponse.data.formatted.payload,
-        expirationDate: new Date(
-          Date.now() + pixPayload.expirationSeconds! * 1000
-        ),
-      },
     });
   } catch (error: any) {
     console.error("Erro no agendamento:", error);
